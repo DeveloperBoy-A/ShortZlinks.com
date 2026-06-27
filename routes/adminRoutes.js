@@ -12,5 +12,8 @@ router.post('/settings/payment-methods', adminController.addPaymentMethod);
 
 router.get('/withdrawals', adminController.getWithdrawals);
 router.post('/withdrawals/:id', adminController.updateWithdrawalStatus);
+// User Management Routes
+router.get('/users', adminController.getUsers);
+router.get('/users/:id', adminController.getUserDetails);
 
 module.exports = router;
