@@ -27,11 +27,38 @@
             // Only process HTTP/HTTPS links and check exclusion list
             if ((url.protocol === 'http:' || url.protocol === 'https:') && !isExcluded(url.hostname)) {
                 
-                // Rewrite the href to pass through the API instantly
-                // Example: https://shortz.com/api?api=TOKEN&url=ORIGINAL_URL
-                const encodedUrl = encodeURIComponent(links[i].href);
-                links[i].href = `${shortz_domain}/api?api=${shortz_api_token}&url=${encodedUrl}`;
-                links[i].target = "_blank"; // Ensure it opens in a new tab for better UX
+                // On-Click Interception (Prevents server overload & redirects properly)
+                links[i].addEventListener('click', async function(e) {
+                    e.preventDefault(); // Stop normal click
+                    const originalUrl = this.href;
+                    
+                    // Optional: Change cursor to show it's loading
+                    document.body.style.cursor = 'wait';
+                    
+                    try {
+                        const encodedUrl = encodeURIComponent(originalUrl);
+                        // Fetching text format URL from API
+                        const apiEndpoint = `${shortz_domain}/api?api=${shortz_api_token}&url=${encodedUrl}&format=text`;
+                        
+                        const response = await fetch(apiEndpoint);
+                        const shortUrl = await response.text();
+                        
+                        // Reset cursor
+                        document.body.style.cursor = 'default';
+                        
+                        // If API successfully returns the short link, redirect there
+                        if (shortUrl && shortUrl.startsWith('http')) {
+                            window.open(shortUrl, "_blank"); // Opens in new tab
+                        } else {
+                            // Fallback if error occurs
+                            window.open(originalUrl, "_blank");
+                        }
+                    } catch (error) {
+                        // If network error, still send user to destination securely
+                        document.body.style.cursor = 'default';
+                        window.open(originalUrl, "_blank");
+                    }
+                });
             }
         } catch (e) {
             // Invalid URL format, skip
@@ -39,4 +66,3 @@
         }
     }
 })();
-          
