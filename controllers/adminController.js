@@ -67,3 +67,36 @@ exports.updateWithdrawalStatus = async (req, res) => {
     
     res.redirect('/admin/withdrawals');
 };
+
+// Fetch all users for Admin
+exports.getUsers = async (req, res) => {
+    try {
+        const users = await User.find().sort('-createdAt');
+        res.render('admin/users', { title: 'User Management', users });
+    } catch (error) {
+        res.status(500).send('Error loading users');
+    }
+};
+
+// Advanced User Profile (God Mode View)
+exports.getUserDetails = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).send('User not found');
+
+        // Fetch their recent links and withdrawal history
+        const Link = require('../models/Link');
+        const userLinks = await Link.find({ userId: user._id }).sort('-createdAt').limit(50);
+        const userWithdrawals = await Withdrawal.find({ userId: user._id }).sort('-createdAt');
+
+        res.render('admin/user-detail', { 
+            title: `Viewing User: ${user.email}`, 
+            viewedUser: user, 
+            userLinks, 
+            userWithdrawals 
+        });
+    } catch (error) {
+        res.status(500).send('Error loading user profile');
+    }
+};
+    
