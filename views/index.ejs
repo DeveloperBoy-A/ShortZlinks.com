@@ -1,39 +1,139 @@
 <%- include('partials/header') %>
-<main class="flex-grow flex flex-col items-center justify-center p-6 overflow-hidden">
-    <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-between mt-10">
-        <div class="w-full md:w-1/2 text-center md:text-left z-10 hero-text">
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-                Shorten. Share. <br> <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Earn Money.</span>
+<main class="flex-grow flex flex-col items-center justify-center p-6 overflow-hidden relative">
+    
+    <div class="absolute top-0 left-0 w-72 h-72 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 right-0 w-72 h-72 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+
+    <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-between mt-10 z-10">
+        
+        <div class="w-full md:w-1/2 text-center md:text-left hero-text">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight text-gray-900 dark:text-white">
+                Shorten. Share. <br> 
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary glowing-text">Earn Money.</span>
             </h1>
             <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
                 Join our premium Publisher network. Drive traffic to your links and earn top CPM rates globally. We share <%= 100 - settings.adminCommissionPercent %>% of the ad revenue directly with you!
             </p>
-            <a href="/login" class="px-8 py-4 bg-primary text-white text-xl font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition transform inline-block">
-                Start Earning Now <i class="fas fa-arrow-right ml-2"></i>
-            </a>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <a href="/login" class="px-8 py-4 bg-primary text-white text-xl font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition transform inline-block text-center">
+                    Start Earning Now <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+                <a href="#how-it-works" class="px-8 py-4 bg-white dark:bg-gray-800 text-primary dark:text-white text-xl font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition transform inline-block text-center border border-gray-200 dark:border-gray-700">
+                    Learn More
+                </a>
+            </div>
         </div>
         
-        <div class="w-full md:w-1/2 mt-12 md:mt-0 relative flex justify-center hero-image">
-            <div class="w-64 h-64 md:w-96 md:h-96 bg-gradient-to-br from-primary to-secondary rounded-full blur-3xl opacity-30 absolute top-0"></div>
-            <i class="fas fa-link text-9xl text-gray-800 dark:text-gray-100 relative z-10 floating-icon" style="filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));"></i>
+        <div class="w-full md:w-1/2 mt-16 md:mt-0 relative flex justify-center hero-image perspective-1000">
+            <div class="w-64 h-64 md:w-96 md:h-96 bg-gradient-to-br from-primary to-secondary rounded-full blur-3xl opacity-30 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+            
+            <div class="relative z-10 floating-icon bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center w-64 h-64 md:w-80 md:h-80" style="transform-style: preserve-3d;">
+                <i class="fas fa-link text-7xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-br from-primary to-secondary drop-shadow-xl mb-4"></i>
+                <div class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 font-bold px-4 py-2 rounded-full shadow-inner">
+                    $ <%= settings.baseCpm.toFixed(2) %> CPM
+                </div>
+            </div>
         </div>
     </div>
 </main>
 
+<section id="how-it-works" class="w-full bg-white dark:bg-gray-800 py-20 px-6 border-t dark:border-gray-700">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-black text-center mb-16 text-gray-900 dark:text-white reveal-text">How It Works?</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="text-center p-6 feature-card">
+                <div class="w-20 h-20 mx-auto bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6 shadow-lg">
+                    <i class="fas fa-user-plus text-3xl text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">1. Create an Account</h3>
+                <p class="text-gray-600 dark:text-gray-400">Sign up in seconds. It's completely free to join our publisher network.</p>
+            </div>
+            
+            <div class="text-center p-6 feature-card">
+                <div class="w-20 h-20 mx-auto bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mb-6 shadow-lg">
+                    <i class="fas fa-compress-arrows-alt text-3xl text-purple-600 dark:text-purple-400"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">2. Shorten Links</h3>
+                <p class="text-gray-600 dark:text-gray-400">Use our advanced dashboard or API to shrink your long destination URLs.</p>
+            </div>
+            
+            <div class="text-center p-6 feature-card">
+                <div class="w-20 h-20 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-6 shadow-lg">
+                    <i class="fas fa-hand-holding-usd text-3xl text-green-600 dark:text-green-400"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">3. Earn Money</h3>
+                <p class="text-gray-600 dark:text-gray-400">Share your links online. You get paid for every valid visitor that crosses the ad pages.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
 <script>
-    // GSAP Animations
+    // Register GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initial Load Animations
     gsap.from(".hero-text", { duration: 1.2, x: -100, opacity: 0, ease: "power3.out" });
     gsap.from(".hero-image", { duration: 1.2, x: 100, opacity: 0, ease: "power3.out", delay: 0.2 });
     
-    // Continuous 3D Float
+    // Continuous 3D Floating Animation
     gsap.to(".floating-icon", {
         y: 20,
-        rotationX: 10,
-        rotationY: -10,
-        duration: 2,
+        rotationX: 15,
+        rotationY: -15,
+        duration: 3,
         yoyo: true,
         repeat: -1,
         ease: "sine.inOut"
     });
+
+    // Scroll Reveal Animations for Features
+    gsap.from(".reveal-text", {
+        scrollTrigger: {
+            trigger: ".reveal-text",
+            start: "top 80%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1
+    });
+
+    gsap.from(".feature-card", {
+        scrollTrigger: {
+            trigger: "#how-it-works",
+            start: "top 70%",
+        },
+        y: 100,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2, // Ek ke baad ek animate honge
+        ease: "back.out(1.7)"
+    });
 </script>
+
+<style>
+    /* 3D Perspective CSS */
+    .perspective-1000 {
+        perspective: 1000px;
+    }
+    
+    /* Background blob animation setup */
+    @keyframes blob {
+        0% { transform: translate(0px, 0px) scale(1); }
+        33% { transform: translate(30px, -50px) scale(1.1); }
+        66% { transform: translate(-20px, 20px) scale(0.9); }
+        100% { transform: translate(0px, 0px) scale(1); }
+    }
+    .animate-blob {
+        animation: blob 7s infinite;
+    }
+    .animation-delay-2000 {
+        animation-delay: 2s;
+    }
+</style>
+
 <%- include('partials/footer') %>
