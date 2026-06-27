@@ -20,8 +20,8 @@ exports.getSettings = async (req, res) => {
 // UPDATED: CPM Engine aur Percentage Update Logic
 exports.updateSettings = async (req, res) => {
     try {
-        const { defaultCpm, adminCommissionPercent, adSteps, countryRates } = req.body;
-        
+        const { baseCpm, adminCommissionPercent, adSteps, countryRates } = req.body;
+
         // JSON string ko object mein convert karna
         let parsedRates = {};
         try {
@@ -30,10 +30,11 @@ exports.updateSettings = async (req, res) => {
             return res.status(400).send('Invalid JSON format for Country Rates');
         }
 
+        // Setting update (baseCpm match kiya model ke field name se)
         await Setting.findOneAndUpdate({}, { 
-            defaultCpm, 
-            adminCommissionPercent, 
-            adSteps, 
+            baseCpm: parseFloat(baseCpm), 
+            adminCommissionPercent: parseFloat(adminCommissionPercent), 
+            adSteps: parseInt(adSteps), 
             countryRates: parsedRates 
         }, { upsert: true });
 
