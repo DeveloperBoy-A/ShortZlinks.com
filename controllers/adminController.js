@@ -100,3 +100,18 @@ exports.getUserDetails = async (req, res) => {
     }
 };
     
+// Add New Domain
+exports.addDomain = async (req, res) => {
+    try {
+        const { newDomain } = req.body;
+        // Clean trailing slashes
+        const cleanDomain = newDomain.replace(/\/$/, "");
+        
+        await Setting.findOneAndUpdate({}, { 
+            $addToSet: { activeDomains: cleanDomain } // addToSet prevents duplicates
+        });
+        res.redirect('/admin/settings?success=domain_added');
+    } catch (error) {
+        res.status(500).send('Error adding domain');
+    }
+};
