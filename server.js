@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
+require('./utils/cpmUpdater');
 const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
