@@ -1,62 +1,218 @@
 <%- include('../partials/header') %>
-<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden bg-gray-50 dark:bg-gray-900">
     <%- include('../partials/sidebar') %>
-    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-        <h1 class="text-3xl font-bold mb-6">Withdraw Earnings</h1>
+    
+    <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+        <div class="max-w-5xl mx-auto space-y-6">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-between border-t-4 border-green-500">
-                <div>
-                    <p class="text-gray-500 text-sm font-bold uppercase mb-1">Available Balance</p>
-                    <h2 class="text-4xl font-black text-green-600 dark:text-green-400">$<%= user.walletBalance.toFixed(2) %></h2>
-                </div>
-                <i class="fas fa-wallet text-5xl text-gray-200 dark:text-gray-700"></i>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-t-4 border-primary">
-                <h3 class="font-bold text-lg mb-4">Request Payout</h3>
-                <form action="/user/withdrawals/request" method="POST">
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Mandatory Traffic Source</label>
-                        <input type="text" name="trafficSource" placeholder="e.g., YouTube Channel, Telegram Group link..." required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
-                        <p class="text-xs text-gray-500 mt-1">We verify traffic to protect advertisers. Fake traffic will result in account ban.</p>
+            <!-- ======================================= -->
+            <!-- 1. BALANCE CARDS (Match Screenshot) -->
+            <!-- ======================================= -->
+            <div class="grid grid-cols-1 gap-4">
+                
+                <!-- Available Balance -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-5 flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-green-500"></div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Available Balance</p>
+                        <h2 class="text-3xl font-black text-gray-800 dark:text-white">$<%= user.walletBalance.toFixed(4) %></h2>
+                        <p class="text-xs font-bold text-green-500 mt-1">INR : ₹<%= (user.walletBalance * 85).toFixed(3) %></p>
                     </div>
-                    <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold hover:bg-indigo-700 transition">Submit Request</button>
-                </form>
-            </div>
-        </div>
+                    <div class="text-green-500 opacity-80">
+                        <i class="fas fa-money-bill-wave text-5xl"></i>
+                    </div>
+                </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 bg-gray-100 dark:bg-gray-700 font-bold border-b dark:border-gray-600">Payment History</div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700">
-                            <th class="p-4">ID</th>
-                            <th class="p-4">Amount</th>
-                            <th class="p-4">Method</th>
-                            <th class="p-4">Status</th>
-                            <th class="p-4">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% history.forEach(req => { %>
-                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                <td class="p-4 font-mono text-sm">#<%= req._id.toString().substring(18,24) %></td>
-                                <td class="p-4 font-bold text-green-500">$<%= req.amount.toFixed(2) %></td>
-                                <td class="p-4"><%= req.method %></td>
-                                <td class="p-4">
-                                    <% if (req.status === 'Pending') { %><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">Pending</span><% } %>
-                                    <% if (req.status === 'Approved') { %><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">Processing</span><% } %>
-                                    <% if (req.status === 'Completed') { %><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">Completed</span><% } %>
-                                    <% if (req.status === 'Returned') { %><span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">Returned</span><% } %>
-                                </td>
-                                <td class="p-4 text-sm text-gray-500"><%= req.createdAt.toLocaleDateString() %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+                <!-- Pending Withdrawn -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-5 flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-yellow-400"></div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Pending Withdrawn</p>
+                        <h2 class="text-3xl font-black text-gray-800 dark:text-white">$<%= typeof pendingAmount !== 'undefined' ? pendingAmount.toFixed(4) : '0.0000' %></h2>
+                        <p class="text-xs font-bold text-green-500 mt-1">INR : ₹<%= typeof pendingAmount !== 'undefined' ? (pendingAmount * 85).toFixed(3) : '0.000' %></p>
+                    </div>
+                    <div class="text-yellow-400 opacity-80">
+                        <i class="fas fa-hand-holding-usd text-5xl"></i>
+                    </div>
+                </div>
+
+                <!-- Total Withdraw -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-5 flex justify-between items-center relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-purple-400"></div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Total Withdraw</p>
+                        <h2 class="text-3xl font-black text-gray-800 dark:text-white">$<%= user.totalWithdrawn.toFixed(4) %></h2>
+                        <p class="text-xs font-bold text-green-500 mt-1">INR : ₹<%= (user.totalWithdrawn * 85).toFixed(3) %></p>
+                    </div>
+                    <div class="text-purple-400 opacity-80">
+                        <i class="fas fa-wallet text-5xl"></i>
+                    </div>
+                </div>
+
             </div>
+
+            <!-- ======================================= -->
+            <!-- 2. DISCLAIMER NOTE -->
+            <!-- ======================================= -->
+            <div class="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2 bg-white dark:bg-gray-800 p-3 rounded shadow-sm border border-gray-100 dark:border-gray-700">
+                <i class="fas fa-info-circle mt-0.5 text-black dark:text-white"></i>
+                <p>Balance are <span class="text-blue-600 dark:text-blue-400 font-bold">NOT FINAL</span> and can differ because of discrepancies, click issues (Self clicks/bot traffic), fraud activity and other adjustments.</p>
+            </div>
+
+            <!-- ======================================= -->
+            <!-- 3. WITHDRAWAL ACTION CARD -->
+            <!-- ======================================= -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                
+                <% if(user.withdrawalAccountDetails) { %>
+                    <form action="/user/withdrawals/request" method="POST" class="space-y-6">
+                        
+                        <!-- User Payment Details Block -->
+                        <div class="flex items-center gap-6 bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                            <!-- Fake Logo for aesthetic (UPI/PayPal) -->
+                            <div class="w-24 h-12 bg-white dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-400 italic font-black text-xl shadow-inner shrink-0">
+                                <% if(user.withdrawalAccountDetails.toLowerCase().includes('upi')) { %>
+                                    <span class="text-green-600">UPI</span>
+                                <% } else if(user.withdrawalAccountDetails.toLowerCase().includes('paypal')) { %>
+                                    <span class="text-blue-600">PayPal</span>
+                                <% } else { %>
+                                    <i class="fas fa-university text-2xl"></i>
+                                <% } %>
+                            </div>
+                            
+                            <div class="space-y-1">
+                                <h3 class="font-black text-lg text-gray-800 dark:text-gray-100">Saved Method</h3>
+                                <p class="text-sm text-gray-800 dark:text-gray-300"><span class="font-bold">Account:</span> <%= user.withdrawalAccountDetails %></p>
+                            </div>
+                        </div>
+
+                        <!-- Traffic Source Input -->
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Traffic Source <span class="text-red-500">*</span></label>
+                            <input type="text" name="trafficSource" placeholder="e.g., YouTube (Channel Link), Telegram Group..." required class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none text-sm transition">
+                            <p class="text-xs text-gray-500 mt-2">Required for verification. Fake traffic will lead to account termination.</p>
+                        </div>
+
+                        <!-- Big Blue Button -->
+                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-lg font-bold text-lg transition shadow-md">
+                            Withdraw
+                        </button>
+
+                    </form>
+                <% } else { %>
+                    <!-- If no payment method is set -->
+                    <div class="text-center py-6">
+                        <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">Payment Method Missing</h3>
+                        <p class="text-gray-500 mb-6">You need to set up your withdrawal account details before requesting a payout.</p>
+                        <a href="/user/settings" class="bg-blue-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-600 transition shadow-md">Go to Settings</a>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- ======================================= -->
+            <!-- 4. WITHDRAWAL STATISTICS TABLE -->
+            <!-- ======================================= -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                
+                <!-- Table Header Styling -->
+                <div class="p-4 border-b border-gray-100 dark:border-gray-700">
+                    <div class="inline-block border border-blue-400 text-blue-600 dark:text-blue-400 text-sm font-bold px-3 py-1 rounded bg-white dark:bg-gray-800">
+                        <i class="fas fa-list-ul mr-1"></i> Withdrawal Statistics
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-center border-collapse whitespace-nowrap text-sm">
+                        <thead>
+                            <tr class="text-blue-600 dark:text-blue-400 font-bold border-b dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4">Publisher<br>Earnings</th>
+                                <th class="p-4">Total<br>Amount</th>
+                                <th class="p-4">Withdrawal<br>Method</th>
+                                <th class="p-4 text-left">Withdrawal Account</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (typeof history !== 'undefined' && history.length > 0) { %>
+                                <% history.forEach(req => { %>
+                                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-300">
+                                        
+                                        <!-- ID -->
+                                        <td class="p-4"><%= req._id.toString().substring(18,24).toUpperCase() %></td>
+                                        
+                                        <!-- Date -->
+                                        <td class="p-4">
+                                            <%= new Date(req.createdAt).toLocaleDateString() %><br>
+                                            <span class="text-xs text-gray-500"><%= new Date(req.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></span>
+                                        </td>
+                                        
+                                        <!-- Status -->
+                                        <td class="p-4 font-bold">
+                                            <% if (req.status === 'Pending') { %><span class="text-blue-500">Pending</span><% } %>
+                                            <% if (req.status === 'Approved') { %><span class="text-yellow-500">Approved</span><% } %>
+                                            <% if (req.status === 'Completed') { %><span class="text-green-600">Complete</span><% } %>
+                                            <% if (req.status === 'Cancelled') { %><span class="text-red-500">Cancelled</span><% } %>
+                                            <% if (req.status === 'Returned') { %><span class="text-gray-500">Returned</span><% } %>
+                                        </td>
+                                        
+                                        <!-- Earnings (Assuming full amount is publisher for now) -->
+                                        <td class="p-4">$<%= req.amount.toFixed(4) %></td>
+                                        
+                                        <!-- Total Amount -->
+                                        <td class="p-4 font-bold text-gray-900 dark:text-gray-100">$<%= req.amount.toFixed(4) %></td>
+                                        
+                                        <!-- Method -->
+                                        <td class="p-4"><%= req.method || 'Bank/UPI' %></td>
+                                        
+                                        <!-- Account Info & Traffic Source -->
+                                        <td class="p-4 text-left">
+                                            <p><span class="font-bold">Account:</span> <%= req.accountDetails || user.withdrawalAccountDetails %></p>
+                                            <% if(req.trafficSource) { %>
+                                                <p class="text-xs text-gray-500 mt-1">Traffic source: <%= req.trafficSource %></p>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="7" class="p-8 text-center text-gray-500">No withdrawal records found.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ======================================= -->
+                <!-- 5. STATUS LEGEND -->
+                <!-- ======================================= -->
+                <div class="p-6 bg-gray-50 dark:bg-gray-800/80 border-t dark:border-gray-700 space-y-3 text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-blue-500 text-white font-bold px-3 py-1 rounded w-24 text-center">Pending</span>
+                        <span class="text-gray-700 dark:text-gray-300">: The payment is being checked by our team.</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-yellow-400 text-white font-bold px-3 py-1 rounded w-24 text-center">Approved</span>
+                        <span class="text-gray-700 dark:text-gray-300">: The payment has been approved and is waiting to be sent.</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-green-600 text-white font-bold px-3 py-1 rounded w-24 text-center">Complete</span>
+                        <span class="text-gray-700 dark:text-gray-300">: The payment has been successfully sent to your payment account.</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-red-500 text-white font-bold px-3 py-1 rounded w-24 text-center">Cancelled</span>
+                        <span class="text-gray-700 dark:text-gray-300">: The payment has been cancelled.</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-gray-500 text-white font-bold px-3 py-1 rounded w-24 text-center">Returned</span>
+                        <span class="text-gray-700 dark:text-gray-300">: The payment has been returned to your account.</span>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </main>
 </div>
