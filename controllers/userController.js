@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs'); // File ke top par add karein
 const User = require('../models/User');
 const Link = require('../models/Link');
 const PaymentMethod = require('../models/PaymentMethod');
-const Withdrawal = require('../models/Withdrawal'); // YE ADD KIYA HAI
+const Withdrawal = require('../models/Withdrawal'); 
 
 // userController.js - getDashboard update
 exports.getDashboard = async (req, res) => {
@@ -165,7 +165,7 @@ exports.getApiDocs = async (req, res) => {
 };
 
 // ==========================================
-// NYE FUNCTIONS: WITHDRAWAL SYSTEM KI LIYE
+// WITHDRAWAL SYSTEM
 // ==========================================
 
 // Get Withdrawals Page
@@ -227,4 +227,16 @@ exports.requestWithdrawal = async (req, res) => {
         res.status(500).send('Error processing withdrawal request.');
     }
 };
-                                
+
+// ==========================================
+// NAYA ADD KIYA GAYA: REFERRALS PAGE
+// ==========================================
+exports.getReferrals = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        res.render('user/referrals', { title: 'Referrals Program', user });
+    } catch (error) {
+        console.error('Referrals Page Error:', error);
+        res.status(500).send('Error loading referrals page');
+    }
+};
