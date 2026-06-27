@@ -103,6 +103,7 @@ exports.renderAdStep = (req, res) => {
 };
 
 // 4. Public API: Process countdown completion via AJAX POST
+// 4. Public API: Process countdown completion
 exports.processStep = async (req, res) => {
     const token = req.body.t;
     if (!token) return res.status(400).json({ error: 'Missing token' });
@@ -112,22 +113,28 @@ exports.processStep = async (req, res) => {
         const { linkId, originalUrl, isValid, ip, country, userAgent, totalSteps, currentStep } = decoded;
 
         if (currentStep < totalSteps) {
-            // Move to next step
             decoded.currentStep += 1;
             const newToken = jwt.sign(decoded, process.env.JWT_SECRET, { expiresIn: '15m' });
             return res.json({ nextUrl: `/l/step/${decoded.currentStep}?t=${newToken}` });
         } else {
-            // Final Step Reached: Process Earnings Math
+            // Final Step Reached
             if (isValid) {
                 const link = await Link.findById(linkId);
+                const settings = await Setting.findOne(); // DB se live settings fetch karein
 
-                // --- DYNAMIC EARNING MATH ENGINE ---
-                const actualCpm = COUNTRY_RATES[country] || DEFAULT_CPM;
-                const publisherCpm = actualCpm * PUBLISHER_SHARE;
-                const adminCpm = actualCpm - publisherCpm; // Remaining goes to Admin
+                // --- DYNAMIC ENGINE: DB SE VALUES UTHAYEIN ---
+                // Agar DB mein countryRate hai toh wo, nahi toh global Default
+                const countryRatesObj = settings.countryRates instanceof Map ? Object.fromEntries(settings.countryRates) : settings.countryRates;
+                const actualCpm = (countryRatesObj && countryRatesObj[country]) ? countryRatesObj[country] : settings.defaultCpm;
+
+                // Admin Panel se percentage uthayein (e.g., 20)
+                const adminPercent = settings.adminCommissionPercent || 20;
+                
+                const adminProfit = (actualCpm * adminPercent) / 100;
+                const publisherCpm = actualCpm - adminProfit;
 
                 const userCut = publisherCpm / 1000;
-                const adminCut = adminCpm / 1000;
+                const adminCut = adminProfit / 1000;
 
                 // Record Click
                 await Click.create({
@@ -141,12 +148,11 @@ exports.processStep = async (req, res) => {
                     adminCommission: adminCut
                 });
 
-                // Update Link Stats
+                // Update Link & User
                 link.totalClicks += 1;
                 link.validEarnings += userCut;
                 await link.save();
 
-                // Update User Wallet
                 await User.findByIdAndUpdate(link.userId, {
                     $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
                 });
@@ -158,26 +164,15 @@ exports.processStep = async (req, res) => {
                     await User.findByIdAndUpdate(linkOwner.referredBy, {
                         $inc: { walletBalance: referralBonus, referralEarnings: referralBonus }
                     });
-                } // <-- YEH BRACKET MISSING THA AAPKE CODE MEIN!
-
+                }
             } else {
-                // Duplicate/Invalid click: Still record it for analytics but 0 earnings
+                // Invalid Click Logic
                 const link = await Link.findById(linkId);
-                await Click.create({
-                    linkId,
-                    userId: link.userId,
-                    ipAddress: ip,
-                    country,
-                    userAgent,
-                    isValid: false,
-                    earningsGenerated: 0,
-                    adminCommission: 0
-                });
+                await Click.create({ linkId, userId: link.userId, ipAddress: ip, country, userAgent, isValid: false, earningsGenerated: 0, adminCommission: 0 });
                 link.totalClicks += 1;
                 await link.save();
             }
 
-            // Generate Final Token to unlock destination
             const finalToken = jwt.sign({ originalUrl }, process.env.JWT_SECRET, { expiresIn: '5m' });
             return res.json({ nextUrl: `/l/final?t=${finalToken}` });
         }
