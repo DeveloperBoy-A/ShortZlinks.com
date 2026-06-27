@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs'); // File ke top par add karein
 const User = require('../models/User');
 const Link = require('../models/Link');
 const PaymentMethod = require('../models/PaymentMethod');
+const Withdrawal = require('../models/Withdrawal'); // YE ADD KIYA HAI
 
 // userController.js - getDashboard update
 exports.getDashboard = async (req, res) => {
@@ -10,7 +11,7 @@ exports.getDashboard = async (req, res) => {
         const links = await Link.find({ userId: user._id }).sort('-createdAt').limit(10);
         const totalLinks = await Link.countDocuments({ userId: user._id });
 
-        // GEO/COUNTRY STATS AGGREGATION (Yeh add karna hai)
+        // GEO/COUNTRY STATS AGGREGATION
         const Click = require('../models/Click');
         const countryStats = await Click.aggregate([
             { $match: { userId: user._id, isValid: true } },
@@ -61,7 +62,6 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
-// Ye naya function add karein
 exports.updateSecurity = async (req, res) => {
     try {
         const { email, currentPassword, newPassword } = req.body;
@@ -163,3 +163,68 @@ exports.getApiDocs = async (req, res) => {
         res.status(500).send('Error loading API docs');
     }
 };
+
+// ==========================================
+// NYE FUNCTIONS: WITHDRAWAL SYSTEM KI LIYE
+// ==========================================
+
+// Get Withdrawals Page
+exports.getWithdrawals = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        const history = await Withdrawal.find({ userId: user._id }).sort('-createdAt');
+        
+        // Calculate pending amount
+        let pendingAmount = 0;
+        history.forEach(req => {
+            if (req.status === 'Pending') {
+                pendingAmount += req.amount;
+            }
+        });
+
+        res.render('user/withdrawals', { 
+            title: 'Withdrawals', 
+            user, 
+            history, 
+            pendingAmount 
+        });
+    } catch (error) {
+        console.error('Withdrawals Page Error:', error);
+        res.status(500).send('Error loading withdrawals page');
+    }
+};
+
+// Request a New Withdrawal
+exports.requestWithdrawal = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        const { trafficSource } = req.body; 
+
+        // Check Minimum Payout (e.g., $5.00)
+        if (user.walletBalance < 5.00) {
+            return res.status(400).send('Minimum withdrawal amount is $5.00');
+        }
+
+        // Database me nayi request save karna
+        await Withdrawal.create({
+            userId: user._id,
+            amount: user.walletBalance,
+            method: 'Bank/UPI', // Default indicator
+            accountDetails: user.withdrawalAccountDetails,
+            trafficSource: trafficSource,
+            status: 'Pending'
+        });
+
+        // User ka balance 0 kar dena kyunki request lag chuki hai
+        user.walletBalance = 0;
+        await user.save();
+
+        // Redirect with success
+        res.redirect('/user/withdrawals?success=request_submitted');
+
+    } catch (error) {
+        console.error("Withdrawal Request Error:", error);
+        res.status(500).send('Error processing withdrawal request.');
+    }
+};
+                                
