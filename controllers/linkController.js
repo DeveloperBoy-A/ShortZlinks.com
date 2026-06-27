@@ -8,17 +8,24 @@ const geoip = require('geoip-lite');
 // 1. User Dashboard: Create Link
 exports.createLink = async (req, res) => {
     try {
-        const { originalUrl } = req.body;
-        const newLink = await Link.create({
+        const { originalUrl, domain } = req.body; // Extract domain
+        
+        // Fetch default domain if user didn't select one
+        const Setting = require('../models/Setting');
+        const settings = await Setting.findOne();
+        const selectedDomain = domain || settings.defaultDomain;
+
+        await Link.create({
             userId: req.session.user.id,
-            originalUrl
+            originalUrl,
+            domain: selectedDomain // Save selected domain
         });
-        res.redirect('/user/links');
+        res.redirect('/user/dashboard?success=link_created');
     } catch (error) {
-        console.error('Create Link Error:', error);
         res.status(500).send('Error creating link');
     }
 };
+
 
 // 2. Public: Initial Click & Redirect to Step 1
 exports.handleInitialClick = async (req, res) => {
