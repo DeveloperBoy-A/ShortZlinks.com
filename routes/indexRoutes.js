@@ -13,5 +13,14 @@ router.get('/login', (req, res) => {
     res.render('login', { title: 'Login or Register' });
 });
 
+// Apni indexRoutes.js file mein ye routes add kar lein
+router.get('/forgot-password', (req, res) => {
+    res.render('forgot-password', { title: 'Forgot Password' });
+});
+
+router.get('/auth/reset-password/:token', (req, res) => {
+    res.render('reset-password', { title: 'Set New Password', token: req.params.token });
+});
+
 module.exports = router;
 router.get('/api', apiController.shortenViaApi);
