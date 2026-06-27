@@ -47,7 +47,7 @@ exports.handleInitialClick = async (req, res) => {
     res.redirect(`/l/step/1?t=${token}`);
 };
 
-// 3. Public: Render Intermediate Ad Step Page
+// 3. Public: Render Intermediate Ad Step Page (UPDATED FOR RANDOM THEMES)
 exports.renderAdStep = (req, res) => {
     const stepNum = parseInt(req.params.step);
     const token = req.query.t;
@@ -61,7 +61,11 @@ exports.renderAdStep = (req, res) => {
             return res.status(403).send('Link tampering detected');
         }
 
-        res.render('redirection/step', { 
+        // Random Theme Selection Logic (1, 2, or 3)
+        const themes = ['step-theme-1', 'step-theme-2', 'step-theme-3'];
+        const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+        res.render(`redirection/${randomTheme}`, { 
             step: stepNum, 
             totalSteps: decoded.totalSteps, 
             token 
@@ -70,6 +74,7 @@ exports.renderAdStep = (req, res) => {
         res.status(403).send('Session expired. Please click the original link again.');
     }
 };
+
 
 // 4. Public API: Process countdown completion via AJAX POST
 exports.processStep = async (req, res) => {
