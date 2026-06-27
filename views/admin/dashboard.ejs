@@ -4,6 +4,7 @@
     <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <h1 class="text-3xl font-bold mb-6 text-red-600">Super Admin Dashboard</h1>
 
+        <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-red-500">
                 <p class="text-gray-500 text-sm font-bold uppercase">Pending Payouts</p>
@@ -19,17 +20,34 @@
                 <p class="text-gray-500 text-sm font-bold uppercase">System Status</p>
                 <h3 class="text-2xl font-black text-green-500">Online</h3>
             </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
-                <p class="text-gray-500 text-sm font-bold uppercase">Active Setup</p>
-                <a href="/admin/settings" class="text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-primary mt-2 block">Go to Configuration &rarr;</a>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                <p class="text-gray-500 text-sm font-bold uppercase">Admin Profit</p>
+                <h3 class="text-3xl font-black text-purple-600">$<%= typeof totalProfit !== 'undefined' ? totalProfit.toFixed(2) : '0.00' %></h3>
             </div>
+        </div>
+
+        <!-- Quick Revenue Control Panel -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border-t-4 border-red-500 mb-8">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fas fa-sliders-h text-red-500"></i> Quick Revenue Control</h2>
+            <form action="/admin/settings/update-cpm" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-bold mb-1">Global Base CPM ($)</label>
+                    <input type="number" step="0.01" name="baseCpm" value="<%= settings.baseCpm %>" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">Admin Commission (%)</label>
+                    <input type="number" name="adminCommissionPercent" value="<%= settings.adminCommissionPercent %>" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded font-bold hover:bg-red-700 w-full">Update Values</button>
+                </div>
+            </form>
         </div>
 
         <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-6 rounded-lg">
             <h2 class="text-xl font-bold text-red-800 dark:text-red-300 mb-2">Welcome to God Mode</h2>
-            <p class="text-red-600 dark:text-red-400">As a Super Admin, you control the revenue split, ad steps, and user payouts. Always ensure user traffic sources are valid before approving any withdrawals to protect your Ad Network accounts.</p>
+            <p class="text-red-600 dark:text-red-400">As a Super Admin, you control the revenue split and payouts. Verify traffic before approving any withdrawals.</p>
         </div>
     </main>
 </div>
 <%- include('../partials/footer') %>
-
