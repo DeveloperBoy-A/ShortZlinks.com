@@ -37,3 +37,10 @@ userSchema.methods.isProfileComplete = function() {
 };
 
 module.exports = mongoose.model('User', userSchema);
+
+    // Add inside your userSchema:
+    apiToken: { type: String, unique: true, default: () => require('nanoid').nanoid(20) },
+    
+    // Referral System
+    referredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    referralEarnings: { type: Number, default: 0.00 },
