@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <h1 class="text-3xl font-bold mb-6">Manage Your Links</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b dark:border-gray-700 bg-gray-100 dark:bg-gray-700 flex justify-between items-center">
+                <span class="font-bold">All Links</span>
+                <a href="/user/tools" class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-indigo-700 transition">Use Mass Shrinker</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700">
+                            <th class="p-4">Short Link</th>
+                            <th class="p-4">Original URL</th>
+                            <th class="p-4">Clicks</th>
+                            <th class="p-4">Earnings</th>
+                            <th class="p-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(links.length === 0) { %>
+                            <tr><td colspan="5" class="p-6 text-center text-gray-500">No links found. Create one from the dashboard!</td></tr>
+                        <% } %>
+                        <% links.forEach(link => { %>
+                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                <td class="p-4 text-primary font-medium">
+                                    <a href="/<%= link.alias %>" target="_blank" id="link-<%= link.alias %>"><%= settings.defaultDomain %>/<%= link.alias %></a>
+                                </td>
+                                <td class="p-4 truncate max-w-xs" title="<%= link.originalUrl %>">
+                                    <%= link.originalUrl %>
+                                </td>
+                                <td class="p-4"><%= link.totalClicks %></td>
+                                <td class="p-4 text-green-500 font-bold">$<%= link.validEarnings.toFixed(4) %></td>
+                                <td class="p-4">
+                                    <button onclick="copyToClipboard('<%= settings.defaultDomain %>/<%= link.alias %>')" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+        });
+    }
+</script>
+<%- include('../partials/footer') %>
