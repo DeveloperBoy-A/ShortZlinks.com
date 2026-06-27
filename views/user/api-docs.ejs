@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <h1 class="text-3xl font-bold mb-6">&lt;/&gt; Developers API</h1>
+        
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-xl font-bold mb-2">Your API Token</h2>
+            <p class="text-sm text-gray-500 mb-4">Use this token to authenticate your API requests.</p>
+            <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 p-3 rounded font-mono font-bold text-center border border-blue-200 dark:border-blue-800">
+                <%= user.apiToken %>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-4">API Endpoint</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-400">Our API responds in standard JSON format, making it fully compatible with existing scripts and AdLinkFly plugins.</p>
+            
+            <h3 class="font-bold text-lg mb-2">GET Request</h3>
+            <code class="block bg-gray-100 dark:bg-gray-900 p-3 rounded text-pink-500 font-mono mb-6"><%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=https://google.com</code>
+            
+            <h3 class="font-bold text-lg mb-2">JSON Response (Success)</h3>
+            <pre class="bg-gray-800 text-green-400 p-4 rounded-md font-mono text-sm mb-6">
+{
+  "status": "success",
+  "shortenedUrl": "<%= settings.defaultDomain %>/AbC12X"
+}
+            </pre>
+            
+            <h3 class="font-bold text-lg mb-2">JSON Response (Error)</h3>
+            <pre class="bg-gray-800 text-red-400 p-4 rounded-md font-mono text-sm">
+{
+  "status": "error",
+  "message": "Invalid API Token."
+}
+            </pre>
+        </div>
+    </main>
+</div>
+<%- include('../partials/footer') %>
+
