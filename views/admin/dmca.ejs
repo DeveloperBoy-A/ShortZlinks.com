@@ -1,0 +1,25 @@
+<%- include('../partials/header') %>
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <h1 class="text-3xl font-bold mb-6 text-red-600">DMCA & Abuse Reports</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 dark:bg-gray-700 border-b dark:border-gray-600">
+                            <th class="p-4">Reported Link</th>
+                            <th class="p-4">Reason & Reporter</th>
+                            <th class="p-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" class="p-4 text-center text-gray-500">System is clean. No pending reports!</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('../partials/footer') %>
