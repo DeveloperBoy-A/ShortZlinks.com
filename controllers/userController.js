@@ -138,3 +138,28 @@ exports.massShrink = async (req, res) => {
         res.status(500).send('Error processing mass shrinker');
     }
 };
+
+// Announcements Page
+exports.getAnnouncements = (req, res) => {
+    res.render('user/announcements', { title: 'Announcements' });
+};
+
+// Quick Link Page
+exports.getQuickLink = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        res.render('user/quick-link', { title: 'Quick Link', user });
+    } catch (error) {
+        res.status(500).send('Error loading page');
+    }
+};
+
+// Developers API Page
+exports.getApiDocs = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        res.render('user/api-docs', { title: 'Developers API', user });
+    } catch (error) {
+        res.status(500).send('Error loading API docs');
+    }
+};
