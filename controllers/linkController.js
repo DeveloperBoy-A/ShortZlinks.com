@@ -114,9 +114,17 @@ exports.processStep = async (req, res) => {
                 await link.save();
 
                 // Update User Wallet
-                await User.findByIdAndUpdate(link.userId, {
-                    $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
-                });
+await User.findByIdAndUpdate(link.userId, {
+    $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
+});
+
+// NEW: Referral Bonus Logic
+const linkOwner = await User.findById(link.userId);
+if (linkOwner.referredBy) {
+    const referralBonus = userCut * (process.env.REFERRAL_PERCENT / 100);
+    await User.findByIdAndUpdate(linkOwner.referredBy, {
+        $inc: { walletBalance: referralBonus, referralEarnings: referralBonus }
+    });
             } else {
                 // Duplicate/Invalid click: Still record it for analytics but 0 earnings
                 const link = await Link.findById(linkId);
