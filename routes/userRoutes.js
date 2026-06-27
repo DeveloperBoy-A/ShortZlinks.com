@@ -9,14 +9,17 @@ router.use(isAuthenticated);
 
 router.get('/dashboard', userController.getDashboard);
 
-router.get('/links', (req, res) => res.render('user/links', { title: 'Manage Links' })); // Links view logic to be added
+// Updated Links Routes
+router.get('/links', userController.getLinks);
 router.post('/links/create', linkController.createLink);
+
+// New Tools & Mass Shrink Routes
+router.get('/tools', userController.getTools);
+router.post('/links/mass', userController.massShrink);
 
 router.get('/settings', userController.getSettings);
 router.post('/settings/update', userController.updateProfile);
-// Existing routes ke niche ye line add karein:
 router.post('/settings/security', userController.updateSecurity);
-
 
 router.get('/withdrawals', withdrawalController.getWithdrawals);
 router.post('/withdrawals/request', withdrawalController.requestWithdrawal);
