@@ -3,19 +3,28 @@ const User = require('../models/User');
 const Link = require('../models/Link');
 const PaymentMethod = require('../models/PaymentMethod');
 
+// userController.js - getDashboard update
 exports.getDashboard = async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id).populate('preferredPaymentMethodId');
         const links = await Link.find({ userId: user._id }).sort('-createdAt').limit(10);
-        
-        // Count total links
         const totalLinks = await Link.countDocuments({ userId: user._id });
+
+        // GEO/COUNTRY STATS AGGREGATION (Yeh add karna hai)
+        const Click = require('../models/Click');
+        const countryStats = await Click.aggregate([
+            { $match: { userId: user._id, isValid: true } },
+            { $group: { _id: "$country", clicks: { $sum: 1 }, earnings: { $sum: "$earningsGenerated" } } },
+            { $sort: { clicks: -1 } },
+            { $limit: 5 } // Top 5 countries
+        ]);
 
         res.render('user/dashboard', { 
             title: 'User Dashboard', 
             user, 
             links, 
-            totalLinks 
+            totalLinks,
+            countryStats // Yeh view me pass kiya
         });
     } catch (error) {
         console.error('User Dashboard Error:', error);
