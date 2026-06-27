@@ -9,6 +9,11 @@ router.use(isAuthenticated);
 
 router.get('/dashboard', userController.getDashboard);
 
+router.get('/announcements', userController.getAnnouncements);
+router.get('/quick-link', userController.getQuickLink);
+router.get('/api', userController.getApiDocs);
+
+
 // Updated Links Routes
 router.get('/links', userController.getLinks);
 router.post('/links/create', linkController.createLink);
