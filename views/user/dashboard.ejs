@@ -1,101 +1,312 @@
 <%- include('../partials/header') %>
-<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<% 
+    // Dynamic Date Formatting Variables
+    const currentMonthName = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+    const todayDateStr = new Date().toLocaleDateString('default', { day: '2-digit', month: 'long', year: 'numeric' });
+    const currentSite = typeof siteName !== 'undefined' ? siteName : 'Our Platform';
+%>
+
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden bg-gray-50 dark:bg-gray-900">
     <%- include('../partials/sidebar') %>
     
-    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-        <h1 class="text-3xl font-bold mb-6">Welcome back, User!</h1>
-        
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-            <form action="/user/links/create" method="POST" class="flex flex-col md:flex-row gap-4">
-                <input type="url" name="originalUrl" placeholder="Paste your long URL here..." required class="flex-1 p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none text-lg">
-                
-                <select name="domain" class="p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none bg-gray-50 dark:bg-gray-800 font-bold text-gray-700 dark:text-gray-200">
-                    <option value="<%= settings.defaultDomain %>"><%= settings.defaultDomain %></option>
-                    <% settings.activeDomains.forEach(domain => { %>
-                        <option value="<%= domain %>"><%= domain %></option>
-                    <% }) %>
-                </select>
+    <main class="flex-1 p-4 md:p-6 overflow-y-auto">
+        <div class="max-w-6xl mx-auto space-y-6">
 
-                <button type="submit" class="bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-indigo-700 shadow-md whitespace-nowrap">Shorten <i class="fas fa-magic ml-2"></i></button>
-            </form>
-        </div>
+            <h1 class="text-2xl font-black text-gray-800 dark:text-white mb-2">Welcome back, <%= user.firstName || user.email.split('@')[0] %>!</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-primary">
-                <p class="text-gray-500 text-sm font-semibold uppercase">Wallet Balance</p>
-                <h3 class="text-3xl font-black">$<%= user.walletBalance.toFixed(2) %></h3>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-green-500">
-                <p class="text-gray-500 text-sm font-semibold uppercase">Lifetime Earnings</p>
-                <h3 class="text-3xl font-black">$<%= user.lifetimeEarnings.toFixed(2) %></h3>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border-l-4 border-secondary">
-                <p class="text-gray-500 text-sm font-semibold uppercase">Total Links</p>
-                <h3 class="text-3xl font-black"><%= totalLinks %></h3>
-            </div>
-        </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-blue-200 dark:border-gray-700">
+                <form action="/user/links/create" method="POST" class="flex flex-col md:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-link text-gray-400"></i>
+                        </div>
+                        <input type="url" name="originalUrl" placeholder="Paste your long URL here..." required class="w-full pl-10 p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none text-lg bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition">
+                    </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            <div class="p-4 border-b dark:border-gray-700 font-bold bg-gray-100 dark:bg-gray-700">Recent Links</div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700">
-                            <th class="p-4">Short Link</th>
-                            <th class="p-4">Original URL</th>
-                            <th class="p-4">Clicks</th>
-                            <th class="p-4">Earnings</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% links.forEach(link => { %>
-                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                <td class="p-4 text-primary font-medium">
-                                    <a href="/<%= link.alias %>" target="_blank"><%= settings.defaultDomain %>/<%= link.alias %></a>
-                                </td>
-                                <td class="p-4 truncate max-w-xs" title="<%= link.originalUrl %>"><%= link.originalUrl %></td>
-                                <td class="p-4"><%= link.totalClicks %></td>
-                                <td class="p-4 text-green-500">$<%= link.validEarnings.toFixed(4) %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            <div class="p-4 border-b dark:border-gray-700 font-bold bg-gray-100 dark:bg-gray-700">
-                <i class="fas fa-globe-americas text-blue-500 mr-2"></i> Top Demographics (Valid Clicks)
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700">
-                            <th class="p-4">Country</th>
-                            <th class="p-4">Total Valid Clicks</th>
-                            <th class="p-4">Total Earnings</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if(typeof countryStats !== 'undefined' && countryStats.length > 0) { %>
-                            <% countryStats.forEach(stat => { %>
-                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                                    <td class="p-4 font-bold flex items-center">
-                                        <img src="https://flagcdn.com/24x18/<%= stat._id === 'Unknown' ? 'xx' : stat._id.toLowerCase() %>.png" class="mr-3 shadow-sm border" alt="flag" onerror="this.style.display='none'"> 
-                                        <%= stat._id === 'Unknown' ? 'Other/Proxy' : stat._id %>
-                                    </td>
-                                    <td class="p-4"><%= stat.clicks %></td>
-                                    <td class="p-4 text-green-500 font-bold">$<%= stat.earnings.toFixed(4) %></td>
-                                </tr>
-                            <% }) %>
+                    <select name="domain" class="p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 dark:bg-gray-900 font-bold text-gray-700 dark:text-gray-200 cursor-pointer">
+                        <% if(typeof settings !== 'undefined') { %>
+                            <option value="<%= settings.defaultDomain %>"><%= settings.defaultDomain %></option>
+                            <% if(settings.activeDomains && settings.activeDomains.length > 0) { %>
+                                <% settings.activeDomains.forEach(domain => { %>
+                                    <option value="<%= domain %>"><%= domain %></option>
+                                <% }) %>
+                            <% } %>
                         <% } else { %>
-                            <tr><td colspan="3" class="p-6 text-center text-gray-500">No geo-data available yet. Drive some traffic!</td></tr>
+                            <option value="shortzlinks.com">shortzlinks.com</option>
                         <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    </select>
 
+                    <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-700 shadow-md whitespace-nowrap transition transform hover:-translate-y-0.5">
+                        Shorten <i class="fas fa-magic ml-2"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border-l-4 border-blue-500 flex justify-between items-center relative overflow-hidden">
+                    <div class="z-10">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Wallet Balance</p>
+                        <h3 class="text-3xl font-black text-gray-800 dark:text-white">$<%= user.walletBalance.toFixed(4) %></h3>
+                    </div>
+                    <i class="fas fa-wallet text-4xl text-blue-100 dark:text-gray-700 absolute right-4"></i>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border-l-4 border-green-500 flex justify-between items-center relative overflow-hidden">
+                    <div class="z-10">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Lifetime Earnings</p>
+                        <h3 class="text-3xl font-black text-gray-800 dark:text-white">$<%= user.lifetimeEarnings ? user.lifetimeEarnings.toFixed(4) : '0.0000' %></h3>
+                    </div>
+                    <i class="fas fa-chart-line text-4xl text-green-100 dark:text-gray-700 absolute right-4"></i>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border-l-4 border-purple-500 flex justify-between items-center relative overflow-hidden">
+                    <div class="z-10">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Total Links</p>
+                        <h3 class="text-3xl font-black text-gray-800 dark:text-white"><%= totalLinks %></h3>
+                    </div>
+                    <i class="fas fa-link text-4xl text-purple-100 dark:text-gray-700 absolute right-4"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-start gap-4">
+                    <div class="bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 p-3 rounded-lg shrink-0">
+                        <i class="fas fa-money-check-alt text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 dark:text-gray-100">Withdrawal Info</h4>
+                        <p class="text-xs text-gray-500 mt-1">🚀 Withdrawal button is LIVE! You can withdraw your earnings. (Active for <%= currentMonthName %>)</p>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-start gap-4">
+                    <div class="bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 p-3 rounded-lg shrink-0">
+                        <i class="fas fa-headset text-xl"></i>
+                    </div>
+                    <div class="w-full">
+                        <h4 class="font-bold text-gray-800 dark:text-gray-100">Need Support?</h4>
+                        <p class="text-xs text-gray-500 mt-1 mb-2">Our support team is here to help with any questions or issues you might have.</p>
+                        <div class="flex gap-2">
+                            <a href="mailto:<%= typeof supportEmail !== 'undefined' ? supportEmail : 'support@example.com' %>" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1 transition"><i class="fas fa-envelope"></i> Email Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <select class="bg-white dark:bg-gray-800 border border-blue-200 dark:border-gray-700 text-blue-600 font-bold px-4 py-2 rounded-full shadow-sm outline-none text-sm cursor-pointer hover:bg-gray-50 transition">
+                    <option><%= currentMonthName %></option>
+                </select>
+            </div>
+
+            <div class="rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800">
+                <div class="bg-blue-600 text-white p-2 text-center text-sm font-bold flex justify-center items-center gap-2">
+                    <i class="fas fa-clock"></i> Today's Report » <%= todayDateStr %>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative">
+                        <p class="text-xs font-bold text-gray-400">VIEWS</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1"><%= typeof todayClicks !== 'undefined' ? todayClicks : 0 %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> Today</p>
+                        <div class="absolute top-4 right-4 bg-blue-50 dark:bg-gray-700 text-blue-500 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-eye"></i></div>
+                    </div>
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative">
+                        <p class="text-xs font-bold text-gray-400">EARNINGS</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1">$<%= typeof todayEarnings !== 'undefined' ? todayEarnings.toFixed(4) : '0.0000' %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> Today</p>
+                        <div class="absolute top-4 right-4 bg-yellow-50 dark:bg-gray-700 text-yellow-500 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-money-bill-wave"></i></div>
+                    </div>
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative">
+                        <p class="text-xs font-bold text-gray-400">REF EARN</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1">$0.0000</h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> Today</p>
+                        <div class="absolute top-4 right-4 bg-red-50 dark:bg-gray-700 text-red-400 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-users"></i></div>
+                    </div>
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative">
+                        <p class="text-xs font-bold text-gray-400">AVG CPM</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1">$<%= typeof todayAverageCpm !== 'undefined' ? todayAverageCpm.toFixed(4) : '0.0000' %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> Today</p>
+                        <div class="absolute top-4 right-4 bg-green-50 dark:bg-gray-700 text-green-500 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-dollar-sign"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 mt-6">
+                <div class="bg-blue-600 text-white p-2 text-center text-sm font-bold flex justify-center items-center gap-2">
+                    <i class="fas fa-chart-pie"></i> This Month's Report » <%= currentMonthName %>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative bg-gray-50/50 dark:bg-gray-900/50">
+                        <p class="text-xs font-bold text-gray-400">VIEWS</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1"><%= typeof totalClicks !== 'undefined' ? totalClicks : 0 %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> <%= currentMonthName %></p>
+                        <div class="absolute top-4 right-4 bg-blue-50 dark:bg-gray-700 text-blue-500 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-eye"></i></div>
+                    </div>
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative bg-gray-50/50 dark:bg-gray-900/50">
+                        <p class="text-xs font-bold text-gray-400">EARNINGS</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1">$<%= typeof totalEarnings !== 'undefined' ? totalEarnings.toFixed(4) : '0.0000' %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> <%= currentMonthName %></p>
+                        <div class="absolute top-4 right-4 bg-yellow-50 dark:bg-gray-700 text-yellow-500 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-money-bill-wave"></i></div>
+                    </div>
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative bg-gray-50/50 dark:bg-gray-900/50">
+                        <p class="text-xs font-bold text-gray-400">REF EARN</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1">$<%= user.referralEarnings ? user.referralEarnings.toFixed(4) : '0.0000' %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> <%= currentMonthName %></p>
+                        <div class="absolute top-4 right-4 bg-red-50 dark:bg-gray-700 text-red-400 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-users"></i></div>
+                    </div>
+                    <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative bg-gray-50/50 dark:bg-gray-900/50">
+                        <p class="text-xs font-bold text-gray-400">AVG CPM</p>
+                        <h3 class="text-2xl font-black text-gray-800 dark:text-gray-100 my-1">$<%= typeof averageCpm !== 'undefined' ? averageCpm.toFixed(4) : '0.0000' %></h3>
+                        <p class="text-xs font-bold text-green-500"><i class="fas fa-angle-double-up"></i> <%= currentMonthName %></p>
+                        <div class="absolute top-4 right-4 bg-green-50 dark:bg-gray-700 text-green-500 w-8 h-8 flex items-center justify-center rounded-full"><i class="fas fa-dollar-sign"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded shadow-sm border border-blue-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 mt-6">
+                <div class="bg-white dark:bg-gray-800 p-3 border-b border-gray-100 dark:border-gray-700 text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                    <i class="fas fa-chart-line"></i> Statistics - A Joyful Data Visualization!
+                </div>
+                <div class="p-4 w-full overflow-x-auto">
+                    <div style="min-width: 600px; height: 300px;">
+                        <canvas id="viewsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded shadow-sm border border-blue-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 mt-6">
+                <div class="bg-white dark:bg-gray-800 p-3 border-b border-gray-100 dark:border-gray-700 text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                    <i class="fas fa-globe-americas"></i> Country-Wise Report
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-center text-sm border-collapse">
+                        <thead>
+                            <tr class="font-bold text-gray-700 dark:text-gray-300 border-b dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+                                <th class="p-4 text-left pl-6">Country</th>
+                                <th class="p-4">Views</th>
+                                <th class="p-4">Publisher Earnings</th>
+                                <th class="p-4">CPM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(typeof countryStats !== 'undefined' && countryStats.length > 0) { %>
+                                <% countryStats.forEach(stat => { %>
+                                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                        <td class="p-4 font-bold flex items-center gap-3 pl-6 text-gray-800 dark:text-gray-200">
+                                            <img src="https://flagcdn.com/24x18/<%= stat._id === 'Unknown' ? 'xx' : stat._id.toLowerCase() %>.png" class="shadow-sm border border-gray-200 dark:border-gray-600 rounded-sm" alt="flag" onerror="this.style.display='none'"> 
+                                            <%= stat._id === 'Unknown' ? 'Other/Proxy' : stat._id %>
+                                        </td>
+                                        <td class="p-4"><%= stat.clicks %></td>
+                                        <td class="p-4 text-gray-800 dark:text-gray-200">$<%= stat.earnings.toFixed(4) %></td>
+                                        <td class="p-4 font-bold text-green-600">$<%= ((stat.earnings/stat.clicks)*1000).toFixed(4) %></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr><td colspan="4" class="p-6 text-center text-gray-500">No geo-data available yet. Drive some traffic!</td></tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="rounded shadow-sm border border-blue-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 mt-6">
+                <div class="bg-white dark:bg-gray-800 p-3 border-b border-gray-100 dark:border-gray-700 text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                    <i class="fas fa-link"></i> Recent Links
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="text-gray-700 dark:text-gray-300 font-bold border-b dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 text-center">
+                                <th class="p-4 text-left pl-6">Short Link</th>
+                                <th class="p-4">Original URL</th>
+                                <th class="p-4">Clicks</th>
+                                <th class="p-4">Earnings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(typeof links !== 'undefined' && links.length > 0) { %>
+                                <% links.forEach(link => { %>
+                                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-center">
+                                        <td class="p-4 text-blue-600 dark:text-blue-400 font-medium text-left pl-6">
+                                            <a href="/<%= link.alias %>" target="_blank" class="hover:underline"><i class="fas fa-external-link-alt text-xs mr-1"></i> <%= typeof settings !== 'undefined' ? settings.defaultDomain : 'shortzlinks.com' %>/<%= link.alias %></a>
+                                        </td>
+                                        <td class="p-4 truncate max-w-[200px] text-gray-500" title="<%= link.originalUrl %>"><%= link.originalUrl %></td>
+                                        <td class="p-4 font-bold text-gray-700 dark:text-gray-300"><%= link.totalClicks %></td>
+                                        <td class="p-4 font-bold text-green-600">$<%= link.validEarnings ? link.validEarnings.toFixed(4) : (link.earnings ? link.earnings.toFixed(4) : '0.0000') %></td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr><td colspan="4" class="p-6 text-center text-gray-500">No links generated yet.</td></tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="rounded shadow-sm border border-blue-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 mt-6">
+                <div class="bg-white dark:bg-gray-800 p-3 border-b border-gray-100 dark:border-gray-700 text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                    <i class="fas fa-exclamation-circle"></i> Rules - Certain Rules to Use <%= currentSite %>
+                </div>
+                <div class="p-4 text-sm">
+                    <p class="font-bold text-gray-800 dark:text-gray-200 mb-1"><i class="fas fa-globe text-black dark:text-gray-400"></i> This Type of Traffic is Not Allowed:</p>
+                    <ul class="text-red-600 dark:text-red-400 space-y-1 mb-4 font-medium">
+                        <li><i class="fas fa-ban mr-1"></i> Multiple Shortners Redirection : Not Allowed</li>
+                        <li><i class="fas fa-ban mr-1"></i> Fake Traffic & Self Clicks : Not Allowed</li>
+                    </ul>
+                    
+                    <p class="font-bold text-gray-800 dark:text-gray-200 mb-1"><i class="fas fa-globe text-black dark:text-gray-400"></i> This Type of Traffic is Allowed:</p>
+                    <ul class="text-green-600 dark:text-green-400 space-y-1 mb-4 font-medium">
+                        <li><i class="far fa-check-circle mr-1"></i> YouTube & Telegram Channel: Allowed</li>
+                        <li><i class="far fa-check-circle mr-1"></i> Other Legal Traffic: Allowed</li>
+                    </ul>
+
+                    <div class="bg-green-500 text-white p-2 rounded text-center mb-2 font-bold">You may use <%= currentSite %> if you agree to our Rules.</div>
+                    <div class="bg-red-500 text-white p-2 rounded text-center font-bold">If you do not agree to our Rules, please do not use our website.</div>
+                </div>
+            </div>
+
+        </div>
     </main>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('viewsChart').getContext('2d');
+        
+        const dynamicLabels = <%- JSON.stringify(typeof chartLabels !== 'undefined' ? chartLabels : [todayDateStr]) %>;
+        const dynamicData = <%- JSON.stringify(typeof chartData !== 'undefined' ? chartData : [typeof todayClicks !== 'undefined' ? todayClicks : 0]) %>;
+
+        const data = {
+            labels: dynamicLabels,
+            datasets: [{
+                label: 'Views',
+                data: dynamicData,
+                borderColor: '#2563eb', // Blue-600
+                backgroundColor: '#2563eb',
+                borderWidth: 2,
+                pointBackgroundColor: '#2563eb',
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: false,
+                tension: 0.1
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#f3f4f6' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        };
+        new Chart(ctx, config);
+    });
+</script>
+
 <%- include('../partials/footer') %>
