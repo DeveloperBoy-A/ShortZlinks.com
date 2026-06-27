@@ -1,0 +1,32 @@
+<%- include('../partials/header') %>
+<main class="flex-grow flex flex-col items-center p-6 bg-gradient-to-b from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+    
+    <div class="w-full max-w-2xl mt-10 text-center">
+        <h2 class="text-xl text-gray-500 font-bold tracking-widest uppercase mb-2">Security Check</h2>
+        <div class="w-16 h-1 bg-primary mx-auto mb-8 rounded"></div>
+
+        <div class="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
+            <p class="text-gray-600 dark:text-gray-400 mb-4 font-medium">Please complete step <%= step %> of <%= totalSteps %></p>
+            
+            <div class="relative w-32 h-32 mx-auto mb-6 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-full shadow-inner border-4 border-gray-100 dark:border-gray-700">
+                <div class="text-5xl font-black text-gray-800 dark:text-white" id="timerDisplay">10</div>
+            </div>
+
+            <div class="w-full min-h-[250px] bg-gray-100 dark:bg-gray-800 rounded-xl mb-6 flex items-center justify-center">
+                <p class="text-xs text-gray-400">Sponsored Content</p>
+                </div>
+
+            <p id="instructionText" class="text-gray-500 mb-6">Your link is being prepared...</p>
+
+            <a id="continueBtn" href="#" class="hidden w-full bg-green-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
+                Click to Continue <i class="fas fa-check-circle ml-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="w-full max-w-2xl mt-8 min-h-[90px] bg-white dark:bg-gray-900 rounded-lg shadow flex items-center justify-center">
+        </div>
+</main>
+<%- include('timer-script') %>
+<%- include('../partials/footer') %>
+
