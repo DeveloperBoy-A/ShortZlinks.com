@@ -11,13 +11,35 @@ exports.getDashboard = async (req, res) => {
         const links = await Link.find({ userId: user._id }).sort('-createdAt').limit(10);
         const totalLinks = await Link.countDocuments({ userId: user._id });
 
-        // GEO/COUNTRY STATS AGGREGATION
         const Click = require('../models/Click');
+        
+        // --- TOTAL STATS (THIS MONTH) ---
+        const totalClicks = await Click.countDocuments({ userId: user._id, isValid: true });
+        const totalEarningsQuery = await Click.aggregate([
+            { $match: { userId: user._id, isValid: true } },
+            { $group: { _id: null, total: { $sum: "$earningsGenerated" } } }
+        ]);
+        const totalEarnings = totalEarningsQuery.length > 0 ? totalEarningsQuery[0].total : 0;
+        const averageCpm = totalClicks > 0 ? (totalEarnings / totalClicks) * 1000 : 0;
+
+        // --- TODAY'S STATS ---
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0); // Aaj raat 12 baje se ab tak
+
+        const todayClicks = await Click.countDocuments({ userId: user._id, isValid: true, createdAt: { $gte: startOfToday } });
+        const todayEarningsQuery = await Click.aggregate([
+            { $match: { userId: user._id, isValid: true, createdAt: { $gte: startOfToday } } },
+            { $group: { _id: null, total: { $sum: "$earningsGenerated" } } }
+        ]);
+        const todayEarnings = todayEarningsQuery.length > 0 ? todayEarningsQuery[0].total : 0;
+        const todayAverageCpm = todayClicks > 0 ? (todayEarnings / todayClicks) * 1000 : 0;
+
+        // --- GEO/COUNTRY STATS ---
         const countryStats = await Click.aggregate([
             { $match: { userId: user._id, isValid: true } },
             { $group: { _id: "$country", clicks: { $sum: 1 }, earnings: { $sum: "$earningsGenerated" } } },
             { $sort: { clicks: -1 } },
-            { $limit: 5 } // Top 5 countries
+            { $limit: 10 }
         ]);
 
         res.render('user/dashboard', { 
@@ -25,7 +47,13 @@ exports.getDashboard = async (req, res) => {
             user, 
             links, 
             totalLinks,
-            countryStats // Yeh view me pass kiya
+            totalClicks,
+            totalEarnings,
+            averageCpm,
+            todayClicks,     // Dynamic Value Passed
+            todayEarnings,   // Dynamic Value Passed
+            todayAverageCpm, // Dynamic Value Passed
+            countryStats 
         });
     } catch (error) {
         console.error('User Dashboard Error:', error);
