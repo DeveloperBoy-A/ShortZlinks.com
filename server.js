@@ -46,16 +46,16 @@ app.use(session({
     }
 }));
 
-// Global Template Variables
+// server.js me is middleware ko update karein:
 app.use(async (req, res, next) => {
     res.locals.siteName = process.env.SITE_NAME || 'ShortZlinks';
     res.locals.user = req.session.user || null;
     res.locals.path = req.path;
-    
-    // Frontend Captcha Key
     res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY;
     
-    // Fetch global settings to cache in locals
+    // YE NAYI LINE ADD KAREIN
+    res.locals.supportEmail = process.env.SUPPORT_EMAIL || process.env.ADMIN_EMAIL;
+    
     const Setting = require('./models/Setting');
     let settings = await Setting.findOne();
     if (!settings) {
