@@ -22,5 +22,7 @@ router.get('/auth/reset-password/:token', (req, res) => {
     res.render('reset-password', { title: 'Set New Password', token: req.params.token });
 });
 
+router.get('/dmca', (req, res) => res.render('dmca'));
+
 module.exports = router;
 router.get('/api', apiController.shortenViaApi);
