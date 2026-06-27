@@ -6,9 +6,17 @@
         <h1 class="text-3xl font-bold mb-6">Welcome back, User!</h1>
         
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-8">
-            <form action="/user/links/create" method="POST" class="flex gap-4">
+            <form action="/user/links/create" method="POST" class="flex flex-col md:flex-row gap-4">
                 <input type="url" name="originalUrl" placeholder="Paste your long URL here..." required class="flex-1 p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none text-lg">
-                <button type="submit" class="bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-indigo-700 shadow-md">Shorten <i class="fas fa-magic ml-2"></i></button>
+                
+                <select name="domain" class="p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none bg-gray-50 dark:bg-gray-800 font-bold text-gray-700 dark:text-gray-200">
+                    <option value="<%= settings.defaultDomain %>"><%= settings.defaultDomain %></option>
+                    <% settings.activeDomains.forEach(domain => { %>
+                        <option value="<%= domain %>"><%= domain %></option>
+                    <% }) %>
+                </select>
+
+                <button type="submit" class="bg-primary text-white px-8 py-4 rounded-lg font-bold hover:bg-indigo-700 shadow-md whitespace-nowrap">Shorten <i class="fas fa-magic ml-2"></i></button>
             </form>
         </div>
 
