@@ -1,41 +1,122 @@
 <%- include('../partials/header') %>
 <div class="flex flex-1 flex-col md:flex-row overflow-hidden">
     <%- include('../partials/sidebar') %>
-    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-        <h1 class="text-3xl font-bold mb-6">&lt;/&gt; Developers API</h1>
+    
+    <main class="flex-1 p-4 md:p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-xl font-bold mb-2">Your API Token</h2>
-            <p class="text-sm text-gray-500 mb-4">Use this token to authenticate your API requests.</p>
-            <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 p-3 rounded font-mono font-bold text-center border border-blue-200 dark:border-blue-800">
-                <%= user.apiToken %>
+        <div class="max-w-4xl mx-auto space-y-6">
+
+            <div class="bg-white dark:bg-gray-800 rounded shadow-sm border border-blue-200 dark:border-gray-700 p-4 md:p-6">
+                
+                <div class="inline-block border border-blue-400 text-blue-600 dark:text-blue-400 text-sm font-bold px-3 py-1 rounded mb-4 bg-white dark:bg-gray-800">
+                    &lt;/&gt; Developers API
+                </div>
+
+                <div class="bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded p-4">
+                    <h3 class="text-green-800 dark:text-green-400 font-bold text-lg mb-2">Your API token:</h3>
+                    <div class="flex items-center">
+                        <input type="text" id="apiTokenInput" value="<%= user.apiToken %>" readonly class="flex-1 p-2 border border-gray-300 dark:border-gray-600 rounded-l focus:outline-none bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm">
+                        <button onclick="copyApiToken()" class="bg-gray-100 dark:bg-gray-600 border border-l-0 border-gray-300 dark:border-gray-600 px-4 py-2 rounded-r hover:bg-gray-200 dark:hover:bg-gray-500 transition">
+                            <i class="fas fa-copy text-gray-600 dark:text-gray-300"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded shadow-sm border border-blue-200 dark:border-gray-700 p-4 md:p-6">
+                
+                <div class="inline-block border border-blue-400 text-blue-600 dark:text-blue-400 text-sm font-bold px-3 py-1 rounded mb-6 bg-white dark:bg-gray-800">
+                    » How to Use Developers API Tool
+                </div>
+
+                <div class="space-y-6 text-sm text-black dark:text-gray-200 font-medium">
+                    
+                    <p>» For developers <%= siteName %> prepared <span class="text-blue-600 dark:text-blue-400">API</span> which returns responses in <span class="text-blue-600 dark:text-blue-400 font-bold">JSON</span> or <span class="text-blue-600 dark:text-blue-400 font-bold">TEXT</span> formats.</p>
+                    
+                    <p>» Currently there is one method which can be used to shorten links on behalf of your account.</p>
+                    
+                    <p>» All you have to do is to send a <span class="text-blue-600 dark:text-blue-400 font-bold">GET</span> request with your <span class="text-blue-600 dark:text-blue-400">API</span> token and URL Like the following:</p>
+
+                    <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono break-all text-gray-800 dark:text-gray-300">
+                        <%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=<span class="font-bold text-black dark:text-white">yourdestinationlink.com</span>&alias=<span class="font-bold text-black dark:text-white">CustomAlias</span>
+                    </div>
+
+                    <p>» You will get a <span class="text-blue-600 dark:text-blue-400 font-bold">JSON</span> response like the following</p>
+
+                    <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono break-all text-gray-800 dark:text-gray-300">
+                        {"status":"success","shortenedUrl":"<%= settings.defaultDomain %>/xxxxx"}
+                    </div>
+
+                    <p>» If you want a <span class="text-blue-600 dark:text-blue-400 font-bold">TEXT</span> response just add <span class="font-bold">&format=text</span> at the end of your request as the below example. This will return just the short link. Note that if an error occurs, it will not output anything.</p>
+
+                    <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono break-all text-gray-800 dark:text-gray-300">
+                        <%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=<span class="font-bold text-black dark:text-white">yourdestinationlink.com</span>&alias=<span class="font-bold text-black dark:text-white">CustomAlias</span><span class="font-bold">&format=text</span>
+                    </div>
+
+                    <div class="bg-red-100 dark:bg-red-900/30 p-4 rounded text-black dark:text-gray-200 mt-6">
+                        <h4 class="font-bold text-lg mb-1 flex items-center gap-2"><i class="fas fa-info-circle"></i> Note</h4>
+                        <p>api & url are required fields and the other fields like alias, format & type are optional.</p>
+                    </div>
+
+                    <div class="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+                        
+                        <h3 class="font-bold text-lg mb-4 text-black dark:text-white">• Using the API in PHP ⤵</h3>
+                        
+                        <p class="mb-6">» To use the <span class="text-blue-600 dark:text-blue-400">API</span> in your PHP application, you need to send a <span class="text-blue-600 dark:text-blue-400 font-bold">GET</span> request via file_get_contents or cURL. Please check the below sample examples using file_get_contents</p>
+
+                        <p class="font-bold mb-2">» Using <span class="text-blue-600 dark:text-blue-400">JSON</span> Response</p>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono overflow-x-auto whitespace-pre text-gray-800 dark:text-gray-300 mb-8 leading-relaxed">
+$long_url = urlencode('yourdestinationlink.com');
+$api_token = '<%= user.apiToken %>';
+$api_url = "<%= settings.defaultDomain %>/api?api={$api_token}&url={$long_url}&alias=CustomAlias";
+$result = @json_decode(file_get_contents($api_url),TRUE);
+if($result["status"] === 'error') {
+    echo $result["message"];
+} else {
+    echo $result["shortenedUrl"];
+}
+                        </div>
+
+                        <p class="font-bold mb-2">» Using Plain <span class="text-blue-600 dark:text-blue-400">TEXT</span> Response</p>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono overflow-x-auto whitespace-pre text-gray-800 dark:text-gray-300 leading-relaxed">
+$long_url = urlencode('yourdestinationlink.com');
+$api_token = '<%= user.apiToken %>';
+$api_url = "<%= settings.defaultDomain %>/api?api={$api_token}&url={$long_url}&alias=CustomAlias&format=text";
+$result = @file_get_contents($api_url);
+if( $result ){
+    echo $result;
+}
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold mb-4">API Endpoint</h2>
-            <p class="mb-4 text-gray-600 dark:text-gray-400">Our API responds in standard JSON format, making it fully compatible with existing scripts and AdLinkFly plugins.</p>
-            
-            <h3 class="font-bold text-lg mb-2">GET Request</h3>
-            <code class="block bg-gray-100 dark:bg-gray-900 p-3 rounded text-pink-500 font-mono mb-6"><%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=https://google.com</code>
-            
-            <h3 class="font-bold text-lg mb-2">JSON Response (Success)</h3>
-            <pre class="bg-gray-800 text-green-400 p-4 rounded-md font-mono text-sm mb-6">
-{
-  "status": "success",
-  "shortenedUrl": "<%= settings.defaultDomain %>/AbC12X"
-}
-            </pre>
-            
-            <h3 class="font-bold text-lg mb-2">JSON Response (Error)</h3>
-            <pre class="bg-gray-800 text-red-400 p-4 rounded-md font-mono text-sm">
-{
-  "status": "error",
-  "message": "Invalid API Token."
-}
-            </pre>
-        </div>
+        
     </main>
 </div>
-<%- include('../partials/footer') %>
 
+<script>
+    function copyApiToken() {
+        var copyText = document.getElementById("apiTokenInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+        document.execCommand("copy");
+        
+        // Change icon temporarily to checkmark
+        const btnIcon = event.currentTarget.querySelector('i');
+        btnIcon.classList.remove('fa-copy');
+        btnIcon.classList.add('fa-check', 'text-green-500');
+        
+        setTimeout(() => {
+            btnIcon.classList.remove('fa-check', 'text-green-500');
+            btnIcon.classList.add('fa-copy');
+        }, 2000);
+    }
+</script>
+
+<%- include('../partials/footer') %>
