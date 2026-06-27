@@ -14,3 +14,4 @@ router.get('/login', (req, res) => {
 });
 
 module.exports = router;
+router.get('/api', apiController.shortenViaApi);
