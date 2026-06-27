@@ -54,6 +54,40 @@
                 </table>
             </div>
         </div>
+
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div class="p-4 border-b dark:border-gray-700 font-bold bg-gray-100 dark:bg-gray-700">
+                <i class="fas fa-globe-americas text-blue-500 mr-2"></i> Top Demographics (Valid Clicks)
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700">
+                            <th class="p-4">Country</th>
+                            <th class="p-4">Total Valid Clicks</th>
+                            <th class="p-4">Total Earnings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(typeof countryStats !== 'undefined' && countryStats.length > 0) { %>
+                            <% countryStats.forEach(stat => { %>
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                                    <td class="p-4 font-bold flex items-center">
+                                        <img src="https://flagcdn.com/24x18/<%= stat._id === 'Unknown' ? 'xx' : stat._id.toLowerCase() %>.png" class="mr-3 shadow-sm border" alt="flag" onerror="this.style.display='none'"> 
+                                        <%= stat._id === 'Unknown' ? 'Other/Proxy' : stat._id %>
+                                    </td>
+                                    <td class="p-4"><%= stat.clicks %></td>
+                                    <td class="p-4 text-green-500 font-bold">$<%= stat.earnings.toFixed(4) %></td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="3" class="p-6 text-center text-gray-500">No geo-data available yet. Drive some traffic!</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </main>
 </div>
 <%- include('../partials/footer') %>
