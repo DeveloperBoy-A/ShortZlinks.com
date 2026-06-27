@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
+const { nanoid } = require('nanoid');
 
 const userSchema = new mongoose.Schema({
+    // Core Auth
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    isActive: { type: Boolean, default: true },
     
-    // Financials
+    // Financials & Stats
     walletBalance: { type: Number, default: 0.00 },
     lifetimeEarnings: { type: Number, default: 0.00 },
     totalWithdrawn: { type: Number, default: 0.00 },
@@ -22,25 +25,28 @@ const userSchema = new mongoose.Schema({
     
     // Withdrawal Settings
     preferredPaymentMethodId: { type: mongoose.Schema.Types.ObjectId, ref: 'PaymentMethod' },
-    withdrawalAccountDetails: { type: String, default: '' }, // e.g., phone number or UPI
+    withdrawalAccountDetails: { type: String, default: '' }, 
     
-    // Traffic Source
+    // Traffic Source Tracking (For Admin Verification)
     declaredTrafficSources: [{ type: String }],
+
+    // Developer API
+    apiToken: { type: String, unique: true, default: () => nanoid(20) },
     
-    isActive: { type: Boolean, default: true }
+    // Referral System
+    referredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    referralEarnings: { type: Number, default: 0.00 },
+
+    // Password Reset
+    resetPasswordToken: { type: String },
+    resetPasswordExpire: { type: Date }
+
 }, { timestamps: true });
 
-// Check if user has filled all billing details
+// Helper Method: Check if user has filled all billing details
 userSchema.methods.isProfileComplete = function() {
     const requiredFields = ['firstName', 'lastName', 'address', 'city', 'state', 'zipCode', 'country', 'phoneNumber'];
     return requiredFields.every(field => this[field] && this[field].trim() !== '');
 };
 
 module.exports = mongoose.model('User', userSchema);
-
-    // Add inside your userSchema:
-    apiToken: { type: String, unique: true, default: () => require('nanoid').nanoid(20) },
-    
-    // Referral System
-    referredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
-    referralEarnings: { type: Number, default: 0.00 },
