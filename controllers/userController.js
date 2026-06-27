@@ -86,3 +86,46 @@ exports.updateSecurity = async (req, res) => {
     }
 };
     
+// Get all links for the user
+exports.getLinks = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        const links = await Link.find({ userId: user._id }).sort('-createdAt');
+        res.render('user/links', { title: 'Manage Links', user, links });
+    } catch (error) {
+        console.error('Error fetching links:', error);
+        res.status(500).send('Error loading links');
+    }
+};
+
+// Render Developer Tools Page
+exports.getTools = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        res.render('user/tools', { title: 'Developer Tools', user });
+    } catch (error) {
+        res.status(500).send('Error loading tools');
+    }
+};
+
+// Mass Shrinker Logic
+exports.massShrink = async (req, res) => {
+    try {
+        const { urls } = req.body;
+        // Split by new line, remove empty spaces
+        const urlArray = urls.split('\n').map(u => u.trim()).filter(u => u !== '');
+        
+        // Limit to 20 URLs at a time to prevent server abuse
+        const toProcess = urlArray.slice(0, 20);
+        
+        const linkPromises = toProcess.map(url => {
+            return Link.create({ userId: req.session.user.id, originalUrl: url });
+        });
+
+        await Promise.all(linkPromises);
+        res.redirect('/user/links?success=mass_shrink');
+    } catch (error) {
+        console.error('Mass Shrink Error:', error);
+        res.status(500).send('Error processing mass shrinker');
+    }
+};
