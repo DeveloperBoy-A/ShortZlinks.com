@@ -1,0 +1,76 @@
+<%- include('partials/header') %>
+<main class="flex-grow flex items-center justify-center p-6">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-4xl w-full flex flex-col md:flex-row overflow-hidden auth-container">
+        
+        <div class="w-full md:w-1/2 bg-gray-900 text-white p-8 flex flex-col justify-center items-center text-center rounded-lg shadow-inner">
+            <h1 class="text-5xl font-black mb-4 site-title glowing-text"><%= siteName %></h1>
+            <p class="text-lg text-gray-300">Unlock your earning potential with every click.</p>
+        </div>
+
+        <div class="w-full md:w-1/2 p-8">
+            <div class="flex mb-6 border-b dark:border-gray-700">
+                <button id="loginTab" class="w-1/2 py-2 font-bold text-primary border-b-2 border-primary">Login</button>
+                <button id="registerTab" class="w-1/2 py-2 font-bold text-gray-500">Register</button>
+            </div>
+
+            <form id="loginForm" action="/auth/login" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" name="email" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <input type="password" name="password" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold hover:bg-indigo-700 transition">Sign In</button>
+            </form>
+
+            <form id="registerForm" action="/auth/register" method="POST" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" name="email" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <input type="password" name="password" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Confirm Password</label>
+                    <input type="password" name="confirmPassword" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
+                <button type="submit" class="w-full bg-secondary text-white py-2 rounded font-bold hover:bg-pink-600 transition">Create Account</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Entrance Animation
+    gsap.from(".auth-container", { duration: 0.8, y: 50, opacity: 0, ease: "back.out(1.7)" });
+    gsap.from(".site-title", { duration: 1.5, scale: 0.5, opacity: 0, delay: 0.3, ease: "elastic.out(1, 0.3)" });
+
+    // Tab Switching Logic
+    const loginTab = document.getElementById('loginTab');
+    const registerTab = document.getElementById('registerTab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    loginTab.addEventListener('click', () => {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        loginTab.classList.add('text-primary', 'border-b-2', 'border-primary');
+        loginTab.classList.remove('text-gray-500');
+        registerTab.classList.remove('text-primary', 'border-b-2', 'border-primary');
+        registerTab.classList.add('text-gray-500');
+    });
+
+    registerTab.addEventListener('click', () => {
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        registerTab.classList.add('text-primary', 'border-b-2', 'border-primary');
+        registerTab.classList.remove('text-gray-500');
+        loginTab.classList.remove('text-primary', 'border-b-2', 'border-primary');
+        loginTab.classList.add('text-gray-500');
+    });
+</script>
+<%- include('partials/footer') %>
