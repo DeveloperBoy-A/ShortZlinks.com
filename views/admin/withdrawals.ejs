@@ -1,0 +1,54 @@
+<%- include('../partials/header') %>
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <h1 class="text-3xl font-bold mb-6 text-red-600">Pending Payouts</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700 bg-gray-100 dark:bg-gray-700">
+                            <th class="p-4">User</th>
+                            <th class="p-4">Amount & Method</th>
+                            <th class="p-4">Account Details</th>
+                            <th class="p-4">Traffic Source</th>
+                            <th class="p-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% withdrawals.forEach(req => { %>
+                            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <td class="p-4">
+                                    <p class="font-bold"><%= req.userId.email %></p>
+                                </td>
+                                <td class="p-4">
+                                    <span class="text-green-500 font-bold">$<%= req.amount.toFixed(2) %></span><br>
+                                    <span class="text-xs text-gray-500"><%= req.method %></span>
+                                </td>
+                                <td class="p-4 font-mono text-sm text-blue-600 dark:text-blue-400">
+                                    <%= req.accountDetails %>
+                                </td>
+                                <td class="p-4 text-xs max-w-xs break-words">
+                                    <%= req.trafficSource %>
+                                </td>
+                                <td class="p-4">
+                                    <form action="/admin/withdrawals/<%= req._id %>" method="POST" class="flex gap-2">
+                                        <select name="status" class="p-1 border rounded dark:bg-gray-700 outline-none text-sm">
+                                            <option value="Pending" <%= req.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                            <option value="Approved" <%= req.status === 'Approved' ? 'selected' : '' %>>Processing</option>
+                                            <option value="Completed" <%= req.status === 'Completed' ? 'selected' : '' %>>Paid</option>
+                                            <option value="Returned" <%= req.status === 'Returned' ? 'selected' : '' %>>Return (Fraud)</option>
+                                        </select>
+                                        <button type="submit" class="bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded text-sm hover:bg-gray-300">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<%- include('../partials/footer') %>
