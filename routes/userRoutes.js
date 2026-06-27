@@ -14,6 +14,9 @@ router.post('/links/create', linkController.createLink);
 
 router.get('/settings', userController.getSettings);
 router.post('/settings/update', userController.updateProfile);
+// Existing routes ke niche ye line add karein:
+router.post('/settings/security', userController.updateSecurity);
+
 
 router.get('/withdrawals', withdrawalController.getWithdrawals);
 router.post('/withdrawals/request', withdrawalController.requestWithdrawal);
