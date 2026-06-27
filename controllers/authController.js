@@ -67,4 +67,68 @@ exports.logout = (req, res) => {
         res.redirect('/login');
     });
 };
-      
+
+const crypto = require('crypto');
+const { sendEmail } = require('../config/mailer');
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        
+        if (!user) {
+            return res.status(404).send('If the email exists, a reset link has been sent.'); // Security practice
+        }
+
+        // Generate Reset Token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 Minutes valid
+        
+        await user.save();
+
+        // Send Email
+        const resetUrl = `${process.env.BASE_URL}/auth/reset-password/${resetToken}`;
+        const message = `
+            <h2>Password Reset Request</h2>
+            <p>You requested to reset your password. Click the link below to reset it:</p>
+            <a href="${resetUrl}" style="padding:10px 20px; background:#4f46e5; color:#fff; text-decoration:none; border-radius:5px;">Reset Password</a>
+            <p>This link expires in 15 minutes.</p>
+        `;
+
+        await sendEmail(user.email, 'Password Reset', message);
+        res.send('Password reset link sent to your email.');
+
+    } catch (error) {
+        console.error('Forgot Password Error:', error);
+        res.status(500).send('Error processing request.');
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+        const user = await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpire: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).send('Invalid or expired token.');
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        
+        await user.save();
+        res.redirect('/login?success=password_reset');
+
+    } catch (error) {
+        res.status(500).send('Error resetting password');
+    }
+};
+    
