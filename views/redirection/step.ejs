@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+<div class="w-full bg-gray-200 dark:bg-gray-700 text-center py-4 text-sm text-gray-500">Advertisement Space (728x90 Top)</div>
+
+<main class="flex-grow flex flex-col items-center justify-center p-6">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl text-center max-w-lg w-full border-t-4 border-primary">
+        <h2 class="text-2xl font-bold mb-2">Step <%= step %> of <%= totalSteps %></h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">Please wait while we verify your link...</p>
+        
+        <div class="text-5xl font-black text-primary mb-6" id="timerDisplay">10</div>
+        
+        <p id="instructionText" class="text-sm text-gray-500 mb-6">Checking for safe destination...</p>
+
+        <a id="continueBtn" href="#" class="hidden w-full bg-secondary text-white py-3 px-6 rounded-lg font-bold text-lg hover:bg-pink-600 transition shadow-lg">
+            Scroll down and click Continue <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+    </div>
+</main>
+
+<div class="w-full bg-gray-200 dark:bg-gray-700 text-center py-4 text-sm text-gray-500">Advertisement Space (728x90 Bottom)</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let timeLeft = 10;
+        const timerDisplay = document.getElementById('timerDisplay');
+        const instructionText = document.getElementById('instructionText');
+        const continueBtn = document.getElementById('continueBtn');
+        const token = "<%= token %>";
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timerDisplay.innerText = "0";
+                instructionText.innerText = "Processing request securely...";
+                
+                // Fire AJAX to backend to validate completion and get next token/URL
+                fetch('/l/step/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ t: token })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.nextUrl) {
+                        timerDisplay.style.display = 'none';
+                        instructionText.innerText = "Verification Complete!";
+                        continueBtn.href = data.nextUrl;
+                        continueBtn.classList.remove('hidden');
+                        
+                        // GSAP Pulse Animation on Button
+                        gsap.to("#continueBtn", { scale: 1.05, repeat: -1, yoyo: true, duration: 0.8 });
+                    } else {
+                        instructionText.innerText = "Error processing request.";
+                    }
+                })
+                .catch(err => {
+                    instructionText.innerText = "Network Error. Please reload.";
+                });
+            }
+        }, 1000);
+    });
+</script>
+<%- include('../partials/footer') %>
