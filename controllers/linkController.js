@@ -5,13 +5,34 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const geoip = require('geoip-lite');
 
+// ==========================================
+// 💸 EARNING ENGINE SETTINGS (ADMIN CONTROL)
+// ==========================================
+const PUBLISHER_SHARE = 0.80; // 80% Publisher ko milega, 20% Admin ka profit
+const DEFAULT_CPM = 1.50;     // Agar country list me nahi hai toh ye CPM milega
+
+// Har country ka total CPM (Jo Ad network aapko deta hai)
+const COUNTRY_RATES = {
+    'US': 12.00, // United States
+    'GB': 10.00, // UK
+    'CA': 8.00,  // Canada
+    'AU': 8.00,  // Australia
+    'DE': 7.00,  // Germany
+    'FR': 7.00,  // France
+    'AE': 6.00,  // UAE
+    'IN': 5.00,  // India
+    'BD': 3.00,  // Bangladesh
+    'PK': 2.50,  // Pakistan
+    'NP': 2.00,  // Nepal
+    'NG': 2.00   // Nigeria
+};
+
 // 1. User Dashboard: Create Link
 exports.createLink = async (req, res) => {
     try {
         const { originalUrl, domain } = req.body; // Extract domain
-        
+
         // Fetch default domain if user didn't select one
-        const Setting = require('../models/Setting');
         const settings = await Setting.findOne();
         const selectedDomain = domain || settings.defaultDomain;
 
@@ -25,7 +46,6 @@ exports.createLink = async (req, res) => {
         res.status(500).send('Error creating link');
     }
 };
-
 
 // 2. Public: Initial Click & Redirect to Step 1
 exports.handleInitialClick = async (req, res) => {
@@ -63,7 +83,7 @@ exports.renderAdStep = (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
+
         if (decoded.currentStep !== stepNum || stepNum > decoded.totalSteps) {
             return res.status(403).send('Link tampering detected');
         }
@@ -82,7 +102,6 @@ exports.renderAdStep = (req, res) => {
     }
 };
 
-
 // 4. Public API: Process countdown completion via AJAX POST
 exports.processStep = async (req, res) => {
     const token = req.body.t;
@@ -100,13 +119,15 @@ exports.processStep = async (req, res) => {
         } else {
             // Final Step Reached: Process Earnings Math
             if (isValid) {
-                const settings = await Setting.findOne();
                 const link = await Link.findById(linkId);
-                
-                // Calculate Revenue Split
-                const clickValue = settings.baseCpm / 1000;
-                const adminCut = clickValue * (settings.adminCommissionPercent / 100);
-                const userCut = clickValue - adminCut;
+
+                // --- DYNAMIC EARNING MATH ENGINE ---
+                const actualCpm = COUNTRY_RATES[country] || DEFAULT_CPM;
+                const publisherCpm = actualCpm * PUBLISHER_SHARE;
+                const adminCpm = actualCpm - publisherCpm; // Remaining goes to Admin
+
+                const userCut = publisherCpm / 1000;
+                const adminCut = adminCpm / 1000;
 
                 // Record Click
                 await Click.create({
@@ -126,17 +147,19 @@ exports.processStep = async (req, res) => {
                 await link.save();
 
                 // Update User Wallet
-await User.findByIdAndUpdate(link.userId, {
-    $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
-});
+                await User.findByIdAndUpdate(link.userId, {
+                    $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
+                });
 
-// NEW: Referral Bonus Logic
-const linkOwner = await User.findById(link.userId);
-if (linkOwner.referredBy) {
-    const referralBonus = userCut * (process.env.REFERRAL_PERCENT / 100);
-    await User.findByIdAndUpdate(linkOwner.referredBy, {
-        $inc: { walletBalance: referralBonus, referralEarnings: referralBonus }
-    });
+                // Referral Bonus Logic
+                const linkOwner = await User.findById(link.userId);
+                if (linkOwner.referredBy) {
+                    const referralBonus = userCut * (process.env.REFERRAL_PERCENT / 100);
+                    await User.findByIdAndUpdate(linkOwner.referredBy, {
+                        $inc: { walletBalance: referralBonus, referralEarnings: referralBonus }
+                    });
+                } // <-- YEH BRACKET MISSING THA AAPKE CODE MEIN!
+
             } else {
                 // Duplicate/Invalid click: Still record it for analytics but 0 earnings
                 const link = await Link.findById(linkId);
@@ -159,6 +182,7 @@ if (linkOwner.referredBy) {
             return res.json({ nextUrl: `/l/final?t=${finalToken}` });
         }
     } catch (error) {
+        console.error("Step Processing Error:", error);
         return res.status(403).json({ error: 'Invalid or expired session' });
     }
 };
@@ -175,4 +199,3 @@ exports.renderFinal = (req, res) => {
         res.status(403).send('Link Expired');
     }
 };
-  
