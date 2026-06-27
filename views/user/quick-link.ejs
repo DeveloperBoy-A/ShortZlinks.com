@@ -1,0 +1,19 @@
+<%- include('../partials/header') %>
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <h1 class="text-3xl font-bold mb-6">⚡ Quick Link</h1>
+        
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold mb-4 text-green-600">Shorten Links Instantly via URL</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Everyone can use the shortest way to shorten links with Quick Link. Just copy the URL below, replace <code>YOUR_URL</code> with your actual destination link, and hit enter in your browser.</p>
+            
+            <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-md flex items-center justify-between border dark:border-gray-700">
+                <code class="text-pink-500 break-all font-mono text-sm"><%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=YOUR_URL</code>
+            </div>
+            
+            <p class="text-sm text-gray-500 mt-4"><i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i> Keep your API token secret. Do not share this URL structure with anyone else.</p>
+        </div>
+    </main>
+</div>
+<%- include('../partials/footer') %>
