@@ -16,4 +16,6 @@ router.post('/withdrawals/:id', adminController.updateWithdrawalStatus);
 router.get('/users', adminController.getUsers);
 router.get('/users/:id', adminController.getUserDetails);
 
+router.post('/settings/domain', adminController.addDomain);
+
 module.exports = router;
