@@ -3,26 +3,46 @@ const Withdrawal = require('../models/Withdrawal');
 const Setting = require('../models/Setting');
 const PaymentMethod = require('../models/PaymentMethod');
 const Link = require('../models/Link');
+const Click = require('../models/Click');
 
+// 1. Dashboard: Stats + Total Profit
 exports.getDashboard = async (req, res) => {
-    const pendingWithdrawals = await Withdrawal.countDocuments({ status: 'Pending' });
-    const totalUsers = await User.countDocuments();
-    res.render('admin/dashboard', { title: 'Admin God Mode', pendingWithdrawals, totalUsers });
+    try {
+        const pendingWithdrawals = await Withdrawal.countDocuments({ status: 'Pending' });
+        const totalUsers = await User.countDocuments();
+        const settings = await Setting.findOne() || await Setting.create({});
+        
+        // Total Admin Commission Calculation
+        const stats = await Click.aggregate([
+            { $match: { isValid: true } },
+            { $group: { _id: null, totalAdminProfit: { $sum: "$adminCommission" } } }
+        ]);
+        const totalProfit = stats.length > 0 ? stats[0].totalAdminProfit : 0;
+
+        res.render('admin/dashboard', { 
+            title: 'Admin God Mode', 
+            pendingWithdrawals, 
+            totalUsers, 
+            totalProfit,
+            settings 
+        });
+    } catch (error) {
+        res.status(500).send('Error loading dashboard');
+    }
 };
 
+// 2. Settings: Render
 exports.getSettings = async (req, res) => {
-    let settings = await Setting.findOne();
-    if (!settings) settings = await Setting.create({});
+    let settings = await Setting.findOne() || await Setting.create({});
     const paymentMethods = await PaymentMethod.find();
     res.render('admin/settings', { title: 'Platform Settings', settings, paymentMethods });
 };
 
-// UPDATED: CPM Engine aur Percentage Update Logic
+// 3. Settings: Update Logic (CPM Engine + Percentage)
 exports.updateSettings = async (req, res) => {
     try {
         const { baseCpm, adminCommissionPercent, adSteps, countryRates } = req.body;
 
-        // JSON string ko object mein convert karna
         let parsedRates = {};
         try {
             parsedRates = JSON.parse(countryRates);
@@ -30,7 +50,6 @@ exports.updateSettings = async (req, res) => {
             return res.status(400).send('Invalid JSON format for Country Rates');
         }
 
-        // Setting update (baseCpm match kiya model ke field name se)
         await Setting.findOneAndUpdate({}, { 
             baseCpm: parseFloat(baseCpm), 
             adminCommissionPercent: parseFloat(adminCommissionPercent), 
@@ -38,19 +57,22 @@ exports.updateSettings = async (req, res) => {
             countryRates: parsedRates 
         }, { upsert: true });
 
-        res.redirect('/admin/settings?success=1');
+        // Redirect back to referring page or dashboard
+        res.redirect(req.headers.referer || '/admin/settings?success=1');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error updating settings');
     }
 };
 
+// 4. Payment Methods
 exports.addPaymentMethod = async (req, res) => {
     const { name, minPayout, iconClass, instructions } = req.body;
     await PaymentMethod.create({ name, minPayout, iconClass, instructions });
     res.redirect('/admin/settings?success=1');
 };
 
+// 5. Withdrawals Management
 exports.getWithdrawals = async (req, res) => {
     const withdrawals = await Withdrawal.find().populate('userId').sort('-createdAt');
     res.render('admin/withdrawals', { title: 'Manage Payouts', withdrawals });
@@ -82,6 +104,7 @@ exports.updateWithdrawalStatus = async (req, res) => {
     res.redirect('/admin/withdrawals');
 };
 
+// 6. User Management
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.find().sort('-createdAt');
@@ -110,6 +133,7 @@ exports.getUserDetails = async (req, res) => {
     }
 };
 
+// 7. Domain Management
 exports.addDomain = async (req, res) => {
     try {
         const { newDomain } = req.body;
