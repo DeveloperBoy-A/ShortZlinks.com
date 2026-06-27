@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Withdrawal = require('../models/Withdrawal');
 const Setting = require('../models/Setting');
 const PaymentMethod = require('../models/PaymentMethod');
+const Link = require('../models/Link');
 
 exports.getDashboard = async (req, res) => {
     const pendingWithdrawals = await Withdrawal.countDocuments({ status: 'Pending' });
@@ -16,10 +17,31 @@ exports.getSettings = async (req, res) => {
     res.render('admin/settings', { title: 'Platform Settings', settings, paymentMethods });
 };
 
+// UPDATED: CPM Engine aur Percentage Update Logic
 exports.updateSettings = async (req, res) => {
-    const { adminCommissionPercent, baseCpm, adSteps } = req.body;
-    await Setting.findOneAndUpdate({}, { adminCommissionPercent, baseCpm, adSteps }, { upsert: true });
-    res.redirect('/admin/settings?success=1');
+    try {
+        const { defaultCpm, adminCommissionPercent, adSteps, countryRates } = req.body;
+        
+        // JSON string ko object mein convert karna
+        let parsedRates = {};
+        try {
+            parsedRates = JSON.parse(countryRates);
+        } catch (e) {
+            return res.status(400).send('Invalid JSON format for Country Rates');
+        }
+
+        await Setting.findOneAndUpdate({}, { 
+            defaultCpm, 
+            adminCommissionPercent, 
+            adSteps, 
+            countryRates: parsedRates 
+        }, { upsert: true });
+
+        res.redirect('/admin/settings?success=1');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error updating settings');
+    }
 };
 
 exports.addPaymentMethod = async (req, res) => {
@@ -36,39 +58,29 @@ exports.getWithdrawals = async (req, res) => {
 exports.updateWithdrawalStatus = async (req, res) => {
     const { id } = req.params;
     const { status, adminNotes } = req.body;
-    
+
     const withdrawal = await Withdrawal.findById(id);
     if (!withdrawal) return res.status(404).send('Not Found');
 
-    // If a payment is returned, refund the user's wallet
     if (status === 'Returned' && withdrawal.status !== 'Returned') {
-        await User.findByIdAndUpdate(withdrawal.userId, {
-            $inc: { walletBalance: withdrawal.amount }
-        });
-    }
-    
-    // If it was returned but now changed to Approved/Completed, deduct it back
-    if ((status === 'Approved' || status === 'Completed') && withdrawal.status === 'Returned') {
-        await User.findByIdAndUpdate(withdrawal.userId, {
-            $inc: { walletBalance: -withdrawal.amount }
-        });
+        await User.findByIdAndUpdate(withdrawal.userId, { $inc: { walletBalance: withdrawal.amount } });
     }
 
-    // Update totalWithdrawn if completed
+    if ((status === 'Approved' || status === 'Completed') && withdrawal.status === 'Returned') {
+        await User.findByIdAndUpdate(withdrawal.userId, { $inc: { walletBalance: -withdrawal.amount } });
+    }
+
     if (status === 'Completed' && withdrawal.status !== 'Completed') {
-        await User.findByIdAndUpdate(withdrawal.userId, {
-            $inc: { totalWithdrawn: withdrawal.amount }
-        });
+        await User.findByIdAndUpdate(withdrawal.userId, { $inc: { totalWithdrawn: withdrawal.amount } });
     }
 
     withdrawal.status = status;
     withdrawal.adminNotes = adminNotes;
     await withdrawal.save();
-    
+
     res.redirect('/admin/withdrawals');
 };
 
-// Fetch all users for Admin
 exports.getUsers = async (req, res) => {
     try {
         const users = await User.find().sort('-createdAt');
@@ -78,14 +90,11 @@ exports.getUsers = async (req, res) => {
     }
 };
 
-// Advanced User Profile (God Mode View)
 exports.getUserDetails = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(404).send('User not found');
 
-        // Fetch their recent links and withdrawal history
-        const Link = require('../models/Link');
         const userLinks = await Link.find({ userId: user._id }).sort('-createdAt').limit(50);
         const userWithdrawals = await Withdrawal.find({ userId: user._id }).sort('-createdAt');
 
@@ -99,17 +108,12 @@ exports.getUserDetails = async (req, res) => {
         res.status(500).send('Error loading user profile');
     }
 };
-    
-// Add New Domain
+
 exports.addDomain = async (req, res) => {
     try {
         const { newDomain } = req.body;
-        // Clean trailing slashes
         const cleanDomain = newDomain.replace(/\/$/, "");
-        
-        await Setting.findOneAndUpdate({}, { 
-            $addToSet: { activeDomains: cleanDomain } // addToSet prevents duplicates
-        });
+        await Setting.findOneAndUpdate({}, { $addToSet: { activeDomains: cleanDomain } });
         res.redirect('/admin/settings?success=domain_added');
     } catch (error) {
         res.status(500).send('Error adding domain');
