@@ -3,22 +3,31 @@
         <span class="font-bold text-lg">Menu</span>
         <button id="menuToggle" class="text-gray-500"><i class="fas fa-bars fa-lg"></i></button>
     </div>
+    
     <ul id="sidebarMenu" class="space-y-2 hidden md:block">
         <% if (user.role === 'admin') { %>
             <li><a href="/admin/dashboard" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 <%= path === '/admin/dashboard' ? 'bg-gray-100 dark:bg-gray-700' : '' %>"><i class="fas fa-tachometer-alt w-6 text-primary"></i> God Mode</a></li>
+            <li><a href="/admin/users" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-users w-6 text-blue-500"></i> Manage Users</a></li>
             <li><a href="/admin/withdrawals" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-money-check-alt w-6 text-green-500"></i> Manage Payouts</a></li>
+            
+            <li><a href="/admin/dmca" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-shield-alt w-6 text-red-500"></i> DMCA Reports</a></li>
+            
             <li><a href="/admin/settings" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-cogs w-6 text-gray-500"></i> Settings</a></li>
+        
         <% } else { %>
             <li><a href="/user/dashboard" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 <%= path === '/user/dashboard' ? 'bg-gray-100 dark:bg-gray-700' : '' %>"><i class="fas fa-chart-pie w-6 text-primary"></i> Dashboard</a></li>
             <li><a href="/user/links" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-link w-6 text-secondary"></i> Manage Links</a></li>
+            <li><a href="/user/tools" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-wrench w-6 text-indigo-500"></i> Tools & API</a></li>
             <li><a href="/user/withdrawals" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-wallet w-6 text-green-500"></i> Withdrawals</a></li>
             <li><a href="/user/settings" class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-user-cog w-6 text-gray-500"></i> Profile</a></li>
         <% } %>
+        
         <li class="pt-4 mt-4 border-t dark:border-gray-700">
             <a href="/auth/logout" class="flex items-center p-2 rounded hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400"><i class="fas fa-sign-out-alt w-6"></i> Logout</a>
         </li>
     </ul>
 </div>
+
 <script>
     document.getElementById('menuToggle').addEventListener('click', () => {
         document.getElementById('sidebarMenu').classList.toggle('hidden');
