@@ -2,6 +2,11 @@ const User = require('../models/User');
 const Link = require('../models/Link');
 const Setting = require('../models/Setting');
 const { nanoid } = require('nanoid');
+const express = require("express");
+const router = express.Router();
+
+const apiController = require("../controllers/apiController");
+
 
 exports.createLinkViaApi = async (req, res) => {
     try {
