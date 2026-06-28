@@ -26,4 +26,4 @@ router.get('/auth/reset-password/:token', (req, res) => {
 router.get('/dmca', (req, res) => res.render('dmca'));
 
 module.exports = router;
-router.get('/api', apiController.shortenViaApi);
+router.get('/api', apiController.createLinkViaApi);
