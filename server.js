@@ -18,9 +18,24 @@ connectDB();
 
 // Security & Middleware
 app.use(helmet({
-    contentSecurityPolicy: false, 
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://challenges.cloudflare.com", "https://cdn.tailwindcss.com"],
+            frameSrc: ["https://challenges.cloudflare.com"],
+            connectSrc: ["'self'", "https://challenges.cloudflare.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"],
+            imgSrc: ["'self'", "data:"],
+        },
+    },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    frameguard: { action: 'SAMEORIGIN' },
 }));
-app.use(cors());
+app.use(cors({
+    origin: process.env.BASE_URL || '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
