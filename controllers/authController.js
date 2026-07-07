@@ -23,7 +23,11 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         
         // Auto-assign admin if it matches the env email
-        const role = email === process.env.ADMIN_EMAIL ? 'admin' : 'user';
+        const normalizedEmail = email.trim().toLowerCase();
+const role =
+    normalizedEmail === process.env.ADMIN_EMAIL.toLowerCase()
+        ? 'admin'
+        : 'user';
 
         // Capture referral (?ref=<userId>) if present and valid
         let referredBy = null;
@@ -35,7 +39,8 @@ exports.register = async (req, res) => {
 
         const newUser = new User({
             username: username.trim(),
-            email,
+            email: normalizedEmail,
+isActive: true,
             password: hashedPassword,
             role,
             referredBy
@@ -57,10 +62,23 @@ exports.login = async (req, res) => {
         // Accept either the new "identifier" field (email or username) or a plain "email" field for backward compatibility
         const loginId = identifier || email;
 
-        const user = await User.findOne({
-            $or: [{ email: loginId }, { username: loginId }],
-            isActive: true
-        });
+        const normalizedLogin =
+    (loginId || "").trim().toLowerCase();
+
+const user = await User.findOne({
+    $or: [
+        { email: normalizedLogin },
+        { username: loginId }
+    ]
+});
+
+if (!user) {
+    return res.status(401).send("Invalid credentials");
+}
+
+if (user.isActive === false) {
+    return res.status(403).send("Account disabled");
+}
         if (!user) {
             return res.status(401).send('Invalid credentials or account disabled');
         }
