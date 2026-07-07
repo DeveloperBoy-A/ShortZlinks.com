@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-// 1. Controller aur Middleware ko import karein
+// 1. Controller import karein
 const authController = require('../controllers/authController');
-const { verifyCaptcha } = require('../middlewares/captchaMiddleware');
 
-// 2. POST routes ke beech mein 'verifyCaptcha' attach karein
-router.post('/register', verifyCaptcha, authController.register);
-router.post('/login', verifyCaptcha, authController.login);
+// 2. Captcha verification hata di gayi hai
+router.post('/register', authController.register);
+router.post('/login', authController.login);
 
 // Baaki auth routes (inme captcha ki zaroorat nahi hai)
 router.get('/logout', authController.logout);
