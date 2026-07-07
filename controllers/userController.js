@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Link = require('../models/Link');
 const PaymentMethod = require('../models/PaymentMethod');
 const Withdrawal = require('../models/Withdrawal'); 
+const Setting = require('../models/Setting');
 
 // userController.js - getDashboard update
 exports.getDashboard = async (req, res) => {
@@ -193,68 +194,10 @@ exports.getApiDocs = async (req, res) => {
 };
 
 // ==========================================
-// WITHDRAWAL SYSTEM
+// NOTE: Withdrawal page/request logic now lives in withdrawalController.js
+// (it has the correct validation: profile-completeness check and
+// per-payment-method minimum payout). See routes/userRoutes.js.
 // ==========================================
-
-// Get Withdrawals Page
-exports.getWithdrawals = async (req, res) => {
-    try {
-        const user = await User.findById(req.session.user.id);
-        const history = await Withdrawal.find({ userId: user._id }).sort('-createdAt');
-        
-        // Calculate pending amount
-        let pendingAmount = 0;
-        history.forEach(req => {
-            if (req.status === 'Pending') {
-                pendingAmount += req.amount;
-            }
-        });
-
-        res.render('user/withdrawals', { 
-            title: 'Withdrawals', 
-            user, 
-            history, 
-            pendingAmount 
-        });
-    } catch (error) {
-        console.error('Withdrawals Page Error:', error);
-        res.status(500).send('Error loading withdrawals page');
-    }
-};
-
-// Request a New Withdrawal
-exports.requestWithdrawal = async (req, res) => {
-    try {
-        const user = await User.findById(req.session.user.id);
-        const { trafficSource } = req.body; 
-
-        // Check Minimum Payout (e.g., $5.00)
-        if (user.walletBalance < 5.00) {
-            return res.status(400).send('Minimum withdrawal amount is $5.00');
-        }
-
-        // Database me nayi request save karna
-        await Withdrawal.create({
-            userId: user._id,
-            amount: user.walletBalance,
-            method: 'Bank/UPI', // Default indicator
-            accountDetails: user.withdrawalAccountDetails,
-            trafficSource: trafficSource,
-            status: 'Pending'
-        });
-
-        // User ka balance 0 kar dena kyunki request lag chuki hai
-        user.walletBalance = 0;
-        await user.save();
-
-        // Redirect with success
-        res.redirect('/user/withdrawals?success=request_submitted');
-
-    } catch (error) {
-        console.error("Withdrawal Request Error:", error);
-        res.status(500).send('Error processing withdrawal request.');
-    }
-};
 
 // ==========================================
 // NAYA ADD KIYA GAYA: REFERRALS PAGE
@@ -262,7 +205,16 @@ exports.requestWithdrawal = async (req, res) => {
 exports.getReferrals = async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id);
-        res.render('user/referrals', { title: 'Referrals Program', user });
+        const settings = await Setting.findOne();
+        const referralCount = await User.countDocuments({ referredBy: user._id });
+        const referralLink = `${settings ? settings.defaultDomain : ''}/login?ref=${user._id}`;
+
+        res.render('user/referrals', { 
+            title: 'Referrals Program', 
+            user, 
+            referralCount, 
+            referralLink 
+        });
     } catch (error) {
         console.error('Referrals Page Error:', error);
         res.status(500).send('Error loading referrals page');
