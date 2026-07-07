@@ -62,6 +62,30 @@ exports.login = async (req, res) => {
         // Accept either the new "identifier" field (email or username) or a plain "email" field for backward compatibility
         const loginId = identifier || email;
 
+console.log("Login ID:", loginId);
+console.log("Password:", password);
+
+const user = await User.findOne({
+    $or: [
+        { email: loginId.toLowerCase() },
+        { username: loginId }
+    ]
+});
+
+console.log("User:", user);
+
+if (!user) {
+    return res.status(401).send("User Not Found");
+}
+
+const isMatch = await bcrypt.compare(password, user.password);
+
+console.log("Password Match:", isMatch);
+
+if (!isMatch) {
+    return res.status(401).send("Password Wrong");
+}
+
         const normalizedLogin =
     (loginId || "").trim().toLowerCase();
 
