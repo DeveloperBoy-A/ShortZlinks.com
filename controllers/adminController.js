@@ -133,7 +133,27 @@ exports.getUserDetails = async (req, res) => {
     }
 };
 
-// 7. Domain Management
+// 8. DMCA / Abuse Reports
+exports.getDmcaReports = async (req, res) => {
+    try {
+        const Report = require('../models/Report');
+        const reports = await Report.find().sort('-createdAt');
+        res.render('admin/dmca', { title: 'DMCA & Abuse Reports', reports });
+    } catch (error) {
+        res.status(500).send('Error loading reports');
+    }
+};
+
+// 9. Platform-wide Link Management
+exports.getAllLinks = async (req, res) => {
+    try {
+        const links = await Link.find().populate('userId', 'email').sort('-createdAt').limit(100);
+        res.render('admin/links', { title: 'Platform Links', links });
+    } catch (error) {
+        res.status(500).send('Error loading links');
+    }
+};
+// 10. Domain Management
 exports.addDomain = async (req, res) => {
     try {
         const { newDomain } = req.body;
