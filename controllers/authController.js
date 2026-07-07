@@ -4,15 +4,20 @@ const mongoose = require('mongoose');
 
 exports.register = async (req, res) => {
     try {
-        const { email, password, confirmPassword } = req.body;
-        
+        const { username, email, password, confirmPassword } = req.body;
+
+        if (!username || username.trim() === '') {
+            return res.status(400).send('Username is required');
+        }
+
         if (password !== confirmPassword) {
             return res.status(400).send('Passwords do not match');
         }
 
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
-            return res.status(400).send('Email already in use');
+            if (existingUser.email === email) return res.status(400).send('Email already in use');
+            return res.status(400).send('Username already taken');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -29,6 +34,7 @@ exports.register = async (req, res) => {
         }
 
         const newUser = new User({
+            username: username.trim(),
             email,
             password: hashedPassword,
             role,
@@ -37,7 +43,7 @@ exports.register = async (req, res) => {
 
         await newUser.save();
         
-        req.session.user = { id: newUser._id, role: newUser.role, email: newUser.email };
+        req.session.user = { id: newUser._id, role: newUser.role, email: newUser.email, username: newUser.username };
         res.redirect('/user/dashboard');
     } catch (error) {
         console.error('Registration Error:', error);
@@ -47,9 +53,14 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        
-        const user = await User.findOne({ email, isActive: true });
+        const { identifier, email, password } = req.body;
+        // Accept either the new "identifier" field (email or username) or a plain "email" field for backward compatibility
+        const loginId = identifier || email;
+
+        const user = await User.findOne({
+            $or: [{ email: loginId }, { username: loginId }],
+            isActive: true
+        });
         if (!user) {
             return res.status(401).send('Invalid credentials or account disabled');
         }
@@ -59,7 +70,7 @@ exports.login = async (req, res) => {
             return res.status(401).send('Invalid credentials');
         }
 
-        req.session.user = { id: user._id, role: user.role, email: user.email };
+        req.session.user = { id: user._id, role: user.role, email: user.email, username: user.username };
         
         if (user.role === 'admin') {
             return res.redirect('/admin/dashboard');
