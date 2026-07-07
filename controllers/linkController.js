@@ -125,7 +125,7 @@ exports.processStep = async (req, res) => {
                 // --- DYNAMIC ENGINE: DB SE VALUES UTHAYEIN ---
                 // Agar DB mein countryRate hai toh wo, nahi toh global Default
                 const countryRatesObj = settings.countryRates instanceof Map ? Object.fromEntries(settings.countryRates) : settings.countryRates;
-                const actualCpm = (countryRatesObj && countryRatesObj[country]) ? countryRatesObj[country] : settings.defaultCpm;
+                const actualCpm = (countryRatesObj && countryRatesObj[country]) ? countryRatesObj[country] : settings.baseCpm;
 
                 // Admin Panel se percentage uthayein (e.g., 20)
                 const adminPercent = settings.adminCommissionPercent || 20;
