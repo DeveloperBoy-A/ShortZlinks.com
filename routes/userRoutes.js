@@ -5,6 +5,7 @@ const router = express.Router();
 const { isAuthenticated } = require('../middlewares/authMiddleware');
 const userController = require('../controllers/userController');
 const linkController = require('../controllers/linkController');
+const withdrawalController = require('../controllers/withdrawalController');
 
 // 🛑 Protect all routes below (User must be logged in)
 router.use(isAuthenticated);
@@ -37,8 +38,8 @@ router.get('/announcements', userController.getAnnouncements);
 // ==========================
 // 5. WITHDRAWALS (Fixed Duplicates)
 // ==========================
-router.get('/withdrawals', userController.getWithdrawals);
-router.post('/withdrawals/request', userController.requestWithdrawal);
+router.get('/withdrawals', withdrawalController.getWithdrawals);
+router.post('/withdrawals/request', withdrawalController.requestWithdrawal);
 
 // ==========================
 // 6. SETTINGS & PROFILE
