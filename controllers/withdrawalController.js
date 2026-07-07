@@ -6,7 +6,16 @@ exports.getWithdrawals = async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id).populate('preferredPaymentMethodId');
         const history = await Withdrawal.find({ userId: user._id }).sort('-createdAt');
-        res.render('user/withdrawals', { title: 'Withdrawals', user, history });
+
+        // Calculate pending amount (sum of all Pending requests)
+        let pendingAmount = 0;
+        history.forEach(w => {
+            if (w.status === 'Pending') {
+                pendingAmount += w.amount;
+            }
+        });
+
+        res.render('user/withdrawals', { title: 'Withdrawals', user, history, pendingAmount });
     } catch (error) {
         res.status(500).send('Error loading withdrawals');
     }
