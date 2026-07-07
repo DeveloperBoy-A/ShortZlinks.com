@@ -9,12 +9,62 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');
 
 // Initialize Express
 const app = express();
 
 // Connect Database
 connectDB();
+async function createDefaultAdmin() {
+    try {
+        const email = process.env.ADMIN_EMAIL?.toLowerCase();
+        const password = process.env.ADMIN_PASSWORD;
+
+        if (!email || !password) return;
+
+        let admin = await User.findOne({ email });
+
+        if (!admin) {
+            const hash = await bcrypt.hash(password, 10);
+
+            admin = await User.create({
+                username: "admin",
+                email,
+                password: hash,
+                role: "admin",
+                isActive: true
+            });
+
+            console.log("✅ Default admin created");
+        } else {
+            let updated = false;
+
+            if (admin.role !== "admin") {
+                admin.role = "admin";
+                updated = true;
+            }
+
+            if (admin.isActive === false) {
+                admin.isActive = true;
+                updated = true;
+            }
+
+            if (updated) {
+                await admin.save();
+                console.log("✅ Admin updated");
+            }
+        }
+    } catch (err) {
+        console.error("Admin initialization failed:", err);
+    }
+}
+
+mongoose.connection.once("open", async () => {
+    await createDefaultAdmin();
+});
+
 
 // Security & Middleware
 app.use(helmet({
@@ -57,10 +107,11 @@ app.use(session({
         ttl: 6 * 60 * 60 // 6 hours
     }),
     cookie: {
-        maxAge: 1000 * 60 * 60 * 6, // 6 hours
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production'
-    }
+    maxAge: 1000 * 60 * 60 * 6,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+}
 }));
 
 // server.js me is middleware ko update karein:
