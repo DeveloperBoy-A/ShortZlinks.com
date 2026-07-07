@@ -4,7 +4,7 @@ const { nanoid } = require('nanoid');
 const userSchema = new mongoose.Schema({
     // Core Auth
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    username: { type: String, required: true, unique: true, trim: true },
+    username: { type: String, required: true, unique: true, sparse: true, trim: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     isActive: { type: Boolean, default: true },
