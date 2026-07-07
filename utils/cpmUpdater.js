@@ -14,7 +14,7 @@ cron.schedule('0 0 * * *', async () => {
 
         await Setting.findOneAndUpdate({}, {
             countryRates: liveRates,
-            defaultCpm: liveRates['GLOBAL'] || 1.00
+            baseCpm: liveRates['GLOBAL'] || 1.00
         }, { upsert: true });
 
         console.log('CPM Rates updated successfully!');
