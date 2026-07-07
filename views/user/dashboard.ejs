@@ -75,7 +75,7 @@
                     </div>
                     <div>
                         <h4 class="font-bold text-gray-800 dark:text-gray-100">Withdrawal Info</h4>
-                        <p class="text-xs text-gray-500 mt-1">🚀 Withdrawal button is LIVE! You can withdraw your earnings. (Active for <%= currentMonthName %>)</p>
+                        <p class="text-xs text-gray-500 mt-1">ðŸš€ Withdrawal button is LIVE! You can withdraw your earnings. (Active for <%= currentMonthName %>)</p>
                     </div>
                 </div>
 
@@ -101,7 +101,7 @@
 
             <div class="rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800">
                 <div class="bg-blue-600 text-white p-2 text-center text-sm font-bold flex justify-center items-center gap-2">
-                    <i class="fas fa-clock"></i> Today's Report » <%= todayDateStr %>
+                    <i class="fas fa-clock"></i> Today's Report Â» <%= todayDateStr %>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
                     <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative">
@@ -133,7 +133,7 @@
 
             <div class="rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 mt-6">
                 <div class="bg-blue-600 text-white p-2 text-center text-sm font-bold flex justify-center items-center gap-2">
-                    <i class="fas fa-chart-pie"></i> This Month's Report » <%= currentMonthName %>
+                    <i class="fas fa-chart-pie"></i> This Month's Report Â» <%= currentMonthName %>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
                     <div class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 relative bg-gray-50/50 dark:bg-gray-900/50">
@@ -228,7 +228,7 @@
                                 <% links.forEach(link => { %>
                                     <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-center">
                                         <td class="p-4 text-blue-600 dark:text-blue-400 font-medium text-left pl-6">
-                                            <a href="/<%= link.alias %>" target="_blank" class="hover:underline"><i class="fas fa-external-link-alt text-xs mr-1"></i> <%= typeof settings !== 'undefined' ? settings.defaultDomain : 'shortzlinks.com' %>/<%= link.alias %></a>
+                                            <a href="/l/<%= link.alias %>" target="_blank" class="hover:underline"><i class="fas fa-external-link-alt text-xs mr-1"></i> <%= typeof settings !== 'undefined' ? settings.defaultDomain : 'shortzlinks.com' %>/l/<%= link.alias %></a>
                                         </td>
                                         <td class="p-4 truncate max-w-[200px] text-gray-500" title="<%= link.originalUrl %>"><%= link.originalUrl %></td>
                                         <td class="p-4 font-bold text-gray-700 dark:text-gray-300"><%= link.totalClicks %></td>
