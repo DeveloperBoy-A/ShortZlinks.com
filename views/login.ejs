@@ -17,8 +17,8 @@
 
             <form id="loginForm" action="/auth/login" method="POST" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Email</label>
-                    <input type="email" name="email" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                    <label class="block text-sm font-medium mb-1">Email or Username</label>
+                    <input type="text" name="identifier" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Password</label>
@@ -31,6 +31,11 @@
             </form>
 
             <form id="registerForm" action="/auth/register" method="POST" class="space-y-4 hidden">
+                <input type="hidden" name="ref" value="<%= typeof ref !== 'undefined' ? ref : '' %>">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Username</label>
+                    <input type="text" name="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" title="Only letters, numbers and underscore allowed" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+                </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">Email</label>
                     <input type="email" name="email" required class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
