@@ -27,7 +27,7 @@
                 <span class="absolute top-1 right-2 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></span>
             </div>
             
-            <span class="mt-4 font-bold text-blue-600 dark:text-blue-400 text-lg"><%= user.email.split('@')[0] %></span>
+            <span class="mt-4 font-bold text-blue-600 dark:text-blue-400 text-lg"><%= user.username || user.email.split('@')[0] %></span>
         </div>
 
         <ul class="flex-1 py-4 space-y-1">
