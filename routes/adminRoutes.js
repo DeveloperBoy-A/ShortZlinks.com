@@ -18,4 +18,8 @@ router.get('/users/:id', adminController.getUserDetails);
 
 router.post('/settings/domain', adminController.addDomain);
 
+// DMCA & Platform Links (linked from sidebar, previously had no route)
+router.get('/dmca', adminController.getDmcaReports);
+router.get('/links', adminController.getAllLinks);
+
 module.exports = router;
