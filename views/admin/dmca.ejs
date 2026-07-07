@@ -15,7 +15,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td colspan="3" class="p-4 text-center text-gray-500">System is clean. No pending reports!</td></tr>
+                        <% if (typeof reports === 'undefined' || reports.length === 0) { %>
+                            <tr><td colspan="3" class="p-4 text-center text-gray-500">System is clean. No pending reports!</td></tr>
+                        <% } else { %>
+                            <% reports.forEach(r => { %>
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td class="p-4 max-w-xs truncate" title="<%= r.reportedUrl %>"><%= r.reportedUrl %></td>
+                                    <td class="p-4">
+                                        <span class="font-bold"><%= r.reason %></span>
+                                        <div class="text-xs text-gray-500"><%= r.email %></div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 rounded text-xs <%= r.status === 'Resolved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>"><%= r.status %></span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
                     </tbody>
                 </table>
             </div>
