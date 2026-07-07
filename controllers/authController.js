@@ -59,70 +59,63 @@ isActive: true,
 exports.login = async (req, res) => {
     try {
         const { identifier, email, password } = req.body;
-        // Accept either the new "identifier" field (email or username) or a plain "email" field for backward compatibility
-        const loginId = identifier || email;
 
-console.log("Login ID:", loginId);
-console.log("Password:", password);
+        const loginId = (identifier || email || "").trim();
+        const normalizedLogin = loginId.toLowerCase();
 
-const user = await User.findOne({
-    $or: [
-        { email: loginId.toLowerCase() },
-        { username: loginId }
-    ]
-});
+        console.log("Login ID:", normalizedLogin);
 
-console.log("User:", user);
+        const user = await User.findOne({
+            $or: [
+                { email: normalizedLogin },
+                { username: loginId }
+            ]
+        });
 
-if (!user) {
-    return res.status(401).send("User Not Found");
-}
+        console.log("User:", user);
 
-const isMatch = await bcrypt.compare(password, user.password);
-
-console.log("Password Match:", isMatch);
-
-if (!isMatch) {
-    return res.status(401).send("Password Wrong");
-}
-
-        const normalizedLogin =
-    (loginId || "").trim().toLowerCase();
-
-const user = await User.findOne({
-    $or: [
-        { email: normalizedLogin },
-        { username: loginId }
-    ]
-});
-
-if (!user) {
-    return res.status(401).send("Invalid credentials");
-}
-
-if (user.isActive === false) {
-    return res.status(403).send("Account disabled");
-}
         if (!user) {
-            return res.status(401).send('Invalid credentials or account disabled');
+            return res.status(401).send("User Not Found");
+        }
+
+        if (user.isActive === false) {
+            return res.status(403).send("Account Disabled");
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
+
+        console.log("Password Match:", isMatch);
+
         if (!isMatch) {
-            return res.status(401).send('Invalid credentials');
+            return res.status(401).send("Password Wrong");
         }
 
-        req.session.user = { id: user._id, role: user.role, email: user.email, username: user.username };
-        
-        if (user.role === 'admin') {
-            return res.redirect('/admin/dashboard');
-        }
-        res.redirect('/user/dashboard');
+        req.session.user = {
+            id: user._id,
+            role: user.role,
+            email: user.email,
+            username: user.username
+        };
+
+        req.session.save((err) => {
+            if (err) {
+                console.error("Session Save Error:", err);
+                return res.status(500).send("Session Error");
+            }
+
+            if (user.role === "admin") {
+                return res.redirect("/admin/dashboard");
+            }
+
+            return res.redirect("/user/dashboard");
+        });
+
     } catch (error) {
-        console.error('Login Error:', error);
-        res.status(500).send('Internal Server Error');
+        console.error("Login Error:", error);
+        res.status(500).send("Internal Server Error");
     }
 };
+
 
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
