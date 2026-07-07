@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
 exports.register = async (req, res) => {
     try {
@@ -19,10 +20,19 @@ exports.register = async (req, res) => {
         // Auto-assign admin if it matches the env email
         const role = email === process.env.ADMIN_EMAIL ? 'admin' : 'user';
 
+        // Capture referral (?ref=<userId>) if present and valid
+        let referredBy = null;
+        const refId = req.body.ref;
+        if (refId && mongoose.Types.ObjectId.isValid(refId)) {
+            const referrer = await User.findById(refId);
+            if (referrer) referredBy = referrer._id;
+        }
+
         const newUser = new User({
             email,
             password: hashedPassword,
-            role
+            role,
+            referredBy
         });
 
         await newUser.save();
