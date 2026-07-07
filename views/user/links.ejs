@@ -27,7 +27,7 @@
                         <% links.forEach(link => { %>
                             <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                                 <td class="p-4 text-primary font-medium">
-                                    <a href="/<%= link.alias %>" target="_blank" id="link-<%= link.alias %>"><%= settings.defaultDomain %>/<%= link.alias %></a>
+                                    <a href="/l/<%= link.alias %>" target="_blank" id="link-<%= link.alias %>"><%= settings.defaultDomain %>/l/<%= link.alias %></a>
                                 </td>
                                 <td class="p-4 truncate max-w-xs" title="<%= link.originalUrl %>">
                                     <%= link.originalUrl %>
@@ -35,7 +35,7 @@
                                 <td class="p-4"><%= link.totalClicks %></td>
                                 <td class="p-4 text-green-500 font-bold">$<%= link.validEarnings.toFixed(4) %></td>
                                 <td class="p-4">
-                                    <button onclick="copyToClipboard('<%= settings.defaultDomain %>/<%= link.alias %>')" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
+                                    <button onclick="copyToClipboard('<%= settings.defaultDomain %>/l/<%= link.alias %>')" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
                                         <i class="fas fa-copy"></i> Copy
                                     </button>
                                 </td>
