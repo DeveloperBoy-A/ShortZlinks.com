@@ -38,7 +38,7 @@ exports.createLinkViaApi = async (req, res) => {
             domain: domain
         });
 
-        const shortUrl = `${domain}/${newLink.alias}`;
+        const shortUrl = `${domain}/l/${newLink.alias}`;
 
         // TEXT FORMAT RESPONSE LOGIC
         if (format === 'text') {
