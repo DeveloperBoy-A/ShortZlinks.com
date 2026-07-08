@@ -8,7 +8,11 @@ router.use(isAdmin);
 router.get('/dashboard', adminController.getDashboard);
 router.get('/settings', adminController.getSettings);
 router.post('/settings', adminController.updateSettings);
+// NOTE: settings.ejs ka CPM form is route pe post karta hai (pehle yeh route missing tha => 404 aata tha)
+router.post('/settings/update-cpm', adminController.updateSettings);
 router.post('/settings/payment-methods', adminController.addPaymentMethod);
+router.post('/settings/payment-methods/:id/toggle', adminController.togglePaymentMethod);
+router.post('/settings/payment-methods/:id/delete', adminController.deletePaymentMethod);
 
 router.get('/withdrawals', adminController.getWithdrawals);
 router.post('/withdrawals/:id', adminController.updateWithdrawalStatus);
