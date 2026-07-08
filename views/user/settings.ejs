@@ -97,20 +97,38 @@
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Select Payment Method</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fas fa-university text-gray-400"></i></div>
-                                <select name="preferredPaymentMethodId" required class="w-full pl-10 p-3 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-green-500 outline-none transition appearance-none">
+                                <select id="paymentMethodSelect" name="preferredPaymentMethodId" required class="w-full pl-10 p-3 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-green-500 outline-none transition appearance-none">
                                     <option value="">-- Choose Method --</option>
                                     <% paymentMethods.forEach(method => { %>
-                                        <option value="<%= method._id %>" <%= user.preferredPaymentMethodId && user.preferredPaymentMethodId.toString() === method._id.toString() ? 'selected' : '' %>>
+                                        <option
+                                            value="<%= method._id %>"
+                                            data-fields="<%= (method.fields || ['Account Details']).join('|') %>"
+                                            <%= user.preferredPaymentMethodId && user.preferredPaymentMethodId.toString() === method._id.toString() ? 'selected' : '' %>
+                                        >
                                             <%= method.name %> (Min: $<%= method.minPayout %>)
                                         </option>
                                     <% }) %>
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"><i class="fas fa-chevron-down text-gray-400"></i></div>
                             </div>
+                            <% if (paymentMethods.length === 0) { %>
+                                <p class="text-xs text-red-500 mt-2"><i class="fas fa-exclamation-circle mr-1"></i> Abhi koi payment method available nahi hai. Admin se contact karein.</p>
+                            <% } %>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Withdrawal Account Details</label>
-                            <input type="text" name="withdrawalAccountDetails" value="<%= user.withdrawalAccountDetails %>" placeholder="e.g., UPI ID, Bank Acc, PayPal Email" required class="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-green-500 outline-none transition">
+
+                            <!-- Method select hone se pehle / fields na hone par yeh generic box dikhega -->
+                            <div id="genericAccountField">
+                                <input type="text" id="genericAccountInput" placeholder="Pehle upar se ek Payment Method chunein" disabled class="w-full p-3 border rounded-lg bg-gray-100 dark:bg-gray-900 dark:border-gray-700 outline-none">
+                            </div>
+
+                            <!-- Method select hone ke baad yahan uske specific fields (Account Number, IFSC, UPI ID, etc.) dikhenge -->
+                            <div id="dynamicAccountFields" class="space-y-3 hidden"></div>
+
+                            <!-- Yeh hidden input hi asal me DB me save hota hai (sab fields ko combine karke) -->
+                            <input type="hidden" name="withdrawalAccountDetails" id="withdrawalAccountDetails" value="<%= user.withdrawalAccountDetails %>">
+
                             <p class="text-xs text-gray-500 mt-2 font-medium"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i> Ensure this is 100% accurate to prevent failed payouts.</p>
                         </div>
                     </div>
@@ -167,4 +185,100 @@
         </div>
     </main>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var select = document.getElementById('paymentMethodSelect');
+    var dynamicContainer = document.getElementById('dynamicAccountFields');
+    var genericField = document.getElementById('genericAccountField');
+    var hiddenInput = document.getElementById('withdrawalAccountDetails');
+    if (!select || !dynamicContainer || !hiddenInput) return;
+
+    // Pehle se saved value ko "Label: value" pairs me todne ki koshish karo,
+    // taaki edit karte waqt purani values wapas fields me dikhein.
+    function parseExistingValue(rawValue) {
+        var map = {};
+        if (!rawValue) return map;
+        rawValue.split('|').forEach(function (part) {
+            var idx = part.indexOf(':');
+            if (idx === -1) return;
+            var label = part.slice(0, idx).trim();
+            var value = part.slice(idx + 1).trim();
+            if (label) map[label] = value;
+        });
+        return map;
+    }
+
+    function renderFields() {
+        var opt = select.options[select.selectedIndex];
+        var fieldsAttr = opt ? opt.getAttribute('data-fields') : '';
+
+        if (!fieldsAttr) {
+            // Koi method select nahi hua
+            dynamicContainer.classList.add('hidden');
+            dynamicContainer.innerHTML = '';
+            genericField.classList.remove('hidden');
+            return;
+        }
+
+        genericField.classList.add('hidden');
+        dynamicContainer.classList.remove('hidden');
+        dynamicContainer.innerHTML = '';
+
+        var fields = fieldsAttr.split('|').filter(Boolean);
+        var existing = parseExistingValue(hiddenInput.value);
+
+        fields.forEach(function (label, i) {
+            var wrapper = document.createElement('div');
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = label;
+            input.dataset.label = label;
+            input.required = true;
+            input.value = existing[label] || '';
+            input.className = 'w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-green-500 outline-none transition mb-2';
+
+            var labelEl = document.createElement('label');
+            labelEl.className = 'block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1';
+            labelEl.textContent = label;
+
+            wrapper.appendChild(labelEl);
+            wrapper.appendChild(input);
+            dynamicContainer.appendChild(wrapper);
+        });
+    }
+
+    function combineFieldsIntoHiddenInput() {
+        var inputs = dynamicContainer.querySelectorAll('input[data-label]');
+        if (inputs.length === 0) return; // generic field ka value already hidden input me set hai
+        var parts = [];
+        inputs.forEach(function (input) {
+            parts.push(input.dataset.label + ': ' + input.value.trim());
+        });
+        hiddenInput.value = parts.join(' | ');
+    }
+
+    select.addEventListener('change', renderFields);
+
+    // Form submit hone se theek pehle dynamic fields ko ek single string me combine karo
+    var form = select.closest('form');
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            combineFieldsIntoHiddenInput();
+            var inputs = dynamicContainer.querySelectorAll('input[data-label]');
+            for (var i = 0; i < inputs.length; i++) {
+                if (!inputs[i].value.trim()) {
+                    e.preventDefault();
+                    alert(inputs[i].dataset.label + ' bharna zaroori hai.');
+                    inputs[i].focus();
+                    return;
+                }
+            }
+        });
+    }
+
+    // Page load par agar pehle se method selected hai to uske fields turant dikhao
+    renderFields();
+});
+</script>
 <%- include('../partials/footer') %>
