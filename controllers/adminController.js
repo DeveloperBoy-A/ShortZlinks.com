@@ -67,9 +67,51 @@ exports.updateSettings = async (req, res) => {
 
 // 4. Payment Methods
 exports.addPaymentMethod = async (req, res) => {
-    const { name, minPayout, iconClass, instructions } = req.body;
-    await PaymentMethod.create({ name, minPayout, iconClass, instructions });
-    res.redirect('/admin/settings?success=1');
+    try {
+        const { name, minPayout, iconClass, instructions, fields } = req.body;
+
+        // "Account Holder Name, Account Number, IFSC Code" -> ["Account Holder Name", "Account Number", "IFSC Code"]
+        const parsedFields = fields
+            ? fields.split(',').map(f => f.trim()).filter(f => f.length > 0)
+            : ['Account Details'];
+
+        await PaymentMethod.create({
+            name,
+            minPayout,
+            iconClass: iconClass || 'fas fa-wallet',
+            instructions,
+            fields: parsedFields.length > 0 ? parsedFields : ['Account Details']
+        });
+        res.redirect('/admin/settings?success=1');
+    } catch (error) {
+        console.error('Add Payment Method Error:', error);
+        res.status(500).send('Error adding payment method');
+    }
+};
+
+// Toggle a payment method Active / Inactive (shows in admin list as current status)
+exports.togglePaymentMethod = async (req, res) => {
+    try {
+        const method = await PaymentMethod.findById(req.params.id);
+        if (!method) return res.status(404).send('Payment method not found');
+        method.isActive = !method.isActive;
+        await method.save();
+        res.redirect('/admin/settings?success=1');
+    } catch (error) {
+        console.error('Toggle Payment Method Error:', error);
+        res.status(500).send('Error updating payment method');
+    }
+};
+
+// Delete a payment method entirely
+exports.deletePaymentMethod = async (req, res) => {
+    try {
+        await PaymentMethod.findByIdAndDelete(req.params.id);
+        res.redirect('/admin/settings?success=1');
+    } catch (error) {
+        console.error('Delete Payment Method Error:', error);
+        res.status(500).send('Error deleting payment method');
+    }
 };
 
 // 5. Withdrawals Management
