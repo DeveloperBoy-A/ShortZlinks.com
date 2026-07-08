@@ -1,52 +1,52 @@
-<header id="navbar" class="fixed top-0 left-0 right-0 z-50 glass-nav border-b dark:border-gray-800 transition-all duration-300">
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200 dark:border-gray-800 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             
             <div class="flex items-center gap-4">
-                <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <i class="fas fa-bars text-xl"></i>
+                <button id="mobileMenuBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="fas fa-bars text-xl dark:text-white"></i>
                 </button>
                 <a href="/" class="text-2xl font-bold text-primary">
                     <img src="/logo.png" alt="<%= siteName %>" class="h-8 w-auto">
                 </a>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
                 
                 <div class="relative">
-                    <button id="notifBtn" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 relative">
+                    <button id="notifBtn" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative dark:text-white">
                         <i class="fas fa-bell text-lg"></i>
-                        <span class="absolute top-1 right-1 bg-red-500 text-white text-[10px] px-1 rounded-full">3</span>
+                        <span class="absolute top-1 right-1 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">3</span>
                     </button>
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-xl rounded-xl border dark:border-gray-700 p-4">
-                        <p class="text-sm">No new notifications.</p>
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-3 w-64 bg-white dark:bg-gray-800 shadow-xl rounded-xl border dark:border-gray-700 p-4 z-50">
+                        <p class="text-sm dark:text-white">No new notifications.</p>
                     </div>
                 </div>
 
                 <div class="relative">
-                    <button id="langBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button id="langBtn" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-white">
                         <i class="fas fa-globe text-lg"></i>
                     </button>
-                    <div id="langDropdown" class="hidden absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 shadow-xl rounded-xl border dark:border-gray-700 py-2">
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">English</a>
+                    <div id="langDropdown" class="hidden absolute right-0 mt-3 w-32 bg-white dark:bg-gray-800 shadow-xl rounded-xl border dark:border-gray-700 py-2 z-50">
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">English</a>
                     </div>
                 </div>
 
                 <% if(user){ %>
                 <div class="relative">
-                    <button id="profileBtn" class="flex items-center gap-2">
-                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user.email %>" class="w-9 h-9 rounded-full border">
+                    <button id="profileBtn" class="flex items-center gap-2 pl-2">
+                        <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user.email %>" class="w-9 h-9 rounded-full border border-gray-200 dark:border-gray-600">
                     </button>
                     
-                    <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-xl rounded-xl border dark:border-gray-700 py-2 z-50">
-                        <div class="px-4 py-2 border-b dark:border-gray-700">
-                            <p class="text-xs text-gray-500">Balance</p>
-                            <p class="font-bold text-primary">$<%= typeof balance !== 'undefined' ? balance : '0.00' %></p>
+                    <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-white dark:bg-gray-800 shadow-2xl rounded-xl border dark:border-gray-700 py-2 z-50 overflow-hidden">
+                        <div class="px-4 py-3 border-b dark:border-gray-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Balance</p>
+                            <p class="font-bold text-primary text-lg">$<%= typeof balance !== 'undefined' ? balance : '0.0000' %></p>
                         </div>
-                        <a href="/user/settings" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">My Profile</a>
-                        <a href="/user/activity" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Account Activity</a>
-                        <a href="/user/security" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Manage 2FA</a>
-                        <a href="/auth/logout" class="block px-4 py-2 text-red-500 hover:bg-red-50">Logout</a>
+                        <a href="/user/settings" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white transition-colors">My Profile</a>
+                        <a href="/user/activity" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white transition-colors">Account Activity</a>
+                        <a href="/user/security" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white transition-colors">Manage 2FA</a>
+                        <a href="/auth/logout" class="block px-4 py-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Logout</a>
                     </div>
                 </div>
                 <% } %>
@@ -56,7 +56,7 @@
 </header>
 
 <script>
-    // Dropdown toggles
+    // Utility to toggle visibility
     const setupDropdown = (btnId, menuId) => {
         const btn = document.getElementById(btnId);
         const menu = document.getElementById(menuId);
@@ -64,6 +64,10 @@
         
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            // Close other dropdowns
+            document.querySelectorAll('[id$="Dropdown"]').forEach(d => {
+                if(d.id !== menuId) d.classList.add('hidden');
+            });
             menu.classList.toggle('hidden');
         });
     };
@@ -74,22 +78,13 @@
 
     // Close on outside click
     document.addEventListener('click', () => {
-        document.getElementById('notifDropdown')?.classList.add('hidden');
-        document.getElementById('langDropdown')?.classList.add('hidden');
-        document.getElementById('profileDropdown')?.classList.add('hidden');
+        document.querySelectorAll('[id$="Dropdown"]').forEach(d => d.classList.add('hidden'));
     });
-
-    // Mobile Menu logic (Assuming existing ID 'mobileMenu' exists in sidebar.ejs)
-    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-    const mobileMenu = document.getElementById("mobileMenu"); 
-    if(mobileMenuBtn && mobileMenu) {
-        mobileMenuBtn.onclick = () => mobileMenu.classList.remove("hidden");
-    }
 
     // Scroll effect
     window.addEventListener("scroll", () => {
         const nav = document.getElementById("navbar");
-        if(window.scrollY > 15) nav.classList.add("shadow-xl");
-        else nav.classList.remove("shadow-xl");
+        if(window.scrollY > 15) nav.classList.add("shadow-lg");
+        else nav.classList.remove("shadow-lg");
     });
 </script>
