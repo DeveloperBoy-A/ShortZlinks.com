@@ -42,7 +42,7 @@
                 </li>
 
                 <li>
-                    <button onclick="toggleDropdown('manageLinksMenu')" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
+                    <button data-dropdown="manageLinksMenu" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
                         <div class="flex items-center gap-4">
                             <i class="fas fa-link w-5 text-center text-blue-400"></i>
                             <span class="font-medium">Manage Links</span>
@@ -76,7 +76,7 @@
                 </li>
 
                 <li>
-                    <button onclick="toggleDropdown('toolsMenu')" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
+                    <button data-dropdown="toolsMenu" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
                         <div class="flex items-center gap-4">
                             <i class="fas fa-layer-group w-5 text-center text-red-300"></i>
                             <span class="font-medium">Tools</span>
@@ -100,7 +100,7 @@
                 </li>
 
                 <li>
-                    <button onclick="toggleDropdown('securityMenu')" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
+                    <button data-dropdown="securityMenu" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
                         <div class="flex items-center gap-4 relative">
                             <i class="fas fa-lock w-5 text-center text-pink-500"></i>
                             <span class="font-medium">Security</span>
@@ -114,7 +114,7 @@
                 </li>
 
                 <li>
-                    <button onclick="toggleDropdown('settingsMenu')" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
+                    <button data-dropdown="settingsMenu" class="w-full flex items-center justify-between px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition focus:outline-none">
                         <div class="flex items-center gap-4">
                             <i class="fas fa-cog w-5 text-center text-green-400"></i>
                             <span class="font-medium">Settings</span>
@@ -185,22 +185,32 @@
 </aside>
 
 <script>
-    // Toggle Mobile Sidebar
-    document.getElementById('menuToggle').addEventListener('click', () => {
-        document.getElementById('sidebarMenu').classList.toggle('hidden');
-    });
+(function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
-    // Dropdown Accordion Logic
-    function toggleDropdown(menuId) {
-        const menu = document.getElementById(menuId);
-        
-        // Agar pehle se open hai, toh close karo
-        if (!menu.classList.contains('hidden')) {
-            menu.classList.add('hidden');
-        } else {
-            menu.classList.remove('hidden');
+        // Toggle Mobile Sidebar
+        var menuToggleBtn = document.getElementById('menuToggle');
+        var sidebarMenu = document.getElementById('sidebarMenu');
+        if (menuToggleBtn && sidebarMenu) {
+            menuToggleBtn.addEventListener('click', function () {
+                sidebarMenu.classList.toggle('hidden');
+            });
         }
-    }
+
+        // Dropdown Accordion Logic — inline onclick ki jagah addEventListener
+        document.querySelectorAll('[data-dropdown]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var menuId = btn.getAttribute('data-dropdown');
+                var menu = document.getElementById(menuId);
+                if (!menu) {
+                    console.warn('Dropdown menu not found:', menuId);
+                    return;
+                }
+                menu.classList.toggle('hidden');
+            });
+        });
+    });
+})();
 </script>
 
 <style>
