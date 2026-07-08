@@ -1,47 +1,381 @@
 <!DOCTYPE html>
 <html lang="en" class="light">
+
 <head>
-    <link rel="stylesheet" href="/css/style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= typeof title !== 'undefined' ? title + ' - ' + siteName : siteName %></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: { primary: '#4f46e5', secondary: '#ec4899' } } }
-        }
-        // Dark Mode Logic
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        .glowing-text {
-            text-shadow: 0 0 10px #4f46e5, 0 0 20px #ec4899;
-        }
-    </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<link rel="stylesheet" href="/css/style.css">
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#4f46e5">
+
+<meta name="description" content="<%= siteName %>">
+
+<title>
+<%= typeof title !== 'undefined' ? title + ' - ' + siteName : siteName %>
+</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+
+tailwind.config={
+darkMode:'class',
+theme:{
+extend:{
+colors:{
+primary:'#4f46e5',
+secondary:'#ec4899'
+}
+}
+}
+}
+
+if(
+localStorage.theme==='dark'||
+(!('theme' in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)
+){
+document.documentElement.classList.add('dark');
+}else{
+document.documentElement.classList.remove('dark');
+}
+
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+body{
+font-family:'Inter',sans-serif;
+}
+
+.glass-nav{
+background:rgba(255,255,255,.85);
+backdrop-filter:blur(16px);
+}
+
+.dark .glass-nav{
+background:rgba(17,24,39,.85);
+}
+
+.nav-link{
+position:relative;
+font-weight:600;
+transition:.3s;
+}
+
+.nav-link:after{
+content:'';
+position:absolute;
+left:0;
+bottom:-6px;
+width:0;
+height:2px;
+background:#4f46e5;
+transition:.3s;
+}
+
+.nav-link:hover:after{
+width:100%;
+}
+
+</style>
+
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 min-h-screen flex flex-col">
-    <nav class="bg-white dark:bg-gray-800 shadow-md p-4 flex justify-between items-center sticky top-0 z-50">
-        <a href="/" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-            <%= siteName %>
-        </a>
-        <div class="flex items-center space-x-4">
-            <button onclick="document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-                <i class="fas fa-moon dark:hidden"></i>
-                <i class="fas fa-sun hidden dark:block"></i>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition">
+
+<nav id="navbar" class="glass-nav sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
+
+<div class="max-w-7xl mx-auto flex items-center justify-between px-5 py-4">
+
+<a href="/" class="text-3xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+
+<%= siteName %>
+
+</a>
+
+<div class="hidden lg:flex items-center gap-8">
+
+<a href="/" class="nav-link">
+Home
+</a>
+
+<a href="/pricing" class="nav-link">
+Pricing
+</a>
+
+<a href="/user/api" class="nav-link">
+Developer API
+</a>
+
+<a href="/announcements" class="nav-link">
+Announcements
+</a>
+
+<a href="/blog" class="nav-link">
+Blog
+</a>
+
+</div>
+
+<div class="flex items-center gap-4">
+
+<button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+
+<i class="fas fa-search"></i>
+
+</button>
+
+<button class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+
+<i class="fas fa-bell"></i>
+
+<span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">
+
+3
+
+</span>
+
+</button>
+
+<button onclick="document.documentElement.classList.toggle('dark');localStorage.theme=document.documentElement.classList.contains('dark')?'dark':'light';"
+
+class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+
+<i class="fas fa-moon dark:hidden"></i>
+
+<i class="fas fa-sun hidden dark:block"></i>
+
+</button>
+
+<% if(user){ %>
+
+<a href="<%= user.role==='admin'?'/admin/dashboard':'/user/dashboard' %>"
+
+class="px-5 py-2 rounded-lg bg-primary text-white hover:bg-indigo-700">
+
+Dashboard
+
+</a>
+
+<% }else{ %>
+
+<a href="/login"
+
+class="px-5 py-2 rounded-lg border border-primary text-primary hover:bg-primary hover:text-white">
+
+Login / Register
+
+</a>
+
+<% } %>
+
+<button id="mobileMenuBtn"
+
+class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+
+<i class="fas fa-bars"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<!-- Remaining mobile menu, profile dropdown, CSS & JS continues in Part 2 -->
+</nav>
+<!-- Part 2 -->
+
+<!-- Mobile Menu -->
+<div id="mobileMenu"
+    class="fixed inset-0 z-[999] hidden">
+
+    <div id="mobileOverlay"
+        class="absolute inset-0 bg-black/50"></div>
+
+    <div
+        class="absolute right-0 top-0 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto">
+
+        <div class="flex items-center justify-between p-5 border-b dark:border-gray-700">
+
+            <h2 class="font-bold text-xl">
+                Menu
+            </h2>
+
+            <button id="closeMobileMenu"
+                class="w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+
+                <i class="fas fa-times"></i>
+
             </button>
-            <% if (user) { %>
-                <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard' %>" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-indigo-700 transition">Dashboard</a>
-            <% } else { %>
-                <a href="/login" class="px-4 py-2 border border-primary text-primary dark:text-white rounded-md hover:bg-primary hover:text-white transition">Login / Register</a>
-            <% } %>
+
         </div>
-    </nav>
-    
+
+        <div class="p-5">
+
+            <a href="/"
+                class="block py-3 font-medium">
+                <i class="fas fa-home w-6"></i>
+                Home
+            </a>
+
+            <a href="/pricing"
+                class="block py-3 font-medium">
+                <i class="fas fa-tags w-6"></i>
+                Pricing
+            </a>
+
+            <a href="/announcements"
+                class="block py-3 font-medium">
+                <i class="fas fa-bullhorn w-6"></i>
+                Announcements
+            </a>
+
+            <a href="/user/api"
+                class="block py-3 font-medium">
+                <i class="fas fa-code w-6"></i>
+                Developer API
+            </a>
+
+            <a href="/blog"
+                class="block py-3 font-medium">
+                <i class="fas fa-newspaper w-6"></i>
+                Blog
+            </a>
+
+            <hr class="my-5 dark:border-gray-700">
+
+            <% if(user){ %>
+
+            <div class="flex items-center gap-3 mb-5">
+
+                <img
+                    src="https://api.dicebear.com/7.x/adventurer/svg?seed=<%= user.email %>"
+                    class="w-14 h-14 rounded-full border">
+
+                <div>
+
+                    <div class="font-bold">
+                        <%= user.username || user.email.split('@')[0] %>
+                    </div>
+
+                    <div class="text-sm text-gray-500">
+                        <%= user.email %>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a href="<%= user.role==='admin'?'/admin/dashboard':'/user/dashboard' %>"
+                class="block py-3 font-medium">
+
+                <i class="fas fa-chart-line w-6"></i>
+
+                Dashboard
+
+            </a>
+
+            <a href="/user/settings"
+                class="block py-3 font-medium">
+
+                <i class="fas fa-user-cog w-6"></i>
+
+                Profile
+
+            </a>
+
+            <a href="/auth/logout"
+                class="block py-3 text-red-500 font-semibold">
+
+                <i class="fas fa-sign-out-alt w-6"></i>
+
+                Logout
+
+            </a>
+
+            <% }else{ %>
+
+            <a href="/login"
+                class="block mt-5 text-center bg-primary text-white rounded-xl py-3">
+
+                Login / Register
+
+            </a>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const menuBtn=document.getElementById("mobileMenuBtn");
+
+const menu=document.getElementById("mobileMenu");
+
+const closeBtn=document.getElementById("closeMobileMenu");
+
+const overlay=document.getElementById("mobileOverlay");
+
+if(menuBtn){
+
+menuBtn.onclick=()=>{
+
+menu.classList.remove("hidden");
+
+};
+
+}
+
+if(closeBtn){
+
+closeBtn.onclick=()=>{
+
+menu.classList.add("hidden");
+
+};
+
+}
+
+if(overlay){
+
+overlay.onclick=()=>{
+
+menu.classList.add("hidden");
+
+};
+
+}
+
+window.addEventListener("scroll",()=>{
+
+const nav=document.getElementById("navbar");
+
+if(window.scrollY>15){
+
+nav.classList.add("shadow-xl");
+
+}else{
+
+nav.classList.remove("shadow-xl");
+
+}
+
+});
+
+</script>
