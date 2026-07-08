@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+<div class="flex flex-1 flex-col md:flex-row overflow-hidden">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <h1 class="text-3xl font-bold mb-6 text-red-600">Platform Links</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="text-gray-600 dark:text-gray-400 border-b dark:border-gray-700 bg-gray-100 dark:bg-gray-700">
+                            <th class="p-4">Short Link</th>
+                            <th class="p-4">Owner</th>
+                            <th class="p-4">Original URL</th>
+                            <th class="p-4">Clicks</th>
+                            <th class="p-4">Earnings</th>
+                            <th class="p-4">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (links && links.length > 0) { %>
+                            <% links.forEach(link => { %>
+                                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td class="p-4 text-blue-600 dark:text-blue-400 font-medium">
+                                        <a href="/l/<%= link.alias %>" target="_blank" class="hover:underline"><i class="fas fa-external-link-alt text-xs mr-1"></i><%= link.alias %></a>
+                                    </td>
+                                    <td class="p-4"><%= link.userId ? link.userId.email : 'Unknown' %></td>
+                                    <td class="p-4 truncate max-w-xs text-gray-500" title="<%= link.originalUrl %>"><%= link.originalUrl %></td>
+                                    <td class="p-4 font-bold"><%= link.totalClicks || 0 %></td>
+                                    <td class="p-4 font-bold text-green-600">$<%= link.validEarnings ? link.validEarnings.toFixed(4) : (link.earnings ? link.earnings.toFixed(4) : '0.0000') %></td>
+                                    <td class="p-4 text-xs text-gray-500"><%= new Date(link.createdAt).toLocaleDateString() %></td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="6" class="p-6 text-center text-gray-500">Abhi tak koi link generate nahi hua hai.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-3">Latest 100 links dikhaye ja rahe hain.</p>
+    </main>
+</div>
+<%- include('../partials/footer') %>
