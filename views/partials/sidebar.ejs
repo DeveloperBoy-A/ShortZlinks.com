@@ -50,7 +50,8 @@
                         <i class="fas fa-ellipsis-v text-gray-400"></i>
                     </button>
                     <ul id="manageLinksMenu" class="hidden flex-col bg-gray-50 dark:bg-gray-900/50 py-2 border-l-4 border-blue-400 ml-4">
-                        <li><a href="/user/links" class="block px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">All Links</a></li>
+                        <li><a href="/user/links" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-link text-green-500"></i> All Links</a></li>
+                        <li><a href="/user/links?hidden=1" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-eye-slash text-pink-500"></i> Hidden Links</a></li>
                     </ul>
                 </li>
 
@@ -104,12 +105,18 @@
                         <div class="flex items-center gap-4 relative">
                             <i class="fas fa-lock w-5 text-center text-pink-500"></i>
                             <span class="font-medium">Security</span>
-                            <span class="absolute -top-1 -right-2 w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
+                            <span class="flex items-center justify-center w-3.5 h-3.5 bg-red-600 text-white text-[8px] font-bold rounded-full">!</span>
                         </div>
                         <i class="fas fa-ellipsis-v text-gray-400"></i>
                     </button>
                     <ul id="securityMenu" class="hidden flex-col bg-gray-50 dark:bg-gray-900/50 py-2 border-l-4 border-pink-500 ml-4">
-                        <li><a href="/user/settings" class="block px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">Update Password</a></li>
+                        <li><a href="/user/settings#activity" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-history text-purple-500"></i> Account Activity</a></li>
+                        <li>
+                            <a href="/user/settings#2fa" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">
+                                <i class="fas fa-shield-alt text-orange-500"></i> Manage 2FA
+                                <span class="flex items-center justify-center w-3.5 h-3.5 bg-red-600 text-white text-[8px] font-bold rounded-full">!</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -122,8 +129,9 @@
                         <i class="fas fa-ellipsis-v text-gray-400"></i>
                     </button>
                     <ul id="settingsMenu" class="hidden flex-col bg-gray-50 dark:bg-gray-900/50 py-2 border-l-4 border-green-400 ml-4">
-                        <li><a href="/user/settings" class="block px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">Profile</a></li>
-                        <li><a href="/user/settings" class="block px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">Withdrawal Info</a></li>
+                        <li><a href="/user/settings" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-id-card text-blue-500"></i> Profile</a></li>
+                        <li><a href="/user/settings#password" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-envelope text-yellow-500"></i> Change Password</a></li>
+                        <li><a href="/user/settings#email" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-at text-pink-500"></i> Change Email</a></li>
                     </ul>
                 </li>
 
@@ -197,7 +205,7 @@
             });
         }
 
-        // Dropdown Accordion Logic — inline onclick ki jagah addEventListener
+        // Dropdown Accordion Logic â€” inline onclick ki jagah addEventListener
         document.querySelectorAll('[data-dropdown]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var menuId = btn.getAttribute('data-dropdown');
