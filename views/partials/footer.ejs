@@ -1,6 +1,113 @@
-    <footer class="mt-auto bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-6 text-center">
-        <img src="/images/logo.png" alt="<%= siteName %>" class="h-8 w-auto mx-auto mb-3">
-        <p class="text-gray-600 dark:text-gray-400">&copy; <%= new Date().getFullYear() %> <%= siteName %>. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+<footer class="bg-[#2d3a5c] text-white pt-14 pb-8 mt-auto relative overflow-hidden" style="background-color: #2b395a;">
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10"
+        style="background-image:url('/images/footer-bg.png');background-size:cover; background-position: center;"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+
+            <!-- About / ShortZlinks -->
+            <div>
+                <h2 class="text-2xl font-bold mb-5">ShortZlinks</h2>
+
+                <p class="text-gray-300 leading-7 text-sm mb-6">
+                    ShortZlinks is a completely free tool where you can create short links, which apart from being free, you get paid! So, now you can make money from home, when managing and protecting your links.
+                </p>
+
+                <!-- Social Icons -->
+                <div class="flex gap-3">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Explore -->
+            <div>
+                <h3 class="text-xl font-bold mb-5">Explore</h3>
+
+                <ul class="space-y-4 text-gray-300 font-medium">
+                    <li>
+                        <a href="/payment-proofs" class="hover:text-white transition">Payment Proofs</a>
+                    </li>
+                    <li>
+                        <a href="/privacy" class="hover:text-white transition">Privacy Policy</a>
+                    </li>
+                    <li>
+                        <a href="/terms" class="hover:text-white transition">Terms and Conditions</a>
+                    </li>
+                    <li>
+                        <a href="/contact" class="hover:text-white transition">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h3 class="text-xl font-bold mb-5">Contact</h3>
+
+                <ul class="space-y-4 text-gray-300 font-medium">
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-phone-alt text-orange-500 mt-1"></i>
+                        <span>Not Available</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-envelope text-orange-500 mt-1"></i>
+                        <span>support.shortzlinks@gmail.com</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="fas fa-map-marker-alt text-orange-500 mt-1"></i>
+                        <span>Gangapur City, Rajasthan<br>INDIA 🇮🇳</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Newsletter Section -->
+        <div class="mb-12">
+            <h3 class="text-xl font-bold mb-4">Newsletter</h3>
+
+            <form action="/subscribe" method="POST" class="flex flex-col gap-3 w-full">
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email address"
+                    required
+                    class="w-full px-4 py-3.5 rounded-md text-black outline-none bg-white">
+
+                <button
+                    type="submit"
+                    class="w-full bg-[#7445c7] hover:bg-[#6035a8] text-white px-8 py-3.5 rounded-md font-bold tracking-wider transition flex items-center justify-center gap-2 shadow-md">
+                    <i class="fas fa-envelope"></i> SUBSCRIBE
+                </button>
+            </form>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="text-center text-[#9ca3af] text-sm">
+            <p class="mb-1">
+                Copyright © ShortZlinks 2026. All Rights Reserved
+            </p>
+            <p>
+                Design with <span class="text-red-500 text-lg leading-none">❤️</span> by <span class="text-gray-300 font-semibold">Team ShortZlinks</span>
+            </p>
+        </div>
+
+    </div>
+
+</footer>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
