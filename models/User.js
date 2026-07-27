@@ -40,7 +40,12 @@ const userSchema = new mongoose.Schema({
 
     // Password Reset
     resetPasswordToken: { type: String },
-    resetPasswordExpire: { type: Date }
+    resetPasswordExpire: { type: Date },
+
+    // Two-Factor Authentication (TOTP)
+    twoFactorEnabled: { type: Boolean, default: false },
+    twoFactorSecret: { type: String, default: null },       // active secret, once confirmed
+    twoFactorPendingSecret: { type: String, default: null }  // secret awaiting confirmation
 
 }, { timestamps: true });
 
