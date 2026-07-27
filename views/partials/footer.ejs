@@ -1,10 +1,10 @@
 <footer class="bg-[#2d3a5c] text-white pt-14 pb-8 mt-auto relative overflow-hidden" style="background-color: #2b395a;">
 
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-10"
+    <!-- Background Pattern (Added pointer-events-none to prevent blocking clicks) -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none"
         style="background-image:url('/images/footer-bg.png');background-size:cover; background-position: center;"></div>
 
-    <div class="relative max-w-7xl mx-auto px-6">
+    <div class="relative max-w-7xl mx-auto px-6 z-10">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
 
@@ -18,16 +18,16 @@
 
                 <!-- Social Icons -->
                 <div class="flex gap-3">
-                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                    <a href="javascript:void(0);" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition cursor-pointer">
                         <i class="fab fa-telegram-plane"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                    <a href="javascript:void(0);" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition cursor-pointer">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                    <a href="javascript:void(0);" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition cursor-pointer">
                         <i class="fab fa-whatsapp"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition">
+                    <a href="javascript:void(0);" class="w-10 h-10 rounded-full bg-white text-gray-800 flex items-center justify-center hover:bg-gray-200 transition cursor-pointer">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                 </div>
@@ -39,16 +39,16 @@
 
                 <ul class="space-y-4 text-gray-300 font-medium">
                     <li>
-                        <a href="/payment-proofs" class="hover:text-white transition">Payment Proofs</a>
+                        <a href="/payment-proofs" class="hover:text-white transition cursor-pointer">Payment Proofs</a>
                     </li>
                     <li>
-                        <a href="/privacy" class="hover:text-white transition">Privacy Policy</a>
+                        <a href="/privacy" class="hover:text-white transition cursor-pointer">Privacy Policy</a>
                     </li>
                     <li>
-                        <a href="/terms" class="hover:text-white transition">Terms and Conditions</a>
+                        <a href="/terms" class="hover:text-white transition cursor-pointer">Terms and Conditions</a>
                     </li>
                     <li>
-                        <a href="/contact" class="hover:text-white transition">Contact Us</a>
+                        <a href="/contact" class="hover:text-white transition cursor-pointer">Contact Us</a>
                     </li>
                 </ul>
             </div>
@@ -89,7 +89,7 @@
 
                 <button
                     type="submit"
-                    class="w-full bg-[#7445c7] hover:bg-[#6035a8] text-white px-8 py-3.5 rounded-md font-bold tracking-wider transition flex items-center justify-center gap-2 shadow-md">
+                    class="w-full bg-[#7445c7] hover:bg-[#6035a8] text-white px-8 py-3.5 rounded-md font-bold tracking-wider transition flex items-center justify-center gap-2 shadow-md cursor-pointer relative z-10">
                     <i class="fas fa-envelope"></i> SUBSCRIBE
                 </button>
             </form>
