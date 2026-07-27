@@ -8,6 +8,10 @@ const authController = require('../controllers/authController');
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
+// Two-Factor login challenge (shown after correct email/password if 2FA is on)
+router.get('/2fa-challenge', authController.render2FAChallenge);
+router.post('/2fa-challenge', authController.verify2FAChallenge);
+
 // Baaki auth routes (inme captcha ki zaroorat nahi hai)
 router.get('/logout', authController.logout);
 
