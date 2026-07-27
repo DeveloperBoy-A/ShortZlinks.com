@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+<main class="flex-grow flex items-center justify-center p-6 bg-gray-50 dark:bg-gray-900">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg max-w-md w-full text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <i class="fas fa-shield-alt text-2xl text-primary"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">Two-Factor Verification</h2>
+        <p class="text-sm text-gray-500 mb-6">Enter the 6-digit code from your authenticator app to finish signing in.</p>
+
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="mb-4 p-3 rounded bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/auth/2fa-challenge" method="POST" class="space-y-4">
+            <input type="text" name="token" required autofocus maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
+                placeholder="000000"
+                class="w-full p-3 text-center text-2xl tracking-[0.5em] border rounded dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary outline-none">
+            <button type="submit" class="w-full bg-primary text-white py-3 rounded font-bold hover:bg-indigo-700 transition shadow-md">
+                Verify &amp; Continue
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a href="/auth/logout" class="text-sm text-gray-500 hover:underline">&larr; Cancel and go back to login</a>
+        </div>
+    </div>
+</main>
+<%- include('partials/footer') %>
