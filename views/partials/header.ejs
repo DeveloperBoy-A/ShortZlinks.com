@@ -1,3 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title + ' | ' + siteName : siteName %></title>
+    <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
+
+    <!-- Prevent dark-mode flash on load -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+    <!-- Tailwind CSS (CDN build used across all views) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#ec4899'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- GSAP (used for entrance animations across pages) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Site-wide styles -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
+
 <nav class="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
 
     <div class="max-w-7xl mx-auto px-3 lg:px-6">
@@ -17,8 +59,8 @@
 
                 <a href="/" class="flex items-center gap-2">
 
-                    <img src="/images/logo.png"
-                        class="w-44 h-auto"
+                    <img id="siteLogo" src="/images/logo.svg"
+                        class="w-44 h-auto site-logo"
                         alt="ShortZlinks">
 
                 </a>
@@ -121,9 +163,9 @@
                     <div id="languageMenu"
                         class="hidden absolute right-0 mt-3 w-44 bg-white dark:bg-gray-800 rounded-xl shadow-xl">
 
-                        <a href="?lang=en" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">ðŸ‡ºðŸ‡¸ English</a>
+                        <a href="?lang=en" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Ã°Å¸â€¡ÂºÃ°Å¸â€¡Â¸ English</a>
 
-                        <a href="?lang=hi" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">ðŸ‡®ðŸ‡³ Hindi</a>
+                        <a href="?lang=hi" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Ã°Å¸â€¡Â®Ã°Å¸â€¡Â³ Hindi</a>
 
                     </div>
 
@@ -135,7 +177,7 @@
                         class="flex items-center gap-2 rounded-full">
 
                         <img
-                            src="<%= user.avatar || '/images/default-avatar.png' %>"
+                            src="<%= user.avatar || '/images/default-avatar.svg' %>"
                             class="w-10 h-10 rounded-full border-2 border-primary object-cover">
 
                     </button>
@@ -148,7 +190,7 @@
                             <p class="text-gray-500 text-sm">Welcome!</p>
 
                             <h3 class="font-bold text-lg">
-                                <%= user.name %>
+                                <%= user.username %>
                             </h3>
 
                         </div>
@@ -190,7 +232,7 @@
 
                                 <span class="text-green-600 font-bold">
 
-                                    $<%= Number(user.balance || 0).toFixed(4) %>
+                                    $<%= Number(user.walletBalance || 0).toFixed(4) %>
 
                                 </span>
 
@@ -198,7 +240,7 @@
 
                         </div>
 
-                        <a href="/logout"
+                        <a href="/auth/logout" id="headerLogoutBtn"
                             class="flex items-center gap-3 px-5 py-4 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
 
                             <i class="fas fa-sign-out-alt"></i>
@@ -265,6 +307,40 @@ document.documentElement.classList.toggle("dark");
 
 localStorage.theme=document.documentElement.classList.contains("dark")?"dark":"light";
 
+});
+
+// Mobile hamburger in the top navbar toggles the dashboard sidebar
+// (previously this button had no click handler at all)
+document.getElementById("sidebarToggle")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    document.getElementById("sidebarMenu")?.classList.toggle("hidden");
+});
+
+// --- Welcome-back animation: plays once on the first page load right after a successful login ---
+(function () {
+    try {
+        if (sessionStorage.getItem('shortz_just_logged_in') === '1') {
+            sessionStorage.removeItem('shortz_just_logged_in');
+            const logo = document.getElementById('siteLogo');
+            if (logo) {
+                logo.classList.add('logo-anim-welcome');
+                setTimeout(() => logo.classList.remove('logo-anim-welcome'), 1200);
+            }
+        }
+    } catch (err) {}
+})();
+
+// --- Logout animation: play a quick spin/fade on the site logo before navigating away ---
+document.getElementById("headerLogoutBtn")?.addEventListener("click", function (e) {
+    e.preventDefault();
+    const href = this.getAttribute("href");
+    const logo = document.getElementById("siteLogo");
+    if (logo) {
+        logo.classList.add("logo-anim-logout");
+        setTimeout(() => { window.location.href = href; }, 550);
+    } else {
+        window.location.href = href;
+    }
 });
 
 </script>
