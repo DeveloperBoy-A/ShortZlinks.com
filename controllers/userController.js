@@ -4,6 +4,8 @@ const Link = require('../models/Link');
 const PaymentMethod = require('../models/PaymentMethod');
 const Withdrawal = require('../models/Withdrawal'); 
 const Setting = require('../models/Setting');
+const LoginActivity = require('../models/LoginActivity');
+const totp = require('../utils/totp');
 
 // userController.js - getDashboard update
 exports.getDashboard = async (req, res) => {
@@ -218,5 +220,108 @@ exports.getReferrals = async (req, res) => {
     } catch (error) {
         console.error('Referrals Page Error:', error);
         res.status(500).send('Error loading referrals page');
+    }
+};
+
+// ==========================================
+// ACCOUNT ACTIVITY (previously a dead link: /user/activity)
+// ==========================================
+exports.getActivity = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        const activity = await LoginActivity.find({ userId: user._id }).sort('-createdAt').limit(25);
+        res.render('user/activity', { title: 'Account Activity', user, activity });
+    } catch (error) {
+        console.error('Activity Page Error:', error);
+        res.status(500).send('Error loading account activity');
+    }
+};
+
+// ==========================================
+// TWO-FACTOR AUTHENTICATION (previously a dead link: /user/2fa)
+// ==========================================
+
+// Show current 2FA status / setup flow
+exports.getTwoFactor = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        let qrCodeUrl = null;
+
+        // If a setup was already started but not confirmed, keep showing the same QR
+        if (!user.twoFactorEnabled && user.twoFactorPendingSecret) {
+            const otpAuthUrl = totp.buildOtpAuthUrl(user.twoFactorPendingSecret, user.email, res.locals.siteName);
+            qrCodeUrl = totp.buildQrCodeUrl(otpAuthUrl);
+        }
+
+        res.render('user/2fa', {
+            title: 'Two-Factor Authentication',
+            user,
+            qrCodeUrl,
+            pendingSecret: user.twoFactorPendingSecret,
+            success: req.query.success
+        });
+    } catch (error) {
+        console.error('2FA Page Error:', error);
+        res.status(500).send('Error loading 2FA settings');
+    }
+};
+
+// Step 1: generate a new secret and show the QR code to scan
+exports.startTwoFactorSetup = async (req, res) => {
+    try {
+        const secret = totp.generateSecret();
+        await User.findByIdAndUpdate(req.session.user.id, { twoFactorPendingSecret: secret });
+        res.redirect('/user/2fa');
+    } catch (error) {
+        console.error('2FA Setup Error:', error);
+        res.status(500).send('Error starting 2FA setup');
+    }
+};
+
+// Step 2: confirm the code from the authenticator app to actually turn 2FA on
+exports.confirmTwoFactorSetup = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        if (!user.twoFactorPendingSecret) {
+            return res.status(400).send('No pending 2FA setup found. Please start setup again.');
+        }
+
+        const { token } = req.body;
+        if (!totp.verifyToken(user.twoFactorPendingSecret, token)) {
+            return res.status(400).send('Invalid code. Please check your authenticator app and try again.');
+        }
+
+        user.twoFactorSecret = user.twoFactorPendingSecret;
+        user.twoFactorPendingSecret = null;
+        user.twoFactorEnabled = true;
+        await user.save();
+
+        res.redirect('/user/2fa?success=enabled');
+    } catch (error) {
+        console.error('2FA Confirm Error:', error);
+        res.status(500).send('Error confirming 2FA setup');
+    }
+};
+
+// Turn 2FA off (requires current password for safety)
+exports.disableTwoFactor = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user.id);
+        const { currentPassword } = req.body;
+
+        const isMatch = await bcrypt.compare(currentPassword || '', user.password);
+        if (!isMatch) {
+            return res.status(400).send('Incorrect current password.');
+        }
+
+        user.twoFactorEnabled = false;
+        user.twoFactorSecret = null;
+        user.twoFactorPendingSecret = null;
+        await user.save();
+
+        res.redirect('/user/2fa?success=disabled');
+    } catch (error) {
+        console.error('2FA Disable Error:', error);
+        res.status(500).send('Error disabling 2FA');
     }
 };
