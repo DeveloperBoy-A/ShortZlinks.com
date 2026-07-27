@@ -36,6 +36,16 @@ router.get('/api', userController.getApiDocs);
 router.get('/announcements', userController.getAnnouncements);
 
 // ==========================
+// 4b. ACCOUNT ACTIVITY & TWO-FACTOR AUTH (previously dead links in the header)
+// ==========================
+router.get('/profile', userController.getSettings); // "My Profile" -> same place profile fields are edited
+router.get('/activity', userController.getActivity);
+router.get('/2fa', userController.getTwoFactor);
+router.post('/2fa/setup', userController.startTwoFactorSetup);
+router.post('/2fa/confirm', userController.confirmTwoFactorSetup);
+router.post('/2fa/disable', userController.disableTwoFactor);
+
+// ==========================
 // 5. WITHDRAWALS (Fixed Duplicates)
 // ==========================
 router.get('/withdrawals', withdrawalController.getWithdrawals);
