@@ -89,6 +89,7 @@ app.use(async (req, res, next) => {
     res.locals.user = req.session.user || null;
     res.locals.path = req.path;
     res.locals.supportEmail = process.env.SUPPORT_EMAIL;
+    res.locals.notifications = []; // default so header.ejs never crashes if a controller forgets to pass it
 
     try {
         let settings = await Setting.findOne();
