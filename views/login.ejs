@@ -72,6 +72,22 @@
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
 
+    // Logo animation on Login submit: animate briefly, then actually submit the form.
+    loginForm.addEventListener('submit', function (e) {
+        if (!loginForm.reportValidity()) return; // let native validation show its messages
+        e.preventDefault();
+        const logo = document.getElementById('siteLogo');
+        // Flag read by the header script on the next page load (dashboard) to
+        // play a short "welcome back" animation on the logo after redirect.
+        try { sessionStorage.setItem('shortz_just_logged_in', '1'); } catch (err) {}
+        if (logo) {
+            logo.classList.add('logo-anim-login');
+            setTimeout(() => loginForm.submit(), 500);
+        } else {
+            loginForm.submit();
+        }
+    });
+
     loginTab.addEventListener('click', () => {
         loginForm.classList.remove('hidden');
         registerForm.classList.add('hidden');
