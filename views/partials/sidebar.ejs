@@ -110,11 +110,10 @@
                         <i class="fas fa-ellipsis-v text-gray-400"></i>
                     </button>
                     <ul id="securityMenu" class="hidden flex-col bg-gray-50 dark:bg-gray-900/50 py-2 border-l-4 border-pink-500 ml-4">
-                        <li><a href="/user/settings#activity" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-history text-purple-500"></i> Account Activity</a></li>
+                        <li><a href="/user/activity" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium"><i class="fas fa-history text-purple-500"></i> Account Activity</a></li>
                         <li>
-                            <a href="/user/settings#2fa" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">
+                            <a href="/user/2fa" class="flex items-center gap-2 px-12 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary font-medium">
                                 <i class="fas fa-shield-alt text-orange-500"></i> Manage 2FA
-                                <span class="flex items-center justify-center w-3.5 h-3.5 bg-red-600 text-white text-[8px] font-bold rounded-full">!</span>
                             </a>
                         </li>
                     </ul>
@@ -184,7 +183,7 @@
         </ul>
         
         <div class="p-6 border-t dark:border-gray-700">
-            <a href="/auth/logout" class="flex items-center justify-center gap-2 w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 py-3 rounded-lg font-bold hover:bg-red-100 transition">
+            <a href="/auth/logout" id="sidebarLogoutBtn" class="flex items-center justify-center gap-2 w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 py-3 rounded-lg font-bold hover:bg-red-100 transition">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </div>
@@ -205,7 +204,7 @@
             });
         }
 
-        // Dropdown Accordion Logic â€” inline onclick ki jagah addEventListener
+        // Dropdown Accordion Logic Ã¢â‚¬â€ inline onclick ki jagah addEventListener
         document.querySelectorAll('[data-dropdown]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var menuId = btn.getAttribute('data-dropdown');
@@ -216,6 +215,20 @@
                 }
                 menu.classList.toggle('hidden');
             });
+        });
+
+        // Logout animation: play a quick spin/fade on the site logo before navigating away
+        var sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+        sidebarLogoutBtn?.addEventListener('click', function (e) {
+            e.preventDefault();
+            var href = this.getAttribute('href');
+            var logo = document.getElementById('siteLogo');
+            if (logo) {
+                logo.classList.add('logo-anim-logout');
+                setTimeout(function () { window.location.href = href; }, 550);
+            } else {
+                window.location.href = href;
+            }
         });
     });
 })();
