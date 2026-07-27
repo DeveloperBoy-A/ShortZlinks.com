@@ -24,10 +24,8 @@ exports.register = async (req, res) => {
         
         // Auto-assign admin if it matches the env email
         const normalizedEmail = email.trim().toLowerCase();
-const role =
-    normalizedEmail === process.env.ADMIN_EMAIL.toLowerCase()
-        ? 'admin'
-        : 'user';
+        const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
+        const role = (adminEmail && normalizedEmail === adminEmail) ? 'admin' : 'user';
 
         // Capture referral (?ref=<userId>) if present and valid
         let referredBy = null;
@@ -56,6 +54,38 @@ isActive: true,
     }
 };
 
+const LoginActivity = require('../models/LoginActivity');
+const { verifyToken } = require('../utils/totp');
+
+// Completes login by writing the session + an activity record, then redirects
+function finalizeLogin(req, res, user) {
+    req.session.user = {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+        username: user.username
+    };
+
+    LoginActivity.create({
+        userId: user._id,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        status: 'success'
+    }).catch((err) => console.error('LoginActivity log failed:', err));
+
+    req.session.save((err) => {
+        if (err) {
+            console.error("Session Save Error:", err);
+            return res.status(500).send("Session Error");
+        }
+
+        if (user.role === "admin") {
+            return res.redirect("/admin/dashboard");
+        }
+        return res.redirect("/user/dashboard");
+    });
+}
+
 exports.login = async (req, res) => {
     try {
         const { identifier, email, password } = req.body;
@@ -63,16 +93,12 @@ exports.login = async (req, res) => {
         const loginId = (identifier || email || "").trim();
         const normalizedLogin = loginId.toLowerCase();
 
-        console.log("Login ID:", normalizedLogin);
-
         const user = await User.findOne({
             $or: [
                 { email: normalizedLogin },
                 { username: loginId }
             ]
         });
-
-        console.log("User:", user);
 
         if (!user) {
             return res.status(401).send("User Not Found");
@@ -84,35 +110,77 @@ exports.login = async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
 
-        console.log("Password Match:", isMatch);
-
         if (!isMatch) {
+            await LoginActivity.create({
+                userId: user._id,
+                ipAddress: req.ip,
+                userAgent: req.headers['user-agent'],
+                status: 'failed_password'
+            }).catch(() => {});
             return res.status(401).send("Password Wrong");
         }
 
-        req.session.user = {
-            id: user._id,
-            role: user.role,
-            email: user.email,
-            username: user.username
-        };
+        // If 2FA is enabled on this account, don't log the user in yet —
+        // stash a pending id in the session and send them to the OTP challenge.
+        if (user.twoFactorEnabled) {
+            req.session.pending2FA = { id: user._id.toString() };
+            return req.session.save((err) => {
+                if (err) {
+                    console.error("Session Save Error:", err);
+                    return res.status(500).send("Session Error");
+                }
+                res.redirect('/auth/2fa-challenge');
+            });
+        }
 
-        req.session.save((err) => {
-            if (err) {
-                console.error("Session Save Error:", err);
-                return res.status(500).send("Session Error");
-            }
-
-            if (user.role === "admin") {
-                return res.redirect("/admin/dashboard");
-            }
-
-            return res.redirect("/user/dashboard");
-        });
+        finalizeLogin(req, res, user);
 
     } catch (error) {
         console.error("Login Error:", error);
         res.status(500).send("Internal Server Error");
+    }
+};
+
+// Renders the "enter your authenticator code" page (shown after a correct
+// email/password when the account has 2FA turned on).
+exports.render2FAChallenge = (req, res) => {
+    if (!req.session.pending2FA) return res.redirect('/login');
+    res.render('2fa-challenge', { title: 'Two-Factor Verification' });
+};
+
+// Verifies the OTP code and, if correct, completes the login.
+exports.verify2FAChallenge = async (req, res) => {
+    try {
+        if (!req.session.pending2FA) return res.redirect('/login');
+
+        const user = await User.findById(req.session.pending2FA.id);
+        if (!user || !user.twoFactorEnabled || !user.twoFactorSecret) {
+            req.session.pending2FA = null;
+            return res.redirect('/login');
+        }
+
+        const { token } = req.body;
+        const isValid = verifyToken(user.twoFactorSecret, token);
+
+        if (!isValid) {
+            await LoginActivity.create({
+                userId: user._id,
+                ipAddress: req.ip,
+                userAgent: req.headers['user-agent'],
+                status: 'failed_2fa'
+            }).catch(() => {});
+            return res.status(401).render('2fa-challenge', {
+                title: 'Two-Factor Verification',
+                error: 'Invalid or expired code. Please try again.'
+            });
+        }
+
+        req.session.pending2FA = null;
+        finalizeLogin(req, res, user);
+
+    } catch (error) {
+        console.error('2FA Challenge Error:', error);
+        res.status(500).send('Internal Server Error');
     }
 };
 
