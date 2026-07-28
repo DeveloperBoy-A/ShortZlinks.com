@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const apiController = require("../controllers/apiController");
+const pageController = require("../controllers/pageController");
 const Report = require("../models/Report");
 
 router.get('/', (req, res) => {
@@ -42,5 +43,12 @@ router.post('/report-abuse', async (req, res) => {
 });
 
 router.get('/api', apiController.createLinkViaApi);
+
+// Footer pages (previously linked but had no backend route -> 404s)
+router.get('/payment-proofs', pageController.getPaymentProofs);
+router.get('/privacy', pageController.getPrivacyPolicy);
+router.get('/terms', pageController.getTerms);
+router.get('/contact', pageController.getContact);
+router.post('/subscribe', pageController.subscribeNewsletter);
 
 module.exports = router;
