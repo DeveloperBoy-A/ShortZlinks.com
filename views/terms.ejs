@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+<main class="flex-grow p-6 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 md:p-10 rounded-xl shadow-lg my-6">
+        <h1 class="text-3xl font-black mb-8 flex items-center gap-3"><i class="fas fa-file-contract text-primary"></i> Terms and Conditions</h1>
+
+        <div class="space-y-8">
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-check-circle text-green-500 w-6"></i> 1. Acceptance of Terms</h2>
+                <p class="text-gray-600 dark:text-gray-400">By using <%= siteName %> (the "Service"), you agree to these Terms, our <a href="/privacy" class="text-primary hover:underline">Privacy Policy</a>, and any other rules we set. If you don't agree, please don't use our Service.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-check-circle text-green-500 w-6"></i> 2. Description of Service</h2>
+                <p class="text-gray-600 dark:text-gray-400">We provide URL shortening, link tracking, and analytics to help you manage and optimize your links.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-check-circle text-green-500 w-6"></i> 3. User Responsibilities</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-2">You must be at least 13 years old (or the legal age in your country). You must not use our Service for:</p>
+                <ul class="space-y-1 text-red-500 dark:text-red-400 font-medium mb-2">
+                    <li><i class="fas fa-times mr-1"></i> Spamming, phishing, or scams</li>
+                    <li><i class="fas fa-times mr-1"></i> Malware, viruses, or harmful content</li>
+                    <li><i class="fas fa-times mr-1"></i> Adult content (unless legally permitted)</li>
+                    <li><i class="fas fa-times mr-1"></i> Illegal activities or copyright violations</li>
+                </ul>
+                <p class="text-gray-600 dark:text-gray-400">You are responsible for the links you create.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-ban text-red-500 w-6"></i> 4. Prohibited Content</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-2">We do not allow:</p>
+                <ul class="space-y-1 text-red-500 dark:text-red-400 font-medium mb-2">
+                    <li><i class="fas fa-times mr-1"></i> Malicious or deceptive links</li>
+                    <li><i class="fas fa-times mr-1"></i> Hate speech, violence, or illegal content</li>
+                    <li><i class="fas fa-times mr-1"></i> Fraudulent or misleading websites</li>
+                    <li><i class="fas fa-times mr-1"></i> Anything that breaks the law</li>
+                </ul>
+                <p class="text-gray-600 dark:text-gray-400">We can block or delete any violating links without warning.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-copyright text-primary w-6"></i> 5. Intellectual Property</h2>
+                <p class="text-gray-600 dark:text-gray-400">Our Service, logo, and branding belong to us. Please don't copy, modify, or misuse our content without permission.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-exclamation-triangle text-yellow-500 w-6"></i> 6. Limitation of Liability</h2>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>We're not responsible for any damages from using our Service.</li>
+                    <li>No 100% uptime guarantee â€” we try our best.</li>
+                    <li>We don't control third-party sites linked through our Service.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-user-slash text-red-500 w-6"></i> 7. Termination</h2>
+                <p class="text-gray-600 dark:text-gray-400">We can suspend or ban your account if you break these rules. No refunds.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-file-signature text-primary w-6"></i> 8. Changes to Terms</h2>
+                <p class="text-gray-600 dark:text-gray-400">We may update these Terms from time to time. Continued use of the Service means you accept the changes.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-balance-scale text-primary w-6"></i> 9. Governing Law</h2>
+                <p class="text-gray-600 dark:text-gray-400">These Terms follow the laws of India.</p>
+            </section>
+
+            <section class="bg-gray-50 dark:bg-gray-900/40 p-5 rounded-lg">
+                <h2 class="text-xl font-bold mb-2 flex items-center gap-2"><i class="fas fa-headset text-primary w-6"></i> 10. Contact Us</h2>
+                <p class="text-gray-600 dark:text-gray-400">Questions? Reach out at <a href="/contact" class="text-primary hover:underline">our Contact page</a> or email <a href="mailto:<%= supportEmail %>" class="text-primary hover:underline"><%= supportEmail %></a>.</p>
+            </section>
+        </div>
+    </div>
+</main>
+<%- include('partials/footer') %>
