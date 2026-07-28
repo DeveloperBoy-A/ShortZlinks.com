@@ -313,7 +313,10 @@ localStorage.theme=document.documentElement.classList.contains("dark")?"dark":"l
 // (previously this button had no click handler at all)
 document.getElementById("sidebarToggle")?.addEventListener("click", (e) => {
     e.stopPropagation();
-    document.getElementById("sidebarMenu")?.classList.toggle("hidden");
+    const aside = document.getElementById("sidebarAside");
+    if (!aside) return;
+    aside.classList.toggle("hidden");
+    aside.classList.toggle("flex");
 });
 
 // --- Welcome-back animation: plays once on the first page load right after a successful login ---
