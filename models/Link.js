@@ -6,6 +6,7 @@ const linkSchema = new mongoose.Schema({
     originalUrl: { type: String, required: true },
     alias: { type: String, required: true, unique: true, default: () => nanoid(7) },
     domain: { type: String }, // For multi-domain support
+    expiresAt: { type: Date, default: null },
     totalClicks: { type: Number, default: 0 },
     validEarnings: { type: Number, default: 0.00 },
     isActive: { type: Boolean, default: true }
