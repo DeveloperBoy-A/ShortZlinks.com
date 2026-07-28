@@ -30,19 +30,34 @@ const COUNTRY_RATES = {
 // 1. User Dashboard: Create Link
 exports.createLink = async (req, res) => {
     try {
-        const { originalUrl, domain } = req.body; // Extract domain
+        const { originalUrl, domain, alias, expiresAt } = req.body;
 
         // Fetch default domain if user didn't select one
         const settings = await Setting.findOne();
         const selectedDomain = domain || settings.defaultDomain;
 
-        await Link.create({
+        const linkData = {
             userId: req.session.user.id,
             originalUrl,
             domain: selectedDomain // Save selected domain
-        });
-        res.redirect('/user/dashboard?success=link_created');
+        };
+
+        // Advance options (both optional)
+        const trimmedAlias = (alias || '').trim();
+        if (trimmedAlias) linkData.alias = trimmedAlias;
+        if (expiresAt) linkData.expiresAt = new Date(expiresAt);
+
+        const link = await Link.create(linkData);
+
+        const shortUrl = `https://${selectedDomain}/${link.alias}`;
+        res.redirect(`/user/dashboard?success=link_created&shortUrl=${encodeURIComponent(shortUrl)}`);
+
     } catch (error) {
+        if (error.code === 11000) {
+            // Duplicate alias — send them back with a clear message instead of a raw 500
+            return res.redirect('/user/dashboard?error=alias_taken');
+        }
+        console.error('Create Link Error:', error);
         res.status(500).send('Error creating link');
     }
 };
