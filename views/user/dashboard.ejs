@@ -17,32 +17,79 @@
             <h1 class="text-2xl font-black text-gray-800 dark:text-white mb-2">Welcome back, <%= user.firstName || user.email.split('@')[0] %>!</h1>
 
             <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-blue-200 dark:border-gray-700">
-                <form action="/user/links/create" method="POST" class="flex flex-col md:flex-row gap-4">
-                    <div class="relative flex-1">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fas fa-link text-gray-400"></i>
+                <% if (typeof query !== 'undefined' && query.success === 'link_created' && query.shortUrl) { %>
+                    <div class="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center justify-between gap-3 flex-wrap">
+                        <span class="text-green-700 dark:text-green-400 font-bold flex items-center gap-2"><i class="fas fa-check-circle"></i> Link created:</span>
+                        <a href="<%= query.shortUrl %>" target="_blank" class="text-primary font-bold hover:underline break-all"><%= query.shortUrl %></a>
+                    </div>
+                <% } %>
+                <% if (typeof query !== 'undefined' && query.error === 'alias_taken') { %>
+                    <div class="mb-4 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 font-bold flex items-center gap-2">
+                        <i class="fas fa-exclamation-circle"></i> That custom alias is already taken â€” please try a different one.
+                    </div>
+                <% } %>
+
+                <form action="/user/links/create" method="POST" id="shortenForm">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-link text-gray-400"></i>
+                            </div>
+                            <input type="url" name="originalUrl" placeholder="Paste your long URL here..." required class="w-full pl-10 p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none text-lg bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition">
                         </div>
-                        <input type="url" name="originalUrl" placeholder="Paste your long URL here..." required class="w-full pl-10 p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none text-lg bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition">
                     </div>
 
-                    <select name="domain" class="p-4 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 dark:bg-gray-900 font-bold text-gray-700 dark:text-gray-200 cursor-pointer">
-                        <% if(typeof settings !== 'undefined') { %>
-                            <option value="<%= settings.defaultDomain %>"><%= settings.defaultDomain %></option>
-                            <% if(settings.activeDomains && settings.activeDomains.length > 0) { %>
-                                <% settings.activeDomains.forEach(domain => { %>
-                                    <option value="<%= domain %>"><%= domain %></option>
-                                <% }) %>
-                            <% } %>
-                        <% } else { %>
-                            <option value="shortzlinks.com">shortzlinks.com</option>
-                        <% } %>
-                    </select>
+                    <!-- Advance options: alias / domain / expiration â€” hidden until "Advance" is clicked -->
+                    <div id="advanceOptions" class="hidden mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 border-t dark:border-gray-700 pt-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Custom Alias (optional)</label>
+                            <input type="text" name="alias" placeholder="my-custom-link" pattern="[A-Za-z0-9_-]{3,20}" title="3-20 letters, numbers, - or _"
+                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Domain</label>
+                            <select name="domain" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 dark:bg-gray-900 font-bold text-gray-700 dark:text-gray-200 cursor-pointer">
+                                <% if(typeof settings !== 'undefined') { %>
+                                    <option value="<%= settings.defaultDomain %>"><%= settings.defaultDomain %></option>
+                                    <% if(settings.activeDomains && settings.activeDomains.length > 0) { %>
+                                        <% settings.activeDomains.forEach(domain => { %>
+                                            <option value="<%= domain %>"><%= domain %></option>
+                                        <% }) %>
+                                    <% } %>
+                                <% } else { %>
+                                    <option value="shortzlinks.com">shortzlinks.com</option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Expiration Date (optional)</label>
+                            <input type="date" name="expiresAt" min="<%= new Date().toISOString().split('T')[0] %>"
+                                class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+                        </div>
+                    </div>
 
-                    <button type="submit" class="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-700 shadow-md whitespace-nowrap transition transform hover:-translate-y-0.5">
-                        Shorten <i class="fas fa-magic ml-2"></i>
-                    </button>
+                    <div class="flex flex-col md:flex-row gap-3 mt-4">
+                        <button type="submit" class="flex-1 bg-blue-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-700 shadow-md whitespace-nowrap transition transform hover:-translate-y-0.5">
+                            Shorten <i class="fas fa-magic ml-2"></i>
+                        </button>
+                        <button type="button" id="toggleAdvanceBtn" class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-8 py-4 rounded-lg font-bold hover:bg-gray-200 dark:hover:bg-gray-600 shadow-sm whitespace-nowrap transition">
+                            <i class="fas fa-sliders-h mr-2"></i> <span id="advanceBtnLabel">Advance</span>
+                        </button>
+                    </div>
                 </form>
             </div>
+
+            <script>
+                (function () {
+                    var toggleBtn = document.getElementById('toggleAdvanceBtn');
+                    var advancePanel = document.getElementById('advanceOptions');
+                    var label = document.getElementById('advanceBtnLabel');
+                    toggleBtn?.addEventListener('click', function () {
+                        var isHidden = advancePanel.classList.toggle('hidden');
+                        label.textContent = isHidden ? 'Advance' : 'Hide Options';
+                    });
+                })();
+            </script>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border-l-4 border-blue-500 flex justify-between items-center relative overflow-hidden">
@@ -167,9 +214,12 @@
                 <div class="bg-white dark:bg-gray-800 p-3 border-b border-gray-100 dark:border-gray-700 text-sm font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
                     <i class="fas fa-chart-line"></i> Statistics - A Joyful Data Visualization!
                 </div>
-                <div class="p-4 w-full overflow-x-auto">
-                    <div style="min-width: 600px; height: 300px;">
-                        <canvas id="viewsChart"></canvas>
+                <div class="p-4 w-full">
+                    <div style="position: relative; height: 260px; width: 100%;">
+                        <canvas id="viewsChart" width="600" height="260"></canvas>
+                        <p id="chartFallbackMsg" class="hidden text-center text-sm text-gray-400 py-16">
+                            <i class="fas fa-exclamation-triangle mr-1"></i> Chart couldn't load â€” please refresh the page.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -271,7 +321,18 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const ctx = document.getElementById('viewsChart').getContext('2d');
+        const canvas = document.getElementById('viewsChart');
+        if (!canvas) return;
+
+        // If Chart.js failed to load (slow network, blocked CDN, etc.) show a
+        // friendly fallback instead of leaving a silently blank box.
+        if (typeof Chart === 'undefined') {
+            canvas.classList.add('hidden');
+            document.getElementById('chartFallbackMsg')?.classList.remove('hidden');
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
         
         const dynamicLabels = <%- JSON.stringify(typeof chartLabels !== 'undefined' ? chartLabels : [todayDateStr]) %>;
         const dynamicData = <%- JSON.stringify(typeof chartData !== 'undefined' ? chartData : [typeof todayClicks !== 'undefined' ? todayClicks : 0]) %>;
