@@ -1,6 +1,6 @@
-<aside class="w-full md:w-72 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col shrink-0 min-h-screen transition-all duration-300 z-40 relative">
+<aside id="sidebarAside" class="hidden md:flex w-full md:w-72 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex-col shrink-0 md:min-h-screen transition-all duration-300 z-40 relative">
 
-    <div id="sidebarMenu" class="hidden md:flex flex-col h-full overflow-y-auto custom-scrollbar">
+    <div id="sidebarMenu" class="flex flex-col h-full overflow-y-auto custom-scrollbar">
         
         <div class="hidden md:flex justify-center items-center py-6 border-b dark:border-gray-700">
             <a href="/" class="flex items-center">
@@ -186,8 +186,7 @@
 (function() {
     document.addEventListener('DOMContentLoaded', function () {
 
-        // Mobile sidebar open/close is handled by header.ejs's sidebarToggle button
-        var sidebarMenu = document.getElementById('sidebarMenu');
+        // Mobile sidebar open/close is handled by header.ejs's sidebarToggle button (toggles #sidebarAside)
 
         // Dropdown Accordion Logic â€” inline onclick ki jagah addEventListener
         document.querySelectorAll('[data-dropdown]').forEach(function (btn) {
