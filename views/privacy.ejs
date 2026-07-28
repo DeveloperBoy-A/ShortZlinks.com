@@ -1,0 +1,93 @@
+<%- include('partials/header') %>
+<main class="flex-grow p-6 bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 md:p-10 rounded-xl shadow-lg my-6">
+        <h1 class="text-3xl font-black mb-2 flex items-center gap-3"><i class="fas fa-user-shield text-primary"></i> Privacy Policy</h1>
+        <p class="text-sm text-gray-400 mb-8">Last Updated: 27-07-2026</p>
+
+        <p class="text-gray-600 dark:text-gray-400 mb-8">
+            At <%= siteName %>, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your data when you use our service. By using our website, you agree to this policy.
+        </p>
+
+        <div class="space-y-8">
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-database text-primary w-6"></i> 1. Information We Collect</h2>
+                <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Data You Provide</p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1 mb-3">
+                    <li>URLs you shorten</li>
+                    <li>Email address (if you register) <i class="fas fa-envelope text-gray-400"></i></li>
+                    <li>IP address &amp; browser info</li>
+                </ul>
+                <p class="font-semibold text-gray-700 dark:text-gray-300 mb-1">Automatically Collected Data</p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>Click analytics (e.g. number of clicks, location, device)</li>
+                    <li>Cookies &amp; tracking technologies</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-cogs text-primary w-6"></i> 2. How We Use Your Data</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-2">We use your information to:</p>
+                <ul class="space-y-1 text-green-600 dark:text-green-400 font-medium">
+                    <li><i class="fas fa-check mr-1"></i> Shorten and track links</li>
+                    <li><i class="fas fa-check mr-1"></i> Improve our service</li>
+                    <li><i class="fas fa-check mr-1"></i> Prevent abuse &amp; fraud</li>
+                    <li><i class="fas fa-check mr-1"></i> Send updates (if subscribed)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-lock text-primary w-6"></i> 3. Data Protection &amp; Security</h2>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>We don't sell your data.</li>
+                    <li>Encryption (HTTPS) keeps your data safe.</li>
+                    <li>Limited access â€” only authorized staff can view data.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-share-alt text-primary w-6"></i> 4. Third-Party Sharing</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-2">We may share data with:</p>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>Analytics providers (Google Analytics, etc.)</li>
+                    <li>Law enforcement (if required by law)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-cookie-bite text-primary w-6"></i> 5. Cookies &amp; Tracking</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-2">We use cookies to improve user experience and analyze traffic. You can disable cookies in your browser settings.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-globe text-primary w-6"></i> 6. International Data Transfers</h2>
+                <p class="text-gray-600 dark:text-gray-400">Your data may be processed outside your country but is protected under strict privacy laws.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-trash-alt text-primary w-6"></i> 7. Data Retention &amp; Deletion</h2>
+                <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>Shortened links are stored until deleted.</li>
+                    <li>User accounts can be deleted upon request.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-child text-primary w-6"></i> 8. Children's Privacy</h2>
+                <p class="text-gray-600 dark:text-gray-400">Our service is not for children under 13. If we discover a child's data, we'll delete it.</p>
+            </section>
+
+            <section>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-2"><i class="fas fa-file-signature text-primary w-6"></i> 9. Changes to This Policy</h2>
+                <p class="text-gray-600 dark:text-gray-400">We may update this policy from time to time. Please check back for changes.</p>
+            </section>
+
+            <section class="bg-gray-50 dark:bg-gray-900/40 p-5 rounded-lg">
+                <h2 class="text-xl font-bold mb-2 flex items-center gap-2"><i class="fas fa-headset text-primary w-6"></i> 10. Contact Us</h2>
+                <p class="text-gray-600 dark:text-gray-400">Questions? Email us at <a href="mailto:<%= supportEmail %>" class="text-primary hover:underline"><%= supportEmail %></a></p>
+            </section>
+        </div>
+
+        <p class="mt-10 text-center font-semibold text-gray-700 dark:text-gray-300">By using <%= siteName %> you agree to this Privacy Policy. <i class="fas fa-check-circle text-green-500"></i></p>
+    </div>
+</main>
+<%- include('partials/footer') %>
