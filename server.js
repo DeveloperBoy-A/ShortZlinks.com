@@ -47,9 +47,10 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdnjs.cloudflare.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
-            imgSrc: ["'self'", "data:", "https://api.dicebear.com"],
+            fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "data:"],
+            imgSrc: ["'self'", "data:", "https://api.dicebear.com", "https://flagcdn.com", "https://api.qrserver.com"],
         },
     }
 }));
@@ -90,6 +91,7 @@ app.use(async (req, res, next) => {
     res.locals.path = req.path;
     res.locals.supportEmail = process.env.SUPPORT_EMAIL;
     res.locals.notifications = []; // default so header.ejs never crashes if a controller forgets to pass it
+    res.locals.query = req.query;  // lets any view react to query flags (e.g. ?subscribed=1) without every controller passing it
 
     try {
         let settings = await Setting.findOne();
