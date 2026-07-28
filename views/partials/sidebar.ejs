@@ -1,13 +1,4 @@
 <aside class="w-full md:w-72 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col shrink-0 min-h-screen transition-all duration-300 z-40 relative">
-    
-    <div class="md:hidden flex justify-between items-center p-4 border-b dark:border-gray-700 bg-white dark:bg-gray-800">
-        <a href="/" class="flex items-center">
-            <img src="/images/logo.png" alt="ShortZlinks" class="h-8 w-auto">
-        </a>
-        <button id="menuToggle" class="text-gray-600 dark:text-gray-300 focus:outline-none bg-blue-500 text-white p-2 rounded">
-            <i class="fas fa-bars fa-lg"></i>
-        </button>
-    </div>
 
     <div id="sidebarMenu" class="hidden md:flex flex-col h-full overflow-y-auto custom-scrollbar">
         
@@ -195,16 +186,10 @@
 (function() {
     document.addEventListener('DOMContentLoaded', function () {
 
-        // Toggle Mobile Sidebar
-        var menuToggleBtn = document.getElementById('menuToggle');
+        // Mobile sidebar open/close is handled by header.ejs's sidebarToggle button
         var sidebarMenu = document.getElementById('sidebarMenu');
-        if (menuToggleBtn && sidebarMenu) {
-            menuToggleBtn.addEventListener('click', function () {
-                sidebarMenu.classList.toggle('hidden');
-            });
-        }
 
-        // Dropdown Accordion Logic Ã¢â‚¬â€ inline onclick ki jagah addEventListener
+        // Dropdown Accordion Logic â€” inline onclick ki jagah addEventListener
         document.querySelectorAll('[data-dropdown]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var menuId = btn.getAttribute('data-dropdown');
