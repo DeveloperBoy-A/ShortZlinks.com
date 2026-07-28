@@ -49,7 +49,11 @@ exports.createLink = async (req, res) => {
 
         const link = await Link.create(linkData);
 
-        const shortUrl = `https://${selectedDomain}/${link.alias}`;
+        // Build the real, correct short URL:
+        // - strip any protocol already baked into defaultDomain/BASE_URL to avoid "https://https://"
+        // - the redirect route is mounted at /l, so the alias must be prefixed with /l/
+        const cleanDomain = selectedDomain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+        const shortUrl = `https://${cleanDomain}/l/${link.alias}`;
         res.redirect(`/user/dashboard?success=link_created&shortUrl=${encodeURIComponent(shortUrl)}`);
 
     } catch (error) {
