@@ -46,6 +46,17 @@ exports.clickFrequencyLimiter = async (req, res, next) => {
             return res.status(404).render('404');
         }
 
+        if (link.expiresAt && link.expiresAt < new Date()) {
+            return res.status(410).render('404', {
+                title: 'Link Expired',
+                message: "This link has expired and is no longer active."
+            });
+        }
+
+        if (link.isActive === false) {
+            return res.status(404).render('404');
+        }
+
         // Check for clicks from this IP on this Link in the last 24 hours
         const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
         
