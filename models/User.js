@@ -45,7 +45,10 @@ const userSchema = new mongoose.Schema({
     // Two-Factor Authentication (TOTP)
     twoFactorEnabled: { type: Boolean, default: false },
     twoFactorSecret: { type: String, default: null },       // active secret, once confirmed
-    twoFactorPendingSecret: { type: String, default: null }  // secret awaiting confirmation
+    twoFactorPendingSecret: { type: String, default: null }, // secret awaiting confirmation
+
+    // Google OAuth
+    googleId: { type: String, default: null, unique: true, sparse: true }
 
 }, { timestamps: true });
 
