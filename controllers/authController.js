@@ -58,13 +58,17 @@ const LoginActivity = require('../models/LoginActivity');
 const { verifyToken } = require('../utils/totp');
 
 // Completes login by writing the session + an activity record, then redirects
-function finalizeLogin(req, res, user) {
+function finalizeLogin(req, res, user, rememberMe) {
     req.session.user = {
         id: user._id,
         role: user.role,
         email: user.email,
         username: user.username
     };
+
+    if (rememberMe) {
+        req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
+    }
 
     LoginActivity.create({
         userId: user._id,
@@ -88,7 +92,7 @@ function finalizeLogin(req, res, user) {
 
 exports.login = async (req, res) => {
     try {
-        const { identifier, email, password } = req.body;
+        const { identifier, email, password, rememberMe } = req.body;
 
         const loginId = (identifier || email || "").trim();
         const normalizedLogin = loginId.toLowerCase();
@@ -123,7 +127,7 @@ exports.login = async (req, res) => {
         // If 2FA is enabled on this account, don't log the user in yet —
         // stash a pending id in the session and send them to the OTP challenge.
         if (user.twoFactorEnabled) {
-            req.session.pending2FA = { id: user._id.toString() };
+            req.session.pending2FA = { id: user._id.toString(), rememberMe: !!rememberMe };
             return req.session.save((err) => {
                 if (err) {
                     console.error("Session Save Error:", err);
@@ -133,7 +137,7 @@ exports.login = async (req, res) => {
             });
         }
 
-        finalizeLogin(req, res, user);
+        finalizeLogin(req, res, user, !!rememberMe);
 
     } catch (error) {
         console.error("Login Error:", error);
@@ -175,8 +179,9 @@ exports.verify2FAChallenge = async (req, res) => {
             });
         }
 
+        const rememberMe = !!req.session.pending2FA.rememberMe;
         req.session.pending2FA = null;
-        finalizeLogin(req, res, user);
+        finalizeLogin(req, res, user, rememberMe);
 
     } catch (error) {
         console.error('2FA Challenge Error:', error);
@@ -253,6 +258,120 @@ exports.resetPassword = async (req, res) => {
 
     } catch (error) {
         res.status(500).send('Error resetting password');
+    }
+};
+
+// ==========================================
+// GOOGLE OAUTH LOGIN
+// Manual Authorization Code flow (no extra npm package needed — uses the
+// node-fetch dependency already present in this project).
+// Requires GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET env vars to be set on
+// Render. If they aren't set, the button gracefully sends the user back
+// with a clear message instead of crashing.
+// ==========================================
+const fetch = require('node-fetch');
+
+exports.googleLogin = (req, res) => {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+        return res.redirect('/login?error=google_not_configured');
+    }
+
+    const state = crypto.randomBytes(16).toString('hex');
+    req.session.googleOAuthState = state;
+
+    const redirectUri = process.env.GOOGLE_CALLBACK_URL || `${req.protocol}://${req.get('host')}/auth/google/callback`;
+
+    const params = new URLSearchParams({
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        redirect_uri: redirectUri,
+        response_type: 'code',
+        scope: 'openid email profile',
+        state,
+        prompt: 'select_account'
+    });
+
+    req.session.save(() => {
+        res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
+    });
+};
+
+exports.googleCallback = async (req, res) => {
+    try {
+        const { code, state, error: googleError } = req.query;
+
+        if (googleError) {
+            return res.redirect('/login?error=google_cancelled');
+        }
+
+        if (!code || !state || state !== req.session.googleOAuthState) {
+            return res.redirect('/login?error=google_failed');
+        }
+        req.session.googleOAuthState = null;
+
+        const redirectUri = process.env.GOOGLE_CALLBACK_URL || `${req.protocol}://${req.get('host')}/auth/google/callback`;
+
+        // Exchange the authorization code for tokens
+        const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                code,
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                redirect_uri: redirectUri,
+                grant_type: 'authorization_code'
+            })
+        });
+        const tokenData = await tokenRes.json();
+
+        if (!tokenData.access_token) {
+            console.error('Google token exchange failed:', tokenData);
+            return res.redirect('/login?error=google_failed');
+        }
+
+        // Fetch the user's Google profile
+        const profileRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${tokenData.access_token}` }
+        });
+        const profile = await profileRes.json();
+
+        if (!profile.email) {
+            return res.redirect('/login?error=google_failed');
+        }
+
+        // Find or create the user
+        let user = await User.findOne({ $or: [{ googleId: profile.sub }, { email: profile.email.toLowerCase() }] });
+
+        if (!user) {
+            const baseUsername = (profile.email.split('@')[0] || 'user').replace(/[^a-zA-Z0-9_]/g, '');
+            let username = baseUsername;
+            let suffix = 0;
+            while (await User.findOne({ username })) {
+                suffix += 1;
+                username = `${baseUsername}${suffix}`;
+            }
+
+            const randomPassword = crypto.randomBytes(24).toString('hex');
+            user = await User.create({
+                username,
+                email: profile.email.toLowerCase(),
+                password: await bcrypt.hash(randomPassword, 10),
+                googleId: profile.sub
+            });
+        } else if (!user.googleId) {
+            user.googleId = profile.sub;
+            await user.save();
+        }
+
+        if (user.isActive === false) {
+            return res.status(403).send('Account Disabled');
+        }
+
+        finalizeLogin(req, res, user, false);
+
+    } catch (error) {
+        console.error('Google Callback Error:', error);
+        res.redirect('/login?error=google_failed');
     }
 };
     
