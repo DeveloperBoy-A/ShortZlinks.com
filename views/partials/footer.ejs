@@ -114,6 +114,10 @@
 
 </footer>
 
+<% if (typeof user !== 'undefined' && user) { %>
+    <%- include('sidebar') %>
+<% } %>
+
 <!-- Floating support buttons â€” visible on every page, bottom-right corner -->
 <div class="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
     <a href="https://t.me/YourBotName" target="_blank"
@@ -127,6 +131,56 @@
         <i class="fas fa-headset text-xl"></i>
     </a>
 </div>
+
+<script>
+    // Site-wide clipboard helper. Used by the dashboard "Copy" button and the
+    // Manage Links page. Falls back to a hidden-textarea + execCommand method
+    // for browsers/contexts where the modern Clipboard API isn't available.
+    function copyToClipboard(text, btnEl) {
+        function onSuccess() {
+            if (btnEl) {
+                var original = btnEl.getAttribute('data-original-html') || btnEl.innerHTML;
+                btnEl.setAttribute('data-original-html', original);
+                btnEl.innerHTML = '<i class="fas fa-check"></i> <span>Copied!</span>';
+                setTimeout(function () { btnEl.innerHTML = original; }, 1500);
+            } else {
+                showCopyToast();
+            }
+        }
+
+        function fallback() {
+            try {
+                var temp = document.createElement('textarea');
+                temp.value = text;
+                temp.style.position = 'fixed';
+                temp.style.opacity = '0';
+                document.body.appendChild(temp);
+                temp.focus();
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                onSuccess();
+            } catch (err) {
+                console.error('Copy failed:', err);
+                alert('Could not copy automatically â€” please copy manually:\n' + text);
+            }
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(onSuccess).catch(fallback);
+        } else {
+            fallback();
+        }
+    }
+
+    function showCopyToast() {
+        var toast = document.createElement('div');
+        toast.textContent = 'Link copied to clipboard!';
+        toast.className = 'fixed bottom-24 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-lg z-[60]';
+        document.body.appendChild(toast);
+        setTimeout(function () { toast.remove(); }, 1800);
+    }
+</script>
 
 </body>
 </html>
