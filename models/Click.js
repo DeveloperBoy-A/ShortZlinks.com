@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const clickSchema = new mongoose.Schema({
     linkId: { type: mongoose.Schema.Types.ObjectId, ref: 'Link', required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false, default: null },
     ipAddress: { type: String, required: true },
     country: { type: String, default: 'Unknown' },
     userAgent: { type: String },
