@@ -36,9 +36,12 @@
         padding-bottom: 0.5rem;
     }
 
-    /* Upgraded Image Styling */
+    /* FIX: Upgraded Image Styling with Min-Height and Background */
     .article-image {
         width: 100%;
+        height: auto;
+        min-height: 250px;
+        background-color: #e5e7eb; /* Shows a grey placeholder while loading */
         border-radius: 16px;
         margin: 2.5rem 0 1rem 0;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
@@ -110,6 +113,13 @@
         top: 0; left: 0; width: 100%; height: 4px;
         background: linear-gradient(90deg, #22c55e, #3b82f6);
     }
+
+    .clickable-btn {
+        position: relative;
+        z-index: 100 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
 </style>
 
 <!-- Sticky Top Navigation -->
@@ -153,25 +163,25 @@
 
             <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
 
-            <!-- FIX 1: Changed to Anchor Link for 100% Working Scroll functionality -->
+            <!-- Scroll Button -->
             <a href="#bottom-verify-section" id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 relative z-50">
                 Scroll Down To Continue <i class="fas fa-arrow-down ml-2 animate-bounce"></i>
             </a>
         </div>
 
-        <!-- Article Content with Relevant Images -->
+        <!-- Article Content with NEW Reliable Images -->
         <div class="article-body mt-10">
             <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security.</p>
             
-            <!-- IMAGE 1: General Wealth/Finance -->
-            <img src="https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=1200&q=80" alt="Financial Growth and Planning" class="article-image">
+            <!-- IMAGE 1: Financial Planning (Pexels Stable URL) -->
+            <img src="https://images.pexels.com/photos/4386476/pexels-photo-4386476.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Financial Growth and Planning" class="article-image">
             <p class="image-caption">Strategic planning is the foundation of wealth generation.</p>
 
             <h2>1. Developing a Bulletproof Budgeting Routine</h2>
             <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities, 30% for wants, and 20% strictly for savings and investments.</p>
             
-            <!-- IMAGE 2: Budgeting/Calculators -->
-            <img src="https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1200&q=80" alt="Budgeting Tools and Calculator" class="article-image">
+            <!-- IMAGE 2: Budgeting -->
+            <img src="https://images.pexels.com/photos/5466786/pexels-photo-5466786.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Budgeting Tools and Calculator" class="article-image">
             <p class="image-caption">Track every penny to ensure your budget aligns with your long-term goals.</p>
 
             <div class="ad-wrapper"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Article Ad Slot 1 ]</div></div>
@@ -179,15 +189,15 @@
             <h2>2. The Psychology of Saving Money</h2>
             <p>You shouldn't wait until you "make more money" to start saving; saving is a priority that creates wealth over time, regardless of income. Small, automated, and regular savings do wonders thanks to compound interest. With digital wallets and auto-transfer features in 2026, you can easily set your bank to move 10% of your paycheck into a savings account before you even see it.</p>
 
-            <!-- IMAGE 3: Saving/Piggy Bank -->
-            <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&q=80" alt="Saving Money Piggy Bank" class="article-image">
+            <!-- IMAGE 3: Saving -->
+            <img src="https://images.pexels.com/photos/259249/pexels-photo-259249.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Saving Money Piggy Bank" class="article-image">
             <p class="image-caption">Automating your savings makes building an emergency fund effortless.</p>
 
             <h2>3. Mastering Debt and Credit Scores</h2>
             <p>Not all debt is bad, but unmanaged consumer debt is a wealth destroyer. Focus on eliminating high-interest liabilities, such as credit card balances, using the Avalanche method (paying highest interest first) or the Snowball method (paying smallest balances first for psychological wins).</p>
 
-            <!-- IMAGE 4: Credit Cards/Debt -->
-            <img src="https://images.unsplash.com/photo-1580519542036-ed47f3e42214?auto=format&fit=crop&w=1200&q=80" alt="Credit Card Management" class="article-image">
+            <!-- IMAGE 4: Credit Cards -->
+            <img src="https://images.pexels.com/photos/164527/pexels-photo-164527.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Credit Card Management" class="article-image">
             <p class="image-caption">Maintain a credit utilization below 30% for a healthy credit score.</p>
 
             <div class="ad-wrapper"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Article Ad Slot 2 ]</div></div>
@@ -195,12 +205,12 @@
             <h2>4. Fundamentals of Investing</h2>
             <p>Investing is not the prerogative of Wall Street experts. Today, anyone can access index funds, ETFs, and robo-advisors from their smartphone. The key is understanding that time in the market beats timing the market. Begin with low-risk, broad-market index funds (like the S&P 500) and let compounding do the heavy lifting.</p>
             
-            <!-- IMAGE 5: Investing/Stock Market -->
-            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80" alt="Investing and Growth" class="article-image">
+            <!-- IMAGE 5: Investing -->
+            <img src="https://images.pexels.com/photos/6802049/pexels-photo-6802049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Investing and Growth" class="article-image">
             <p class="image-caption">Consistent long-term investing in the stock market yields the best results.</p>
         </div>
 
-        <!-- STEP 2: FINAL CONTINUE BUTTON (Target ID for Top Scroll Button) -->
+        <!-- STEP 2: FINAL CONTINUE BUTTON -->
         <div class="mt-16 bg-gray-50 border-2 border-gray-100 rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-inner relative z-20" id="bottom-verify-section">
             <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
                 <i class="fas fa-lock-open text-2xl"></i>
@@ -211,8 +221,8 @@
                 Please wait for the timer at the top to complete...
             </div>
 
-            <!-- FIX 2: Simplified Bottom Button to ensure no CSS click-blocking -->
-            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide relative z-50">
+            <!-- Destination Button -->
+            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide relative z-50 clickable-btn">
                 Get Destination Link <i class="fas fa-external-link-alt ml-2"></i>
             </a>
 
@@ -272,7 +282,7 @@
                     continueBtn.style.display = 'flex'; 
                 }
                 
-                clearInterval(customLogic); // Stop checking once done
+                clearInterval(customLogic);
             }
         }, 500);
     });
