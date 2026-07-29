@@ -41,22 +41,31 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ t: token })
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.nextUrl) {
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok && data.nextUrl) {
                         timerDisplay.style.display = 'none';
-                        instructionText.innerText = "Verification Complete!";
+                        instructionText.innerText = "Verification Complete! Redirecting...";
                         continueBtn.href = data.nextUrl;
                         continueBtn.classList.remove('hidden');
-                        
+
                         // GSAP Pulse Animation on Button
                         gsap.to("#continueBtn", { scale: 1.05, repeat: -1, yoyo: true, duration: 0.8 });
+
+                        // Auto-advance so people don't get stuck waiting â€” the button remains as a manual fallback
+                        setTimeout(() => { window.location.href = data.nextUrl; }, 1800);
                     } else {
-                        instructionText.innerText = "Error processing request.";
+                        instructionText.innerText = "Session expired â€” please click the link again from the original page.";
+                        continueBtn.textContent = 'Retry';
+                        continueBtn.href = window.location.href;
+                        continueBtn.classList.remove('hidden');
                     }
                 })
                 .catch(err => {
-                    instructionText.innerText = "Network Error. Please reload.";
+                    instructionText.innerText = "Network error â€” tap Retry.";
+                    continueBtn.textContent = 'Retry';
+                    continueBtn.href = window.location.href;
+                    continueBtn.classList.remove('hidden');
                 });
             }
         }, 1000);
