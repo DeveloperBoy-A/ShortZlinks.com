@@ -1,31 +1,173 @@
 <%- include('../partials/header') %>
-<main class="flex-grow flex items-center justify-center p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-900 dark:to-gray-800">
-    <div class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-2xl text-center max-w-md w-full border-2 border-green-400">
-        <i class="fas fa-check-circle text-6xl text-green-500 mb-6 drop-shadow-md"></i>
-        <h2 class="text-3xl font-black mb-2 text-gray-800 dark:text-gray-100">Congratulations ðŸŽ‰</h2>
-        <p class="text-lg text-gray-600 dark:text-gray-400 mb-2">Your destination link is securely ready.</p>
-        <p class="text-sm text-gray-400 mb-8" id="autoRedirectNote">Redirecting automatically in <span id="finalCountdown">3</span>s...</p>
 
-        <a href="<%= destination %>" id="finalDestinationLink" rel="nofollow noreferrer" class="block w-full bg-green-500 text-white py-4 rounded-xl font-bold text-xl hover:bg-green-600 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-            Get Link <i class="fas fa-external-link-alt ml-2"></i>
-        </a>
+<!-- FontAwesome & Google Fonts for Premium Look -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+    .premium-wrapper {
+        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(to bottom, #d2fbf1 0%, #f6f8fb 20%, #ffffff 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
+        padding-bottom: 60px;
+    }
+
+    /* Floating Checkmark Icon */
+    .check-badge {
+        width: 85px;
+        height: 85px;
+        background: linear-gradient(135deg, #4bd5a4, #1b8a61);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: -42px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 7px solid #e1fbf4;
+        box-shadow: 0 8px 20px rgba(27, 138, 97, 0.3);
+        z-index: 10;
+    }
+
+    /* Main Card Styling */
+    .premium-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(27, 138, 97, 0.15);
+        position: relative;
+        margin-top: 50px;
+        padding: 60px 24px 30px;
+        text-align: center;
+    }
+
+    /* Primary Get Link Button */
+    .btn-primary {
+        background: linear-gradient(180deg, #1b8b64, #116849);
+        box-shadow: 0 6px 0 #0d4a33, 0 10px 20px rgba(17, 104, 73, 0.4);
+        transition: all 0.15s ease-in-out;
+    }
+    
+    .btn-primary:active {
+        transform: translateY(6px);
+        box-shadow: 0 0px 0 #0d4a33, 0 4px 10px rgba(17, 104, 73, 0.4);
+    }
+
+    /* Sponsor Section */
+    .sponsor-text {
+        color: #314259;
+        font-weight: 800;
+    }
+
+    /* Blue Sponsor Button */
+    .btn-secondary {
+        background: linear-gradient(180deg, #2087d8, #1360a0);
+        box-shadow: 0 6px 0 #0d487c, 0 10px 20px rgba(19, 96, 160, 0.3);
+        transition: all 0.15s ease-in-out;
+    }
+
+    .btn-secondary:active {
+        transform: translateY(6px);
+        box-shadow: 0 0px 0 #0d487c, 0 4px 10px rgba(19, 96, 160, 0.3);
+    }
+
+    /* Feature Boxes Styling */
+    .feature-box {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    }
+</style>
+
+<div class="premium-wrapper w-full text-gray-800">
+    <div class="w-full max-w-md md:max-w-lg px-5 flex flex-col items-center flex-grow z-10">
+        
+        <!-- Main Content Card -->
+        <div class="premium-card w-full border border-gray-100 border-b-4 border-b-green-100">
+            <!-- Floating Check Icon -->
+            <div class="check-badge">
+                <i class="fas fa-check text-4xl text-white"></i>
+            </div>
+            
+            <!-- Congratulations Text -->
+            <h1 class="text-xl md:text-2xl font-extrabold text-black tracking-wide mb-4 leading-tight uppercase">
+                Congratulations 🎉<br>Your link is securely ready.
+            </h1>
+            
+            <!-- Smile Please Block -->
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mt-6 mb-2 tracking-wide">
+                Smile Please!
+            </h2>
+            <p class="text-gray-400 text-sm md:text-base font-normal mb-8 px-2">
+                Enjoy every moment, because death is unexpected
+            </p>
+
+            <p class="text-gray-700 text-sm md:text-base font-medium mb-6">
+                Please click the button below to get your destination link.
+            </p>
+
+            <!-- Destination Link -->
+            <a href="<%= destination %>" id="finalDestinationLink" rel="nofollow noreferrer" class="btn-primary text-white font-bold py-4 px-8 rounded-full block w-full text-lg md:text-xl uppercase tracking-wider mb-2">
+                Get Link Now
+            </a>
+        </div>
+
+        <!-- NEW: Premium Features / Security Info Section (Increases Page Length & Trust) -->
+        <div class="w-full mt-12 grid grid-cols-1 gap-4">
+            <h3 class="text-center font-bold text-gray-400 uppercase tracking-widest text-sm mb-2">Why Trust Us</h3>
+            
+            <div class="grid grid-cols-3 gap-3 md:gap-4 text-center">
+                <!-- Box 1 -->
+                <div class="feature-box bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="bg-green-50 text-green-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                        <i class="fas fa-shield-check text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-700 text-xs md:text-sm uppercase">100% Secure</h4>
+                </div>
+                <!-- Box 2 -->
+                <div class="feature-box bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                        <i class="fas fa-bolt text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-700 text-xs md:text-sm uppercase">Fast Speed</h4>
+                </div>
+                <!-- Box 3 -->
+                <div class="feature-box bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="bg-purple-50 text-purple-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                        <i class="fas fa-user-shield text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-700 text-xs md:text-sm uppercase">Privacy Safe</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sponsored By Section -->
+        <div class="mt-14 text-center w-full">
+            <div class="w-16 h-1 bg-gray-200 mx-auto mb-8 rounded-full"></div> <!-- Divider -->
+            
+            <h3 class="text-2xl sponsor-text mb-4 font-bold">Sponsored By</h3>
+            
+            <!-- Custom Sponsor Logo/Text Area -->
+            <div class="flex items-center justify-center space-x-3 text-gray-800 mb-8 bg-white py-4 px-8 rounded-2xl shadow-sm border border-gray-100 inline-flex transition hover:shadow-md">
+                <i class="fas fa-shield-alt text-3xl text-blue-500"></i>
+                <div class="text-left leading-tight">
+                    <span class="text-2xl font-bold block text-gray-800">[Tokyo_Updates]</span>
+                    <span class="text-sm font-semibold text-gray-400 uppercase tracking-widest">Secure Links</span>
+                </div>
+            </div>
+
+            <!-- Become a sponsor button -->
+            <a href="#" class="btn-secondary text-white font-bold py-4 px-8 rounded-xl block w-full text-lg">
+                Become a Sponsor!
+            </a>
+        </div>
     </div>
-</main>
-<script>
-    // Auto-redirect after a short pause; the button above still works immediately
-    // as a manual fallback (useful if the browser blocks the automatic navigation).
-    (function () {
-        var seconds = 3;
-        var el = document.getElementById('finalCountdown');
-        var destination = document.getElementById('finalDestinationLink').href;
-        var timer = setInterval(function () {
-            seconds -= 1;
-            if (el) el.textContent = seconds;
-            if (seconds <= 0) {
-                clearInterval(timer);
-                window.location.href = destination;
-            }
-        }, 1000);
-    })();
-</script>
+</div>
+
 <%- include('../partials/footer') %>
