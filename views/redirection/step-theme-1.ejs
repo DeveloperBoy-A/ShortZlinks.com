@@ -1,218 +1,244 @@
 
+
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
     body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9fafb;
-        color: #374151;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #f4f7f6;
+        color: #1f2937;
     }
     
     .article-body p {
-        margin-bottom: 1.5rem;
-        line-height: 1.8;
-        font-size: 1.05rem;
+        font-family: 'Merriweather', serif;
+        margin-bottom: 1.75rem;
+        line-height: 1.9;
+        font-size: 1.125rem;
+        color: #374151;
     }
     
-    .article-body h2, .article-body h3 {
+    .article-body h2 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
         color: #111827;
-        font-weight: 700;
-        margin-top: 2.5rem;
-        margin-bottom: 1rem;
+        font-weight: 800;
+        font-size: 1.875rem;
+        margin-top: 3.5rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.5rem;
     }
 
     .article-image {
         width: 100%;
-        border-radius: 12px;
-        margin: 2rem 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-radius: 16px;
+        margin: 2.5rem 0;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         object-fit: cover;
     }
 
-    /* Ad Placeholders */
+    .drop-cap::first-letter {
+        font-size: 3.5rem;
+        font-weight: 800;
+        float: left;
+        line-height: 1;
+        padding-right: 0.5rem;
+        color: #2563eb;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .ad-wrapper {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 2.5rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        border: 1px solid #f3f4f6;
+        text-align: center;
+    }
+    .ad-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #9ca3af;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
     .ad-slot {
-        width: 100%;
-        background-color: #e5e7eb;
-        border: 2px dashed #9ca3af;
+        background-color: #f8fafc;
+        border: 2px dashed #cbd5e1;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6b7280;
+        color: #64748b;
         font-weight: 600;
-        margin: 2rem 0;
         border-radius: 8px;
+        width: 100%;
     }
-    .ad-responsive { min-height: 250px; }
     .ad-banner { height: 90px; }
+    .ad-rectangle { height: 250px; }
+    .ad-skyscraper { height: 600px; }
+    
+    @media (min-width: 768px) {
+        .ad-float-right { float: right; width: 300px; margin: 0.5rem 0 1.5rem 2rem; }
+    }
 
-    /* Verification Box Styling */
     .verify-box {
-        background: linear-gradient(to right, #eff6ff, #dbeafe);
-        border: 2px solid #bfdbfe;
-        border-radius: 12px;
-        padding: 24px 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+        border: 2px solid #bbf7d0;
+        border-radius: 16px;
+        padding: 32px 20px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .verify-box::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 4px;
+        background: linear-gradient(90deg, #22c55e, #3b82f6);
     }
 </style>
 
-<!-- Top Navigation -->
-<header class="bg-white shadow-sm py-4 px-6 mb-8 border-b border-gray-200">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <div class="text-2xl font-extrabold text-gray-800 tracking-tight">ShortInvest</div>
-        <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-600">
-            <a href="#" class="hover:text-blue-600">Home</a>
-            <a href="#" class="hover:text-blue-600">Finance</a>
-            <a href="#" class="hover:text-blue-600">Investing</a>
-            <a href="#" class="hover:text-blue-600">Contact</a>
+<!-- Sticky Top Navigation -->
+<header class="bg-white/90 backdrop-blur-md shadow-sm py-4 px-6 mb-8 border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-xl">S</div>
+            <div class="text-2xl font-extrabold text-gray-900 tracking-tight">ShortInvest</div>
+        </div>
+        <nav class="hidden md:flex space-x-8 text-sm font-bold text-gray-600">
+            <a href="#" class="hover:text-blue-600 transition">Markets</a>
+            <a href="#" class="hover:text-blue-600 transition">Personal Finance</a>
+            <a href="#" class="px-4 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition">Subscribe</a>
         </nav>
     </div>
 </header>
 
-<main class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<main class="max-w-7xl mx-auto px-4 grid grid-cols-1 xl:grid-cols-12 gap-10">
 
-    <!-- Left Column: Article Content & Verification -->
-    <div class="lg:col-span-2 bg-white p-5 md:p-10 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-blue-500 overflow-hidden">
+    <div class="xl:col-span-8 bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 overflow-hidden relative z-10">
 
         <!-- Article Header -->
-        <header class="mb-6">
-            <div class="text-sm text-blue-600 font-bold uppercase tracking-wider mb-2">Verification Step <%= step %> of <%= totalSteps %></div>
-            <h1 class="text-2xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Best Personal Finance Advice to Start in 2026</h1>
-            <div class="flex items-center text-gray-500 text-sm">
-                <span class="font-semibold text-gray-700">By Starindia</span>
-                <span class="mx-2">•</span>
-                <span>February 18, 2026</span>
-            </div>
+        <header class="mb-8 text-center md:text-left">
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 font-bold text-xs uppercase tracking-widest mb-4">Verification Step <%= step %> of <%= totalSteps %></span>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">The Ultimate Guide to Personal Finance: Building Wealth in 2026</h1>
         </header>
 
-        <!-- Top Ad Slot -->
-        <div class="ad-slot ad-responsive">
-            [ AdSense Responsive Ad Slot ]
-        </div>
+        <div class="ad-wrapper"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Header Ad Slot ]</div></div>
 
-        <!-- STEP 1: VERIFICATION TIMER BOX (Mobile Optimized) -->
-        <div class="verify-box flex flex-col items-center justify-center my-8" id="step1-box">
-            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 text-center">Please Wait for Verification...</h3>
-            
-            <!-- Timer ID required by timer-script (Fixed height stops bouncing) -->
-            <div class="text-5xl font-black text-red-500 my-2 h-16 flex items-center justify-center" id="timerDisplay">10</div>
-            
-            <!-- Instruction Text ID required by timer-script (Fixed height) -->
-            <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Analyzing traffic quality...</p>
+        <!-- STEP 1: VERIFICATION TIMER BOX -->
+        <div class="verify-box flex flex-col items-center justify-center my-10 relative z-20" id="step1-box">
+            <div class="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-shield-check text-3xl"></i>
+            </div>
+            <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-2 text-center">Securing Your Connection...</h3>
 
-            <!-- Custom Scroll Button (Uses Tailwind Flex for proper Android alignment) -->
-            <button id="scroll-btn" class="hidden w-full max-w-sm mx-auto bg-blue-600 text-white font-bold py-4 px-4 rounded-full shadow-lg hover:bg-blue-700 transition-all items-center justify-center text-sm md:text-base" onclick="scrollToBottom()">
-                Scroll Down & Click Continue <i class="fas fa-arrow-down ml-2"></i>
+            <!-- Timer Area -->
+            <div id="timer-wrapper" class="w-full flex justify-center">
+                <div class="text-6xl font-black text-blue-600 my-4 h-20 flex items-center justify-center" id="timerDisplay">10</div>
+            </div>
+
+            <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
+
+            <!-- Custom Scroll Button (Added high z-index and pointer-events-auto) -->
+            <button id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 relative z-50 cursor-pointer">
+                Scroll Down To Continue <i class="fas fa-arrow-down ml-2 animate-bounce"></i>
             </button>
         </div>
 
-        <!-- Article Body -->
-        <div class="article-body mt-8 text-gray-700">
-            <p>Best Personal Finance advice Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services, the shift in labor markets, and simple access to credit, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money and making smart choices and building a safe future.</p>
-
-            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80" alt="Best Personal Finance Advice" class="article-image">
-            
-            <div class="ad-slot ad-banner">
-                [ AdSense Inline Article Ad Slot ]
-            </div>
-
-            <h2 class="text-xl md:text-2xl font-bold">Developing a powerful budgeting routine</h2>
-            <p>Personal finance advice is based on budgeting. Budgeting is not a constraint of your life; it only makes your money more organized so that you can use it in a better way. The novices ought to be directed to develop a basic and realistic budget that addresses the necessities such as rent, food, transport, and utilities as well as to make space to save and to enjoy themselves.</p>
-
-            <img src="https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&w=800&q=80" alt="Smart Spending Behavior" class="article-image">
-            
-            <div class="ad-slot ad-responsive">
-                [ AdSense In-feed Ad Slot ]
-            </div>
-
-            <h2 class="text-xl md:text-2xl font-bold">Conclusion</h2>
-            <p>Personal finance advice for a start-up in 2026 is more about simplicity, discipline and smart habits. It does not require elaborate ideas or affluence to accomplish. You must have attitude, organization, discipline, and awareness.</p>
+        <!-- Article Content -->
+        <div class="article-body mt-10">
+            <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money, making smart choices, and building a stress-free future.</p>
+            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80" alt="Financial Planning" class="article-image">
+            <h2>1. Developing a Bulletproof Budgeting Routine</h2>
+            <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities (rent, food, utilities), 30% for wants, and 20% dedicated strictly to savings and investments.</p>
         </div>
 
-        <!-- STEP 2: FINAL CONTINUE BUTTON (Targeted by timer-script, Mobile Optimized) -->
-        <div class="mt-12 text-center pb-8 border-b border-gray-200 flex flex-col items-center justify-center" id="bottom-verify-section">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Verification Complete!</h3>
-            
-            <!-- Fixed height to prevent layout shifting -->
-            <div id="bottom-waiting-text" class="text-gray-400 font-semibold italic mb-4 h-6 flex items-center justify-center">
-                Please wait for the timer above to complete...
+        <!-- STEP 2: FINAL CONTINUE BUTTON -->
+        <div class="mt-16 bg-gray-50 border-2 border-gray-100 rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-inner relative z-20" id="bottom-verify-section">
+            <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-lock-open text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-gray-900 mb-4">Destination Link Ready</h3>
+
+            <div id="bottom-waiting-text" class="text-gray-500 font-semibold mb-6 h-6 flex items-center justify-center bg-gray-200 py-4 px-6 rounded-lg animate-pulse">
+                Please wait for the timer at the top to complete...
             </div>
 
-            <!-- Continue Button ID required by timer-script -->
-            <a id="continueBtn" href="#" class="hidden w-full max-w-sm mx-auto bg-blue-600 text-white py-4 px-4 rounded-full font-black text-lg hover:bg-blue-700 transition shadow-xl items-center justify-center">
-                Continue to Next Step <i class="fas fa-arrow-right ml-2"></i>
+            <!-- Niche wala button -->
+            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide relative z-50 cursor-pointer">
+                Get Destination Link <i class="fas fa-external-link-alt ml-2"></i>
             </a>
+
+            <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our terms of service.</p>
         </div>
 
-        <!-- Bottom Ad Slot -->
-        <div class="ad-slot ad-responsive">
-            [ AdSense Bottom Ad Slot ]
-        </div>
-
+        <div class="ad-wrapper mb-0 mt-8"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Bottom Ad ]</div></div>
     </div>
 
-    <!-- Right Column: Sidebar (Perfect for Sticky Ads) -->
-    <aside class="lg:col-span-1 hidden lg:block">
-        <div class="sticky top-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h3 class="text-lg font-bold border-b pb-2 mb-4">Advertisement</h3>
-                <!-- Sidebar Ad 1 -->
-                <div class="ad-slot ad-responsive h-64 w-full m-0">
-                    [ Sidebar Ad Slot ]
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h3 class="text-lg font-bold border-b pb-2 mb-4">Recent Posts</h3>
-                <ul class="space-y-3 text-sm text-gray-600">
-                    <li class="hover:text-blue-600 cursor-pointer">Creating Multiple Revenue Sources</li>
-                    <li class="hover:text-blue-600 cursor-pointer">Learning the Fundamentals of Investing</li>
-                    <li class="hover:text-blue-600 cursor-pointer">Protect Your Financial Future</li>
-                </ul>
-            </div>
+    <!-- Right Column Sidebar -->
+    <aside class="xl:col-span-4 hidden xl:block">
+        <div class="sticky top-28 space-y-8">
+            <div class="ad-wrapper m-0 p-4"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle w-full m-0">[ Sidebar Ad ]</div></div>
         </div>
     </aside>
-
 </main>
 
-<footer class="bg-gray-900 text-gray-400 text-center py-6 mt-12 text-sm">
-    <p>Copyright © 2026 ShortInvest | Powered by Astra WordPress Theme</p>
+<footer class="bg-gray-900 text-white pt-16 pb-8 mt-20 border-t-4 border-blue-600 text-center">
+    <p class="text-gray-500 text-sm">Copyright © 2026 ShortInvest | All Rights Reserved.</p>
 </footer>
 
 <!-- Backend Timer Script -->
 <%- include('timer-script') %>
 
-<!-- Fixed Mobile Bridge Logic (No auto-click/redirect from this frontend code) -->
+<!-- ROBUST BRIDGE LOGIC -->
 <script>
-    const customLogic = setInterval(() => {
-        const timerVal = document.getElementById('timerDisplay').innerText;
+    document.addEventListener("DOMContentLoaded", function() {
+        const timerValElement = document.getElementById('timerDisplay');
         const continueBtn = document.getElementById('continueBtn');
         const scrollBtn = document.getElementById('scroll-btn');
         const waitingText = document.getElementById('bottom-waiting-text');
         
-        // Use Tailwind classes instead of inline styles to prevent mobile layout breaking
-        if (timerVal === "0" || timerVal === 0 || !continueBtn.classList.contains('hidden')) {
-            // Show top scroll button
-            scrollBtn.classList.remove('hidden');
-            scrollBtn.classList.add('flex');
-            
-            // Hide "Please wait" text at the bottom
-            waitingText.classList.add('hidden');
-            
-            // Ensure continueBtn displays properly as flex on mobile if unhidden by timer-script
-            if(!continueBtn.classList.contains('hidden')) {
-                continueBtn.classList.add('flex');
-            }
-
-            clearInterval(customLogic);
+        // Ensure scroll function works dynamically
+        if (scrollBtn) {
+            scrollBtn.addEventListener("click", function(e) {
+                e.preventDefault(); // Stop default button behavior
+                document.getElementById('bottom-verify-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
         }
-    }, 500);
 
-    // Smooth Scroll function
-    function scrollToBottom() {
-        document.getElementById('bottom-verify-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+        const customLogic = setInterval(() => {
+            if (!timerValElement || !continueBtn) return;
+            
+            const timerVal = timerValElement.innerText.trim();
+            const btnNotHidden = !continueBtn.classList.contains('hidden');
+            const hrefUpdated = continueBtn.getAttribute('href') !== '#' && continueBtn.getAttribute('href') !== '';
+            
+            // Check if timer is 0 OR backend already revealed the button
+            if (timerVal === "0" || timerVal === 0 || timerVal === "" || btnNotHidden || hrefUpdated) {
+                
+                // 1. Unhide and display top Scroll Button
+                if(scrollBtn) {
+                    scrollBtn.classList.remove('hidden');
+                    scrollBtn.style.display = 'flex';
+                }
+                
+                // 2. Hide waiting text
+                if(waitingText) {
+                    waitingText.style.display = 'none';
+                }
+                
+                // 3. Force show bottom continue button
+                if(continueBtn) {
+                    continueBtn.classList.remove('hidden');
+                    continueBtn.style.display = 'flex'; 
+                }
+                
+                clearInterval(customLogic); // Stop checking once done
+            }
+        }, 500);
+    });
 </script>
-
