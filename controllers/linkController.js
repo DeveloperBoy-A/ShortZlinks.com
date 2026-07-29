@@ -66,6 +66,53 @@ exports.createLink = async (req, res) => {
     }
 };
 
+// 1b. Public: Create a link with NO account (used by the homepage "Shorten" box).
+// Anonymous links work exactly like normal ones (redirect, ad-steps, click counting)
+// but have no owner, so they don't generate publisher earnings for anybody.
+exports.createGuestLink = async (req, res) => {
+    try {
+        const originalUrl = (req.body.originalUrl || req.body.url || '').trim();
+
+        if (!originalUrl) {
+            return res.status(400).json({ success: false, error: 'Please enter a URL.' });
+        }
+
+        let parsed;
+        try {
+            parsed = new URL(originalUrl);
+            if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error('bad protocol');
+        } catch (e) {
+            return res.status(400).json({ success: false, error: 'Please enter a valid URL (starting with http:// or https://).' });
+        }
+
+        const settings = await Setting.findOne() || await Setting.create({});
+
+        // Don't allow shortening the site's own domain (prevents redirect loops/abuse)
+        const ownDomain = (settings.defaultDomain || '').replace(/^https?:\/\//, '').replace(/\/+$/, '');
+        if (ownDomain && parsed.hostname.replace(/^www\./, '') === ownDomain.replace(/^www\./, '')) {
+            return res.status(400).json({ success: false, error: 'You cannot shorten a link from this same domain.' });
+        }
+
+        const link = await Link.create({
+            userId: null,
+            isGuestLink: true,
+            originalUrl,
+            domain: settings.defaultDomain
+        });
+
+        const cleanDomain = (settings.defaultDomain || '').replace(/^https?:\/\//, '').replace(/\/+$/, '');
+        const shortUrl = `https://${cleanDomain}/l/${link.alias}`;
+
+        return res.json({ success: true, shortUrl });
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(409).json({ success: false, error: 'That short alias is already taken, please try again.' });
+        }
+        console.error('Guest Link Create Error:', error);
+        return res.status(500).json({ success: false, error: 'Something went wrong, please try again.' });
+    }
+};
+
 // 2. Public: Initial Click & Redirect to Step 1
 exports.handleInitialClick = async (req, res) => {
     try {
@@ -152,6 +199,7 @@ exports.processStep = async (req, res) => {
             if (isValid) {
                 const link = await Link.findById(linkId);
                 const settings = await Setting.findOne() || await Setting.create({}); // DB se live settings fetch karein
+                const hasOwner = !!link.userId; // false for guest/no-account links
 
                 // --- DYNAMIC ENGINE: DB SE VALUES UTHAYEIN ---
                 // Agar DB mein countryRate hai toh wo, nahi toh global Default
@@ -160,17 +208,19 @@ exports.processStep = async (req, res) => {
 
                 // Admin Panel se percentage uthayein (e.g., 20)
                 const adminPercent = settings.adminCommissionPercent || 20;
-                
+
                 const adminProfit = (actualCpm * adminPercent) / 100;
                 const publisherCpm = actualCpm - adminProfit;
 
-                const userCut = publisherCpm / 1000;
+                // Guest (ownerless) links have nobody to pay the publisher share to,
+                // so that share simply isn't distributed for those clicks.
+                const userCut = hasOwner ? publisherCpm / 1000 : 0;
                 const adminCut = adminProfit / 1000;
 
                 // Record Click
                 await Click.create({
                     linkId,
-                    userId: link.userId,
+                    userId: link.userId || null,
                     ipAddress: ip,
                     country,
                     userAgent,
@@ -179,27 +229,29 @@ exports.processStep = async (req, res) => {
                     adminCommission: adminCut
                 });
 
-                // Update Link & User
+                // Update Link (click count always increments, earnings only if owned)
                 link.totalClicks += 1;
-                link.validEarnings += userCut;
+                if (hasOwner) link.validEarnings += userCut;
                 await link.save();
 
-                await User.findByIdAndUpdate(link.userId, {
-                    $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
-                });
-
-                // Referral Bonus Logic
-                const linkOwner = await User.findById(link.userId);
-                if (linkOwner.referredBy) {
-                    const referralBonus = userCut * (process.env.REFERRAL_PERCENT / 100);
-                    await User.findByIdAndUpdate(linkOwner.referredBy, {
-                        $inc: { walletBalance: referralBonus, referralEarnings: referralBonus }
+                if (hasOwner) {
+                    await User.findByIdAndUpdate(link.userId, {
+                        $inc: { walletBalance: userCut, lifetimeEarnings: userCut }
                     });
+
+                    // Referral Bonus Logic
+                    const linkOwner = await User.findById(link.userId);
+                    if (linkOwner && linkOwner.referredBy) {
+                        const referralBonus = userCut * (process.env.REFERRAL_PERCENT / 100);
+                        await User.findByIdAndUpdate(linkOwner.referredBy, {
+                            $inc: { walletBalance: referralBonus, referralEarnings: referralBonus }
+                        });
+                    }
                 }
             } else {
                 // Invalid Click Logic
                 const link = await Link.findById(linkId);
-                await Click.create({ linkId, userId: link.userId, ipAddress: ip, country, userAgent, isValid: false, earningsGenerated: 0, adminCommission: 0 });
+                await Click.create({ linkId, userId: link.userId || null, ipAddress: ip, country, userAgent, isValid: false, earningsGenerated: 0, adminCommission: 0 });
                 link.totalClicks += 1;
                 await link.save();
             }
