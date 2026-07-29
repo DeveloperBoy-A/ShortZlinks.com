@@ -1,6 +1,5 @@
 <%- include('../partials/header') %>
 <div class="flex flex-1 flex-col md:flex-row overflow-hidden">
-    <%- include('../partials/sidebar') %>
     
     <main class="flex-1 p-4 md:p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         
@@ -27,28 +26,28 @@
             <div class="bg-white dark:bg-gray-800 rounded shadow-sm border border-blue-200 dark:border-gray-700 p-4 md:p-6">
                 
                 <div class="inline-block border border-blue-400 text-blue-600 dark:text-blue-400 text-sm font-bold px-3 py-1 rounded mb-6 bg-white dark:bg-gray-800">
-                    » How to Use Developers API Tool
+                    Â» How to Use Developers API Tool
                 </div>
 
                 <div class="space-y-6 text-sm text-black dark:text-gray-200 font-medium">
                     
-                    <p>» For developers <%= siteName %> prepared <span class="text-blue-600 dark:text-blue-400">API</span> which returns responses in <span class="text-blue-600 dark:text-blue-400 font-bold">JSON</span> or <span class="text-blue-600 dark:text-blue-400 font-bold">TEXT</span> formats.</p>
+                    <p>Â» For developers <%= siteName %> prepared <span class="text-blue-600 dark:text-blue-400">API</span> which returns responses in <span class="text-blue-600 dark:text-blue-400 font-bold">JSON</span> or <span class="text-blue-600 dark:text-blue-400 font-bold">TEXT</span> formats.</p>
                     
-                    <p>» Currently there is one method which can be used to shorten links on behalf of your account.</p>
+                    <p>Â» Currently there is one method which can be used to shorten links on behalf of your account.</p>
                     
-                    <p>» All you have to do is to send a <span class="text-blue-600 dark:text-blue-400 font-bold">GET</span> request with your <span class="text-blue-600 dark:text-blue-400">API</span> token and URL Like the following:</p>
+                    <p>Â» All you have to do is to send a <span class="text-blue-600 dark:text-blue-400 font-bold">GET</span> request with your <span class="text-blue-600 dark:text-blue-400">API</span> token and URL Like the following:</p>
 
                     <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono break-all text-gray-800 dark:text-gray-300">
                         <%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=<span class="font-bold text-black dark:text-white">yourdestinationlink.com</span>&alias=<span class="font-bold text-black dark:text-white">CustomAlias</span>
                     </div>
 
-                    <p>» You will get a <span class="text-blue-600 dark:text-blue-400 font-bold">JSON</span> response like the following</p>
+                    <p>Â» You will get a <span class="text-blue-600 dark:text-blue-400 font-bold">JSON</span> response like the following</p>
 
                     <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono break-all text-gray-800 dark:text-gray-300">
                         {"status":"success","shortenedUrl":"<%= settings.defaultDomain %>/xxxxx"}
                     </div>
 
-                    <p>» If you want a <span class="text-blue-600 dark:text-blue-400 font-bold">TEXT</span> response just add <span class="font-bold">&format=text</span> at the end of your request as the below example. This will return just the short link. Note that if an error occurs, it will not output anything.</p>
+                    <p>Â» If you want a <span class="text-blue-600 dark:text-blue-400 font-bold">TEXT</span> response just add <span class="font-bold">&format=text</span> at the end of your request as the below example. This will return just the short link. Note that if an error occurs, it will not output anything.</p>
 
                     <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono break-all text-gray-800 dark:text-gray-300">
                         <%= settings.defaultDomain %>/api?api=<%= user.apiToken %>&url=<span class="font-bold text-black dark:text-white">yourdestinationlink.com</span>&alias=<span class="font-bold text-black dark:text-white">CustomAlias</span><span class="font-bold">&format=text</span>
@@ -61,11 +60,11 @@
 
                     <div class="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
                         
-                        <h3 class="font-bold text-lg mb-4 text-black dark:text-white">• Using the API in PHP ⤵</h3>
+                        <h3 class="font-bold text-lg mb-4 text-black dark:text-white">â€¢ Using the API in PHP â¤µ</h3>
                         
-                        <p class="mb-6">» To use the <span class="text-blue-600 dark:text-blue-400">API</span> in your PHP application, you need to send a <span class="text-blue-600 dark:text-blue-400 font-bold">GET</span> request via file_get_contents or cURL. Please check the below sample examples using file_get_contents</p>
+                        <p class="mb-6">Â» To use the <span class="text-blue-600 dark:text-blue-400">API</span> in your PHP application, you need to send a <span class="text-blue-600 dark:text-blue-400 font-bold">GET</span> request via file_get_contents or cURL. Please check the below sample examples using file_get_contents</p>
 
-                        <p class="font-bold mb-2">» Using <span class="text-blue-600 dark:text-blue-400">JSON</span> Response</p>
+                        <p class="font-bold mb-2">Â» Using <span class="text-blue-600 dark:text-blue-400">JSON</span> Response</p>
                         
                         <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono overflow-x-auto whitespace-pre text-gray-800 dark:text-gray-300 mb-8 leading-relaxed">
 $long_url = urlencode('yourdestinationlink.com');
@@ -79,7 +78,7 @@ if($result["status"] === 'error') {
 }
                         </div>
 
-                        <p class="font-bold mb-2">» Using Plain <span class="text-blue-600 dark:text-blue-400">TEXT</span> Response</p>
+                        <p class="font-bold mb-2">Â» Using Plain <span class="text-blue-600 dark:text-blue-400">TEXT</span> Response</p>
                         
                         <div class="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded font-mono overflow-x-auto whitespace-pre text-gray-800 dark:text-gray-300 leading-relaxed">
 $long_url = urlencode('yourdestinationlink.com');
