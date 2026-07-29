@@ -100,6 +100,14 @@
         top: 0; left: 0; width: 100%; height: 4px;
         background: linear-gradient(90deg, #22c55e, #3b82f6);
     }
+
+    /* Fixed Button Clickability */
+    .clickable-btn {
+        position: relative;
+        z-index: 100 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
 </style>
 
 <!-- Sticky Top Navigation -->
@@ -143,18 +151,41 @@
 
             <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
 
-            <!-- Custom Scroll Button (Added high z-index and pointer-events-auto) -->
-            <button id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 relative z-50 cursor-pointer">
+            <!-- Custom Scroll Button (Fixed Clickability) -->
+            <button id="scroll-btn" onclick="scrollToBottomSection()" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 clickable-btn">
                 Scroll Down To Continue <i class="fas fa-arrow-down ml-2 animate-bounce"></i>
             </button>
         </div>
 
-        <!-- Article Content -->
+        <!-- Article Content with Relevant Images -->
         <div class="article-body mt-10">
-            <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money, making smart choices, and building a stress-free future.</p>
+            <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security.</p>
+            
             <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80" alt="Financial Planning" class="article-image">
+            <p class="text-center text-sm text-gray-400 -mt-6 mb-8 italic">Strategic planning is the foundation of wealth generation.</p>
+
             <h2>1. Developing a Bulletproof Budgeting Routine</h2>
-            <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities (rent, food, utilities), 30% for wants, and 20% dedicated strictly to savings and investments.</p>
+            <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities, 30% for wants, and 20% strictly for savings and investments.</p>
+            
+            <img src="https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1200&q=80" alt="Budgeting Tools" class="article-image">
+
+            <h2>2. The Psychology of Saving Money</h2>
+            <p>You shouldn't wait until you "make more money" to start saving; saving is a priority that creates wealth over time, regardless of income. Small, automated, and regular savings do wonders thanks to compound interest. With digital wallets and auto-transfer features in 2026, you can easily set your bank to move 10% of your paycheck into a savings account before you even see it.</p>
+
+            <div class="ad-wrapper ad-float-right hidden md:block">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-rectangle" style="height: 250px;">[ Float Square Ad ]</div>
+            </div>
+
+            <h2>3. Mastering Debt and Credit Scores</h2>
+            <p>Not all debt is bad, but unmanaged consumer debt is a wealth destroyer. Focus on eliminating high-interest liabilities, such as credit card balances, using the Avalanche method (paying highest interest first) or the Snowball method (paying smallest balances first for psychological wins).</p>
+
+            <img src="https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&w=1200&q=80" alt="Credit Card Management" class="article-image">
+
+            <h2>4. Fundamentals of Investing</h2>
+            <p>Investing is not the prerogative of Wall Street experts. Today, anyone can access index funds, ETFs, and robo-advisors from their smartphone. The key is understanding that time in the market beats timing the market. Begin with low-risk, broad-market index funds (like the S&P 500) and let compounding do the heavy lifting.</p>
+            
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1200&q=80" alt="Investing and Growth" class="article-image">
         </div>
 
         <!-- STEP 2: FINAL CONTINUE BUTTON -->
@@ -168,8 +199,8 @@
                 Please wait for the timer at the top to complete...
             </div>
 
-            <!-- Niche wala button -->
-            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide relative z-50 cursor-pointer">
+            <!-- Destination Button (Fixed Clickability) -->
+            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide clickable-btn">
                 Get Destination Link <i class="fas fa-external-link-alt ml-2"></i>
             </a>
 
@@ -196,19 +227,26 @@
 
 <!-- ROBUST BRIDGE LOGIC -->
 <script>
+    // Global Scroll Function ensures it's always accessible by the button's onclick
+    window.scrollToBottomSection = function() {
+        const targetSection = document.getElementById('bottom-verify-section');
+        if(targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Add a brief pulse animation to the final button to guide user's eye
+            const finalBtn = document.getElementById('continueBtn');
+            if(finalBtn && !finalBtn.classList.contains('hidden')) {
+                finalBtn.classList.add('scale-105');
+                setTimeout(() => finalBtn.classList.remove('scale-105'), 300);
+            }
+        }
+    };
+
     document.addEventListener("DOMContentLoaded", function() {
         const timerValElement = document.getElementById('timerDisplay');
         const continueBtn = document.getElementById('continueBtn');
         const scrollBtn = document.getElementById('scroll-btn');
         const waitingText = document.getElementById('bottom-waiting-text');
-        
-        // Ensure scroll function works dynamically
-        if (scrollBtn) {
-            scrollBtn.addEventListener("click", function(e) {
-                e.preventDefault(); // Stop default button behavior
-                document.getElementById('bottom-verify-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-        }
 
         const customLogic = setInterval(() => {
             if (!timerValElement || !continueBtn) return;
@@ -242,3 +280,4 @@
         }, 500);
     });
 </script>
+
