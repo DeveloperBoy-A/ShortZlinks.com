@@ -314,9 +314,11 @@ localStorage.theme=document.documentElement.classList.contains("dark")?"dark":"l
 document.getElementById("sidebarToggle")?.addEventListener("click", (e) => {
     e.stopPropagation();
     const aside = document.getElementById("sidebarAside");
-    if (!aside) return;
-    aside.classList.toggle("hidden");
-    aside.classList.toggle("flex");
+    const backdrop = document.getElementById("sidebarBackdrop");
+    if (!aside) return; // sidebar isn't on this page (e.g. logged-out visitor)
+    aside.classList.remove("-translate-x-full");
+    backdrop?.classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
 });
 
 // --- Welcome-back animation: plays once on the first page load right after a successful login ---
