@@ -1,227 +1,404 @@
 
 
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
     body {
-        font-family: 'Inter', sans-serif;
-        background-color: #f9fafb;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #f4f7f6;
+        color: #1f2937;
+    }
+    
+    /* Editorial Article Typography */
+    .article-body p {
+        font-family: 'Merriweather', serif;
+        margin-bottom: 1.75rem;
+        line-height: 1.9;
+        font-size: 1.125rem;
         color: #374151;
     }
     
-    .article-body p {
-        margin-bottom: 1.5rem;
-        line-height: 1.8;
-        font-size: 1.05rem;
-    }
-    
-    .article-body h2, .article-body h3 {
+    .article-body h2 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
         color: #111827;
+        font-weight: 800;
+        font-size: 1.875rem;
+        margin-top: 3.5rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+    }
+
+    .article-body h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #1f2937;
         font-weight: 700;
+        font-size: 1.5rem;
         margin-top: 2.5rem;
         margin-bottom: 1rem;
     }
 
     .article-image {
         width: 100%;
-        border-radius: 12px;
-        margin: 2rem 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        border-radius: 16px;
+        margin: 2.5rem 0;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         object-fit: cover;
     }
 
-    /* Ad Placeholders */
+    /* First Letter Drop Cap for Editorial Feel */
+    .drop-cap::first-letter {
+        font-size: 3.5rem;
+        font-weight: 800;
+        float: left;
+        line-height: 1;
+        padding-right: 0.5rem;
+        color: #2563eb;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* --- AD PLACEHOLDER PATTERNS --- */
+    .ad-wrapper {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 2.5rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        border: 1px solid #f3f4f6;
+        text-align: center;
+    }
+    .ad-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #9ca3af;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
     .ad-slot {
-        width: 100%;
-        background-color: #e5e7eb;
-        border: 2px dashed #9ca3af;
+        background-color: #f8fafc;
+        border: 2px dashed #cbd5e1;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6b7280;
+        color: #64748b;
         font-weight: 600;
-        margin: 2rem 0;
         border-radius: 8px;
+        width: 100%;
     }
-    .ad-responsive { min-height: 250px; }
     .ad-banner { height: 90px; }
+    .ad-rectangle { height: 250px; }
+    .ad-skyscraper { height: 600px; }
+    
+    /* Float Ad Pattern (Desktop only) */
+    @media (min-width: 768px) {
+        .ad-float-right {
+            float: right;
+            width: 300px;
+            margin: 0.5rem 0 1.5rem 2rem;
+        }
+    }
+
+    /* Native/Matched Content Ad Grid */
+    .ad-native-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2.5rem 0;
+    }
+    .ad-native-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .ad-native-img { height: 120px; background: #e2e8f0; }
 
     /* Verification Box Styling */
     .verify-box {
-        background: linear-gradient(to right, #eff6ff, #dbeafe);
-        border: 2px solid #bfdbfe;
-        border-radius: 12px;
-        padding: 24px 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+        border: 2px solid #bbf7d0;
+        border-radius: 16px;
+        padding: 32px 20px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+    }
+    .verify-box::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 4px;
+        background: linear-gradient(90deg, #22c55e, #3b82f6);
     }
 </style>
 
-<!-- Top Navigation -->
-<header class="bg-white shadow-sm py-4 px-6 mb-8 border-b border-gray-200">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <div class="text-2xl font-extrabold text-gray-800 tracking-tight">ShortInvest</div>
-        <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-600">
-            <a href="#" class="hover:text-blue-600">Home</a>
-            <a href="#" class="hover:text-blue-600">Finance</a>
-            <a href="#" class="hover:text-blue-600">Investing</a>
-            <a href="#" class="hover:text-blue-600">Contact</a>
+<!-- Sticky Top Navigation -->
+<header class="bg-white/90 backdrop-blur-md shadow-sm py-4 px-6 mb-8 border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-xl">S</div>
+            <div class="text-2xl font-extrabold text-gray-900 tracking-tight">ShortInvest</div>
+        </div>
+        <nav class="hidden md:flex space-x-8 text-sm font-bold text-gray-600">
+            <a href="#" class="hover:text-blue-600 transition">Markets</a>
+            <a href="#" class="hover:text-blue-600 transition">Personal Finance</a>
+            <a href="#" class="hover:text-blue-600 transition">Crypto</a>
+            <a href="#" class="px-4 py-2 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition">Subscribe</a>
         </nav>
+        <button class="md:hidden text-gray-600"><i class="fas fa-bars text-2xl"></i></button>
     </div>
 </header>
 
-<main class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<main class="max-w-7xl mx-auto px-4 grid grid-cols-1 xl:grid-cols-12 gap-10">
 
-    <!-- Left Column: Article Content & Verification -->
-    <div class="lg:col-span-2 bg-white p-5 md:p-10 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-blue-500 overflow-hidden">
+    <!-- Left Column: Main Article & Verification (Spans 8 columns on large screens) -->
+    <div class="xl:col-span-8 bg-white p-6 md:p-12 rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
 
         <!-- Article Header -->
-        <header class="mb-6">
-            <div class="text-sm text-blue-600 font-bold uppercase tracking-wider mb-2">Verification Step <%= step %> of <%= totalSteps %></div>
-            <h1 class="text-2xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Best Personal Finance Advice to Start in 2026</h1>
-            <div class="flex items-center text-gray-500 text-sm">
-                <span class="font-semibold text-gray-700">By Starindia</span>
-                <span class="mx-2">•</span>
-                <span>February 18, 2026</span>
+        <header class="mb-8 text-center md:text-left">
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 font-bold text-xs uppercase tracking-widest mb-4">Verification Step <%= step %> of <%= totalSteps %></span>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">The Ultimate Guide to Personal Finance: Building Wealth in 2026</h1>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between border-y border-gray-100 py-4 mt-6">
+                <div class="flex items-center gap-4 mb-4 md:mb-0">
+                    <img src="https://ui-avatars.com/api/?name=Star+India&background=0D8ABC&color=fff" alt="Author" class="w-12 h-12 rounded-full shadow-sm">
+                    <div class="text-left">
+                        <div class="font-bold text-gray-900">Starindia Finance</div>
+                        <div class="text-xs text-gray-500 font-medium">Updated: February 18, 2026 • 8 min read</div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-10 h-10 rounded-full bg-gray-100 hover:bg-blue-100 hover:text-blue-600 flex items-center justify-center transition"><i class="fab fa-twitter"></i></button>
+                    <button class="w-10 h-10 rounded-full bg-gray-100 hover:bg-blue-100 hover:text-blue-800 flex items-center justify-center transition"><i class="fab fa-linkedin-in"></i></button>
+                    <button class="w-10 h-10 rounded-full bg-gray-100 hover:bg-green-100 hover:text-green-600 flex items-center justify-center transition"><i class="fas fa-link"></i></button>
+                </div>
             </div>
         </header>
 
-        <!-- Top Ad Slot -->
-        <div class="ad-slot ad-responsive">
-            [ AdSense Responsive Ad Slot ]
+        <!-- TOP AD PATTERN 1: Standard Leaderboard / Rectangle -->
+        <div class="ad-wrapper">
+            <span class="ad-label">Advertisement</span>
+            <div class="ad-slot ad-rectangle">
+                [ Header Responsive Ad Slot ]
+            </div>
         </div>
 
-        <!-- STEP 1: VERIFICATION TIMER BOX (Mobile Optimized) -->
-        <div class="verify-box flex flex-col items-center justify-center my-8" id="step1-box">
-            <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-2 text-center">Please Wait for Verification...</h3>
+        <!-- STEP 1: VERIFICATION TIMER BOX -->
+        <div class="verify-box flex flex-col items-center justify-center my-10" id="step1-box">
+            <div class="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-shield-check text-3xl"></i>
+            </div>
+            <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-2 text-center">Securing Your Connection...</h3>
             
-            <!-- Timer ID required by timer-script (Fixed height stops bouncing) -->
-            <div class="text-5xl font-black text-red-500 my-2 h-16 flex items-center justify-center" id="timerDisplay">10</div>
+            <!-- Timer ID required by timer-script -->
+            <div class="text-6xl font-black text-blue-600 my-4 h-20 flex items-center justify-center drop-shadow-md" id="timerDisplay">10</div>
             
-            <!-- Instruction Text ID required by timer-script (Fixed height) -->
-            <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Analyzing traffic quality...</p>
+            <!-- Instruction Text ID required by timer-script -->
+            <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
 
             <!-- Custom Scroll Button -->
-            <button id="scroll-btn" class="hidden w-full max-w-sm mx-auto bg-blue-600 text-white font-bold py-4 px-4 rounded-full shadow-lg hover:bg-blue-700 transition-all items-center justify-center text-sm md:text-base" onclick="scrollToBottom()">
-                Scroll Down & Click Continue <i class="fas fa-arrow-down ml-2"></i>
+            <button id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all items-center justify-center text-lg mt-2" onclick="scrollToBottom()">
+                Scroll Down To Continue <i class="fas fa-arrow-down ml-2 animate-bounce"></i>
             </button>
         </div>
 
-        <!-- Article Body -->
-        <div class="article-body mt-8 text-gray-700">
-            <p>Best Personal Finance advice Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services, the shift in labor markets, and simple access to credit, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money and making smart choices and building a safe future.</p>
+        <!-- Article Content -->
+        <div class="article-body mt-10">
+            <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money, making smart choices, and building a stress-free future.</p>
 
-            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80" alt="Best Personal Finance Advice" class="article-image">
+            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80" alt="Financial Planning Strategy" class="article-image">
+            <p class="text-center text-sm text-gray-400 -mt-6 mb-8 italic">Strategic planning is the foundation of wealth generation.</p>
+
+            <p>All it takes is for a person to acquire simple, foundational personal finance knowledge and implement it with a uniform approach to create a sound financial base. This guide dives deep into practical, beginner-friendly tips concerning mindset, daily habits, debt management, and long-term exponential growth.</p>
+
+            <h2>1. Developing a Bulletproof Budgeting Routine</h2>
+            <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities (rent, food, utilities), 30% for wants, and 20% dedicated strictly to savings and investments.</p>
             
-            <div class="ad-slot ad-banner">
-                [ AdSense Inline Article Ad Slot ]
+            <!-- AD PATTERN 2: In-Article Floating Ad -->
+            <div class="ad-wrapper ad-float-right hidden md:block">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-rectangle" style="height: 250px;">
+                    [ Float Square Ad ]
+                </div>
             </div>
 
-            <p>All it takes is a person to acquire simple personal finance advice and knowledge and implement it with a uniform approach to create a sound financial base. This is a guide to the personal finance advice and tips that are practical and beginner-friendly. It concerned the mindset, habits, planning, and long-term growth.</p>
+            <p>Failure to budget often occurs because people attempt to make their restrictions too severe. Allow yourself small luxuries. If you completely cut out entertainment, you will eventually experience "budget fatigue" and abandon the plan entirely.</p>
 
-            <h2 class="text-xl md:text-2xl font-bold">Developing a powerful budgeting routine</h2>
-            <p>Personal finance advice is based on budgeting. Budgeting is not a constraint of your life; it only makes your money more organized so that you can use it in a better way. The novices ought to be directed to develop a basic and realistic budget that addresses the necessities such as rent, food, transport, and utilities as well as to make space to save and to enjoy themselves. Failure to budget in many people occurs in the year 2026 since they attempt to make it too strict.</p>
+            <h2>2. The Psychology of Saving Money</h2>
+            <p>You shouldn't wait until you "make more money" to start saving; saving is a priority that creates wealth over time, regardless of income. Small, automated, and regular savings do wonders thanks to compound interest. With digital wallets and auto-transfer features in 2026, you can easily set your bank to move 10% of your paycheck into a savings account before you even see it.</p>
 
-            <h2 class="text-xl md:text-2xl font-bold">Saving Money as a Daily Habit</h2>
-            <p>It is not about waiting till you have more cash to save, saving is a priority. Novices have the notion that to save they have to earn a very good salary, yet little and regular savings can do wonders in the long term. Saving is becoming easier than ever with the help of automatic savings devices and digital wallets in 2026. Savings should not be a choice, it must be a fixed cost. Discipline gets developed, and financial security is created even by small daily or weekly savings.</p>
-
-            <img src="https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&w=800&q=80" alt="Smart Spending Behavior" class="article-image">
-            
-            <div class="ad-slot ad-responsive">
-                [ AdSense In-feed Ad Slot ]
+            <!-- AD PATTERN 3: Native Style "Matched Content" -->
+            <div class="ad-wrapper bg-gray-50 border-none shadow-none">
+                <span class="ad-label text-left mb-3 text-gray-500 font-bold">Recommended Financial Tools</span>
+                <div class="ad-native-grid">
+                    <div class="ad-native-card">
+                        <div class="ad-native-img flex items-center justify-center text-gray-400">[ Image ]</div>
+                        <div class="p-3 text-left">
+                            <h4 class="font-bold text-sm text-gray-800">Top High-Yield Savings Accounts</h4>
+                            <p class="text-xs text-blue-600 mt-1">Sponsored</p>
+                        </div>
+                    </div>
+                    <div class="ad-native-card">
+                        <div class="ad-native-img flex items-center justify-center text-gray-400">[ Image ]</div>
+                        <div class="p-3 text-left">
+                            <h4 class="font-bold text-sm text-gray-800">Best Credit Cards for Cash Back</h4>
+                            <p class="text-xs text-blue-600 mt-1">Sponsored</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <h2 class="text-xl md:text-2xl font-bold">Managing Debt Responsibly</h2>
-            <p>One of the greatest financial problems of beginners is debt. In 2026, loans, credit cards and online credit services are readily available, and one can easily fall into the trap of debt. Not all debt is bad, but unmanaged debt is dangerous. Good debt management implies that one should know the interest rate, payment terms, and whether or not he or she can pay. Novices need not do unnecessary borrowing but pay off high interest liabilities before considering other debts. Debt management safeguards your future earnings and keeps your financial life under control.</p>
+            <h2>3. Mastering Debt and Credit Scores</h2>
+            <p>Not all debt is bad, but unmanaged consumer debt is a wealth destroyer. In 2026, "Buy Now, Pay Later" (BNPL) services are ubiquitous, making it dangerously easy to fall into a debt trap. Focus on eliminating high-interest liabilities, such as credit card balances, using the Avalanche method (paying highest interest first) or the Snowball method (paying smallest balances first for psychological wins).</p>
 
-            <h2 class="text-xl md:text-2xl font-bold">Creating Multiple Revenue Sources</h2>
-            <p>The dependence on one source of income is risky in 2026. The world is experiencing a transformation in job markets, automation is on the rise, and economic uncertainty is usual. Novices will have to think of establishing more than one source of income at a young age. This does not imply working 24/7 but trying out side skills, working as a freelancer, online work, or starting a small business. Additional income provides economic stability, assists in quicker savings, and decreases the stress level.</p>
+            <p>Equally important is monitoring your credit score. A strong credit score dictates your ability to get a mortgage, favorable auto loan rates, and even affects job prospects in certain sectors. Keep your credit utilization below 30% and never miss a payment.</p>
 
-            <div class="ad-slot ad-banner">
-                [ AdSense Inline Article Ad Slot 2 ]
+            <img src="https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&w=1200&q=80" alt="Smart Spending Behavior" class="article-image">
+
+            <h2>4. Creating Multiple Revenue Streams</h2>
+            <p>Depending on a single source of income is the riskiest financial decision you can make today. The world is experiencing rapid transformations in job markets, fueled by AI and automation. Building multiple streams of income—whether it's dividend investing, freelance consulting, creating digital products, or real estate—creates a protective moat around your lifestyle.</p>
+
+            <!-- AD PATTERN 4: Standard Banner -->
+            <div class="ad-wrapper">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-banner">
+                    [ Content Banner Ad ]
+                </div>
             </div>
 
-            <h2 class="text-xl md:text-2xl font-bold">Learning the Fundamentals of Investing</h2>
-            <p>It is not necessarily the prerogative of experts to invest. The novices can access easy online investment solutions and financial literacy in 2026. It is necessary to get to know simple terms of investment such as risk, returns, diversification and compounding. By investing, you will have your money working as opposed to being inactive. Novices are advised to learn first and then invest and begin with low-risk and long-run plans. Early investment will provide time with the ability to accumulate wealth over a safe period.</p>
+            <h2>5. The Fundamentals of Investing & Retirement</h2>
+            <p>Investing is not the prerogative of Wall Street experts. Today, anyone can access index funds, ETFs, and robo-advisors from their smartphone. The key is understanding that time in the market beats timing the market. Begin with low-risk, broad-market index funds (like the S&P 500) and let compounding do the heavy lifting.</p>
+            <p>Furthermore, max out tax-advantaged retirement accounts (like 401ks or IRAs) as early as possible. Every dollar invested in your 20s or 30s is worth exponentially more than a dollar invested in your 50s.</p>
 
-            <img src="https://images.unsplash.com/photo-1616514197671-15d99ce7a6f8?auto=format&fit=crop&w=800&q=80" alt="Healthy Money Mindset" class="article-image">
-            
-            <h2 class="text-xl md:text-2xl font-bold">Protect Your Financial Future</h2>
-            <p>Personal finance advice comprises a component of financial protection that is frequently overlooked. These are insurance, safe digital procedures, and emergency financial planning. Online fraud, identity theft, and fraud are on the rise in 2026. Novices need to know how to secure their financial resources and products. Protection does not entirely relate to monetary matters but to a sense of safety and security in the long term.</p>
-
-            <div class="ad-slot ad-responsive">
-                [ AdSense In-feed Ad Slot ]
-            </div>
-
-            <h2 class="text-xl md:text-2xl font-bold">Conclusion</h2>
-            <p>Personal finance advice for a start-up in 2026 is more about simplicity, discipline and smart habits. It does not require elaborate ideas or affluence to accomplish. You must have attitude, organization, discipline, and awareness. With proper budgeting, saving, spending, debt management, income building, long-term planning and protection of your finances, you make a solid base to have financial freedom.</p>
+            <h2>Conclusion</h2>
+            <p>Personal finance in 2026 is about consistency, emotional discipline, and automation. You must prioritize organization over complex strategies. By mastering budgeting, wiping out toxic debt, securing multiple income streams, and investing for the long horizon, you are laying an unshakable foundation for true financial freedom.</p>
         </div>
 
-        <!-- STEP 2: FINAL CONTINUE BUTTON (Targeted by timer-script, Mobile Optimized) -->
-        <div class="mt-12 text-center pb-8 border-b border-gray-200 flex flex-col items-center justify-center" id="bottom-verify-section">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Verification Complete!</h3>
+        <!-- STEP 2: FINAL CONTINUE BUTTON (Targeted by timer-script) -->
+        <div class="mt-16 bg-gray-50 border-2 border-gray-100 rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-inner" id="bottom-verify-section">
+            <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-lock-open text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-gray-900 mb-4">Destination Link Ready</h3>
             
             <!-- Fixed height to prevent layout shifting -->
-            <div id="bottom-waiting-text" class="text-gray-400 font-semibold italic mb-4 h-6 flex items-center justify-center">
-                Please wait for the timer above to complete...
+            <div id="bottom-waiting-text" class="text-gray-500 font-semibold mb-6 h-6 flex items-center justify-center bg-gray-200 py-4 px-6 rounded-lg animate-pulse">
+                Please wait for the timer at the top to complete...
             </div>
 
             <!-- Continue Button ID required by timer-script -->
-            <a id="continueBtn" href="#" class="hidden w-full max-w-sm mx-auto bg-blue-600 text-white py-4 px-4 rounded-full font-black text-lg hover:bg-blue-700 transition shadow-xl items-center justify-center">
-                Continue to Next Step <i class="fas fa-arrow-right ml-2"></i>
+            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg hover:shadow-2xl hover:-translate-y-1 items-center justify-center tracking-wide">
+                Get Destination Link <i class="fas fa-external-link-alt ml-2"></i>
             </a>
+            
+            <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our terms of service.</p>
         </div>
 
         <!-- Bottom Ad Slot -->
-        <div class="ad-slot ad-responsive">
-            [ AdSense Bottom Ad Slot ]
+        <div class="ad-wrapper mb-0 mt-8">
+            <span class="ad-label">Advertisement</span>
+            <div class="ad-slot ad-rectangle">
+                [ Bottom Ad Slot ]
+            </div>
         </div>
 
     </div>
 
-    <!-- Right Column: Sidebar (Perfect for Sticky Ads) -->
-    <aside class="lg:col-span-1 hidden lg:block">
-        <div class="sticky top-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h3 class="text-lg font-bold border-b pb-2 mb-4">Advertisement</h3>
-                <!-- Sidebar Ad 1 -->
-                <div class="ad-slot ad-responsive h-64 w-full m-0">
-                    [ Sidebar Ad Slot ]
+    <!-- Right Column: Sidebar -->
+    <aside class="xl:col-span-4 hidden xl:block">
+        <div class="sticky top-28 space-y-8">
+            
+            <!-- Search Widget -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-gray-900 mb-4">Search</h3>
+                <div class="relative">
+                    <input type="text" placeholder="Search topics..." class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition font-medium">
+                    <i class="fas fa-search absolute right-4 top-4 text-gray-400 text-lg"></i>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h3 class="text-lg font-bold border-b pb-2 mb-4">Recent Posts</h3>
-                <ul class="space-y-3 text-sm text-gray-600">
-                    <li class="hover:text-blue-600 cursor-pointer">Creating Multiple Revenue Sources</li>
-                    <li class="hover:text-blue-600 cursor-pointer">Learning the Fundamentals of Investing</li>
-                    <li class="hover:text-blue-600 cursor-pointer">Protect Your Financial Future</li>
-                    <li class="hover:text-blue-600 cursor-pointer">Best Budgeting Apps of 2026</li>
-                </ul>
-            </div>
-            
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
-                <h3 class="text-lg font-bold border-b pb-2 mb-4">Sponsored</h3>
-                <!-- Sidebar Ad 2 -->
-                <div class="ad-slot ad-responsive h-96 w-full m-0">
-                    [ Vertical Skyscraper Ad ]
+            <!-- AD PATTERN 5: Sidebar Square -->
+            <div class="ad-wrapper m-0 p-4">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-rectangle w-full m-0">
+                    [ Sidebar Square Ad ]
                 </div>
             </div>
+
+            <!-- Trending Posts Widget -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-sm font-extrabold uppercase tracking-widest text-gray-900 mb-4 border-b border-gray-100 pb-3">Trending Now</h3>
+                <div class="space-y-4">
+                    <a href="#" class="group flex gap-4 items-center">
+                        <div class="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition leading-tight">5 Apps to Track Your Net Worth Automatically</h4>
+                            <p class="text-xs text-gray-400 mt-1">Feb 14, 2026</p>
+                        </div>
+                    </a>
+                    <a href="#" class="group flex gap-4 items-center">
+                        <div class="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=100&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition leading-tight">Index Funds vs ETFs: Which is Better?</h4>
+                            <p class="text-xs text-gray-400 mt-1">Feb 10, 2026</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- AD PATTERN 6: Sticky Skyscraper Ad -->
+            <div class="ad-wrapper m-0 p-4 sticky top-28">
+                <span class="ad-label">Sponsored</span>
+                <div class="ad-slot ad-skyscraper w-full m-0">
+                    [ Vertical Skyscraper Ad 300x600 ]
+                </div>
+            </div>
+
         </div>
     </aside>
 
 </main>
 
-<footer class="bg-gray-900 text-gray-400 text-center py-6 mt-12 text-sm">
-    <p>Copyright © 2026 ShortInvest | Powered by Astra WordPress Theme</p>
+<footer class="bg-gray-900 text-white pt-16 pb-8 mt-20 border-t-4 border-blue-600">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div>
+            <div class="text-2xl font-extrabold tracking-tight mb-4 text-white">ShortInvest</div>
+            <p class="text-gray-400 text-sm leading-relaxed">Your ultimate destination for mastering personal finance, investing strategies, and building generational wealth in the digital age.</p>
+        </div>
+        <div>
+            <h4 class="font-bold mb-4 uppercase tracking-wider text-sm text-gray-300">Quick Links</h4>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#" class="hover:text-blue-400 transition">About Us</a></li>
+                <li><a href="#" class="hover:text-blue-400 transition">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-blue-400 transition">Terms of Service</a></li>
+                <li><a href="#" class="hover:text-blue-400 transition">Contact Support</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="font-bold mb-4 uppercase tracking-wider text-sm text-gray-300">Newsletter</h4>
+            <p class="text-sm text-gray-400 mb-4">Get weekly financial tips delivered directly to your inbox.</p>
+            <div class="flex">
+                <input type="email" placeholder="Your email address" class="w-full px-4 py-2 rounded-l-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-blue-500">
+                <button class="bg-blue-600 px-4 py-2 rounded-r-lg font-bold hover:bg-blue-700 transition">Join</button>
+            </div>
+        </div>
+    </div>
+    <div class="text-center text-gray-500 text-sm border-t border-gray-800 pt-8">
+        <p>Copyright © 2026 ShortInvest | All Rights Reserved.</p>
+    </div>
 </footer>
 
 <!-- Backend Timer Script -->
 <%- include('timer-script') %>
 
-<!-- Fixed Mobile Bridge Logic (No auto-click/redirect from this frontend code) -->
+<!-- Custom Bridge Logic -->
 <script>
     const customLogic = setInterval(() => {
         const timerVal = document.getElementById('timerDisplay').innerText;
@@ -229,7 +406,6 @@
         const scrollBtn = document.getElementById('scroll-btn');
         const waitingText = document.getElementById('bottom-waiting-text');
         
-        // Use Tailwind classes instead of inline styles to prevent mobile layout breaking
         if (timerVal === "0" || timerVal === 0 || !continueBtn.classList.contains('hidden')) {
             // Show top scroll button
             scrollBtn.classList.remove('hidden');
@@ -238,7 +414,7 @@
             // Hide "Please wait" text at the bottom
             waitingText.classList.add('hidden');
             
-            // Ensure continueBtn displays properly as flex on mobile if unhidden by timer-script
+            // Ensure continueBtn displays properly as flex
             if(!continueBtn.classList.contains('hidden')) {
                 continueBtn.classList.add('flex');
             }
@@ -252,4 +428,3 @@
         document.getElementById('bottom-verify-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 </script>
-
