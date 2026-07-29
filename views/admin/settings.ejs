@@ -1,6 +1,5 @@
 <%- include('../partials/header') %>
 <div class="flex flex-1 flex-col md:flex-row overflow-hidden">
-    <%- include('../partials/sidebar') %>
     <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <h1 class="text-3xl font-bold mb-6 text-red-600">Super Admin Configuration</h1>
 
@@ -55,7 +54,7 @@
                             Fields user ko bharne honge (comma se separate karein)
                         </label>
                         <input type="text" name="fields" required placeholder="Account Holder Name, Account Number, IFSC Code, Bank Name" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                        <p class="text-xs text-gray-500 mt-1">Example — UPI: <code>UPI ID</code> | PayPal: <code>PayPal Email</code> | Bank: <code>Account Holder Name, Account Number, IFSC Code, Bank Name</code></p>
+                        <p class="text-xs text-gray-500 mt-1">Example â€” UPI: <code>UPI ID</code> | PayPal: <code>PayPal Email</code> | Bank: <code>Account Holder Name, Account Number, IFSC Code, Bank Name</code></p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Instructions for user (optional)</label>
@@ -87,9 +86,9 @@
                                         <td class="p-3 text-xs text-gray-500"><%= (method.fields || []).join(', ') %></td>
                                         <td class="p-3">
                                             <% if (method.isActive) { %>
-                                                <span class="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-bold">● Active</span>
+                                                <span class="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-bold">â— Active</span>
                                             <% } else { %>
-                                                <span class="px-2 py-1 bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-full text-xs font-bold">○ Inactive</span>
+                                                <span class="px-2 py-1 bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-full text-xs font-bold">â—‹ Inactive</span>
                                             <% } %>
                                         </td>
                                         <td class="p-3">
