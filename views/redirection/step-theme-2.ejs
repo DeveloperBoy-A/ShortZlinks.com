@@ -6,6 +6,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: #f4f7f6;
@@ -31,12 +35,25 @@
         padding-bottom: 0.5rem;
     }
 
+    /* Stable Image Styling */
     .article-image {
         width: 100%;
+        height: auto;
+        min-height: 250px;
+        background-color: #e2e8f0;
         border-radius: 16px;
-        margin: 2.5rem 0;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        margin: 2.5rem 0 1rem 0;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
         object-fit: cover;
+        border: 1px solid #e5e7eb;
+    }
+
+    .image-caption {
+        text-align: center;
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-style: italic;
+        margin-bottom: 2rem;
     }
 
     .drop-cap::first-letter {
@@ -79,12 +96,7 @@
     }
     .ad-banner { height: 90px; }
     .ad-rectangle { height: 250px; }
-    .ad-skyscraper { height: 600px; }
     
-    @media (min-width: 768px) {
-        .ad-float-right { float: right; width: 300px; margin: 0.5rem 0 1.5rem 2rem; }
-    }
-
     .verify-box {
         background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
         border: 2px solid #bbf7d0;
@@ -99,6 +111,13 @@
         position: absolute;
         top: 0; left: 0; width: 100%; height: 4px;
         background: linear-gradient(90deg, #22c55e, #3b82f6);
+    }
+
+    .clickable-btn {
+        position: relative;
+        z-index: 100 !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
     }
 </style>
 
@@ -131,9 +150,14 @@
 
         <!-- STEP 1: VERIFICATION TIMER BOX -->
         <div class="verify-box flex flex-col items-center justify-center my-10 relative z-20" id="step1-box">
+
+            <!-- FIXED: SVG Icon (Will NEVER fail to load) -->
             <div class="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                <i class="fas fa-shield-check text-3xl"></i>
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
             </div>
+
             <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-2 text-center">Securing Your Connection...</h3>
 
             <!-- Timer Area -->
@@ -143,46 +167,84 @@
 
             <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
 
-            <!-- Custom Scroll Button (Added high z-index and pointer-events-auto) -->
-            <button id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 relative z-50 cursor-pointer">
-                Scroll Down To Continue <i class="fas fa-arrow-down ml-2 animate-bounce"></i>
-            </button>
+            <!-- Scroll Button with SVG Arrow -->
+            <a href="#bottom-verify-section" id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 px-6 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 relative z-50 clickable-btn">
+                Scroll Down To Continue 
+                <svg class="w-5 h-5 ml-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </a>
         </div>
 
-        <!-- Article Content -->
+        <!-- FULL ARTICLE CONTENT RESTORED & RELIABLE WIKIMEDIA IMAGES -->
         <div class="article-body mt-10">
-            <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money, making smart choices, and building a stress-free future.</p>
-            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80" alt="Financial Planning" class="article-image">
+            <p class="drop-cap">Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services evolve, the labor markets shift, and access to credit becomes dangerously simple, novices can easily have a panic attack when working to establish financial security.</p>
+
+            <!-- IMAGE 1: Stable Wikimedia Image -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Financial_Report.jpg/800px-Financial_Report.jpg" alt="Financial Planning" class="article-image" onerror="this.style.display='none'">
+            <p class="image-caption">Strategic planning is the foundation of wealth generation.</p>
+
             <h2>1. Developing a Bulletproof Budgeting Routine</h2>
-            <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities (rent, food, utilities), 30% for wants, and 20% dedicated strictly to savings and investments.</p>
+            <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities, 30% for wants, and 20% strictly for savings and investments.</p>
+
+            <!-- IMAGE 2: Stable Wikimedia Image -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Coins_and_graph.jpg/800px-Coins_and_graph.jpg" alt="Budgeting and Finance" class="article-image" onerror="this.style.display='none'">
+            <p class="image-caption">Track every penny to ensure your budget aligns with your long-term goals.</p>
+
+            <div class="ad-wrapper"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Article Ad Slot 1 ]</div></div>
+
+            <h2>2. The Psychology of Saving Money</h2>
+            <p>You shouldn't wait until you "make more money" to start saving; saving is a priority that creates wealth over time, regardless of income. Small, automated, and regular savings do wonders thanks to compound interest. With digital wallets and auto-transfer features in 2026, you can easily set your bank to move 10% of your paycheck into a savings account before you even see it.</p>
+
+            <!-- IMAGE 3: Stable Wikimedia Image -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Piggy_bank_pink.jpg/800px-Piggy_bank_pink.jpg" alt="Saving Money" class="article-image" onerror="this.style.display='none'">
+            <p class="image-caption">Automating your savings makes building an emergency fund effortless.</p>
+
+            <h2>3. Mastering Debt and Credit Scores</h2>
+            <p>Not all debt is bad, but unmanaged consumer debt is a wealth destroyer. Focus on eliminating high-interest liabilities, such as credit card balances, using the Avalanche method (paying highest interest first) or the Snowball method (paying smallest balances first for psychological wins).</p>
+
+            <div class="ad-wrapper"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Article Ad Slot 2 ]</div></div>
+
+            <h2>4. Creating Multiple Revenue Streams</h2>
+            <p>Depending on a single source of income is the riskiest financial decision you can make today. The world is experiencing rapid transformations in job markets, fueled by AI and automation. Building multiple streams of income—whether it's dividend investing, freelance consulting, creating digital products, or real estate—creates a protective moat around your lifestyle.</p>
+
+            <h2>5. Fundamentals of Investing</h2>
+            <p>Investing is not the prerogative of Wall Street experts. Today, anyone can access index funds, ETFs, and robo-advisors from their smartphone. The key is understanding that time in the market beats timing the market. Begin with low-risk, broad-market index funds (like the S&P 500) and let compounding do the heavy lifting.</p>
+
+            <h2>Conclusion</h2>
+            <p>Personal finance in 2026 is about consistency, emotional discipline, and automation. You must prioritize organization over complex strategies. By mastering budgeting, wiping out toxic debt, securing multiple income streams, and investing for the long horizon, you are laying an unshakable foundation for true financial freedom.</p>
         </div>
 
         <!-- STEP 2: FINAL CONTINUE BUTTON -->
         <div class="mt-16 bg-gray-50 border-2 border-gray-100 rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-inner relative z-20" id="bottom-verify-section">
+
+            <!-- FIXED: SVG Icon for Bottom Lock -->
             <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
-                <i class="fas fa-lock-open text-2xl"></i>
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                </svg>
             </div>
+
             <h3 class="text-2xl font-extrabold text-gray-900 mb-4">Destination Link Ready</h3>
 
             <div id="bottom-waiting-text" class="text-gray-500 font-semibold mb-6 h-6 flex items-center justify-center bg-gray-200 py-4 px-6 rounded-lg animate-pulse">
                 Please wait for the timer at the top to complete...
             </div>
 
-            <!-- Niche wala button -->
-            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide relative z-50 cursor-pointer">
-                Get Destination Link <i class="fas fa-external-link-alt ml-2"></i>
+            <!-- Destination Button with SVG Arrow -->
+            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg flex items-center justify-center tracking-wide relative z-50 clickable-btn">
+                Continue to Next Step 
+                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </a>
-            
+
             <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our terms of service.</p>
         </div>
-        
+
         <div class="ad-wrapper mb-0 mt-8"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle">[ Bottom Ad ]</div></div>
     </div>
 
     <!-- Right Column Sidebar -->
     <aside class="xl:col-span-4 hidden xl:block">
         <div class="sticky top-28 space-y-8">
-            <div class="ad-wrapper m-0 p-4"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle w-full m-0">[ Sidebar Ad ]</div></div>
+            <div class="ad-wrapper m-0 p-4"><span class="ad-label">Advertisement</span><div class="ad-slot ad-rectangle w-full m-0" style="height: 600px;">[ Sidebar Sticky Ad ]</div></div>
         </div>
     </aside>
 </main>
@@ -194,21 +256,13 @@
 <!-- Backend Timer Script -->
 <%- include('timer-script') %>
 
-<!-- ROBUST BRIDGE LOGIC -->
+<!-- Clean UI Logic for Buttons -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const timerValElement = document.getElementById('timerDisplay');
         const continueBtn = document.getElementById('continueBtn');
         const scrollBtn = document.getElementById('scroll-btn');
         const waitingText = document.getElementById('bottom-waiting-text');
-        
-        // Ensure scroll function works dynamically
-        if (scrollBtn) {
-            scrollBtn.addEventListener("click", function(e) {
-                e.preventDefault(); // Stop default button behavior
-                document.getElementById('bottom-verify-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-        }
 
         const customLogic = setInterval(() => {
             if (!timerValElement || !continueBtn) return;
@@ -217,29 +271,27 @@
             const btnNotHidden = !continueBtn.classList.contains('hidden');
             const hrefUpdated = continueBtn.getAttribute('href') !== '#' && continueBtn.getAttribute('href') !== '';
             
-            // Check if timer is 0 OR backend already revealed the button
             if (timerVal === "0" || timerVal === 0 || timerVal === "" || btnNotHidden || hrefUpdated) {
                 
-                // 1. Unhide and display top Scroll Button
+                // Show top Scroll Button
                 if(scrollBtn) {
                     scrollBtn.classList.remove('hidden');
                     scrollBtn.style.display = 'flex';
                 }
                 
-                // 2. Hide waiting text
+                // Hide waiting text
                 if(waitingText) {
                     waitingText.style.display = 'none';
                 }
                 
-                // 3. Force show bottom continue button
+                // Show bottom continue button
                 if(continueBtn) {
                     continueBtn.classList.remove('hidden');
                     continueBtn.style.display = 'flex'; 
                 }
                 
-                clearInterval(customLogic); // Stop checking once done
+                clearInterval(customLogic);
             }
         }, 500);
     });
 </script>
-
