@@ -140,9 +140,13 @@ exports.processStep = async (req, res) => {
         const { linkId, originalUrl, isValid, ip, country, userAgent, totalSteps, currentStep } = decoded;
 
         if (currentStep < totalSteps) {
-            decoded.currentStep += 1;
-            const newToken = jwt.sign(decoded, process.env.JWT_SECRET, { expiresIn: '15m' });
-            return res.json({ nextUrl: `/l/step/${decoded.currentStep}?t=${newToken}` });
+            // decoded already carries 'exp'/'iat' from the original token — jwt.sign()
+            // refuses to accept a payload that already has 'exp' together with the
+            // expiresIn option, so strip those before re-signing for the next step.
+            const { exp, iat, ...payload } = decoded;
+            payload.currentStep = currentStep + 1;
+            const newToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+            return res.json({ nextUrl: `/l/step/${payload.currentStep}?t=${newToken}` });
         } else {
             // Final Step Reached
             if (isValid) {
