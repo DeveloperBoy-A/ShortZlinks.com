@@ -12,6 +12,10 @@ router.post('/login', authController.login);
 router.get('/2fa-challenge', authController.render2FAChallenge);
 router.post('/2fa-challenge', authController.verify2FAChallenge);
 
+// Google OAuth login
+router.get('/google', authController.googleLogin);
+router.get('/google/callback', authController.googleCallback);
+
 // Baaki auth routes (inme captcha ki zaroorat nahi hai)
 router.get('/logout', authController.logout);
 
