@@ -1,74 +1,283 @@
-<%- include('../partials/header') %>
-<div class="w-full bg-gray-200 dark:bg-gray-700 text-center py-4 text-sm text-gray-500">Advertisement Space (728x90 Top)</div>
 
-<main class="flex-grow flex flex-col items-center justify-center p-6">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl text-center max-w-lg w-full border-t-4 border-primary">
-        <h2 class="text-2xl font-bold mb-2">Step <%= step %> of <%= totalSteps %></h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">Please wait while we verify your link...</p>
-        
-        <div class="text-5xl font-black text-primary mb-6" id="timerDisplay">10</div>
-        
-        <p id="instructionText" class="text-sm text-gray-500 mb-6">Checking for safe destination...</p>
 
-        <a id="continueBtn" href="#" class="hidden w-full bg-secondary text-white py-3 px-6 rounded-lg font-bold text-lg hover:bg-pink-600 transition shadow-lg">
-            Scroll down and click Continue <i class="fas fa-arrow-right ml-2"></i>
-        </a>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9fafb;
+        color: #374151;
+    }
+    
+    .article-body p {
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+    
+    .article-body h2, .article-body h3 {
+        color: #111827;
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .article-image {
+        width: 100%;
+        border-radius: 12px;
+        margin: 2rem 0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        object-fit: cover;
+    }
+
+    /* Ad Placeholders */
+    .ad-slot {
+        width: 100%;
+        background-color: #e5e7eb;
+        border: 2px dashed #9ca3af;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-weight: 600;
+        margin: 2rem 0;
+        border-radius: 8px;
+    }
+    .ad-responsive { min-height: 250px; }
+    .ad-banner { height: 90px; }
+
+    /* Verification Box Styling */
+    .verify-box {
+        background: linear-gradient(to right, #eff6ff, #dbeafe);
+        border: 2px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-verify {
+        background-color: #2563eb;
+        color: white;
+        padding: 12px 32px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        display: none;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+    }
+
+    .btn-verify:hover {
+        background-color: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+    .timer-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e40af;
+    }
+</style>
+
+<!-- Top Navigation -->
+<header class="bg-white shadow-sm py-4 px-6 mb-8 border-b border-gray-200">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="text-2xl font-extrabold text-gray-800 tracking-tight">ShortInvest</div>
+        <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-600">
+            <a href="#" class="hover:text-blue-600">Home</a>
+            <a href="#" class="hover:text-blue-600">Finance</a>
+            <a href="#" class="hover:text-blue-600">Investing</a>
+            <a href="#" class="hover:text-blue-600">Contact</a>
+        </nav>
     </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Article Content & Verification -->
+    <div class="lg:col-span-2 bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-gray-100">
+        
+        <!-- Article Header -->
+        <header class="mb-6">
+            <div class="text-sm text-blue-600 font-bold uppercase tracking-wider mb-2">Finance Guide</div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">Best Personal Finance Advice to Start in 2026</h1>
+            <div class="flex items-center text-gray-500 text-sm">
+                <span class="font-semibold text-gray-700">By Starindia</span>
+                <span class="mx-2">•</span>
+                <span>February 18, 2026</span>
+            </div>
+        </header>
+
+        <!-- Top Ad Slot -->
+        <div class="ad-slot ad-responsive">
+            [ AdSense Responsive Ad Slot ]
+        </div>
+
+        <!-- STEP 1: VERIFICATION TIMER BOX -->
+        <div class="verify-box" id="step1-box">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Please Wait for your Link...</h3>
+            <div id="timer-display" class="timer-text my-4">
+                You can proceed in <span id="countdown-number" class="text-red-500 text-3xl">15</span> seconds
+            </div>
+            <button id="scroll-btn" class="btn-verify mx-auto" onclick="scrollToBottom()">
+                Scroll Down & Click Continue <i class="fas fa-arrow-down ml-2"></i>
+            </button>
+        </div>
+
+        <!-- Article Body -->
+        <div class="article-body mt-8 text-gray-700">
+            <p>Best Personal Finance advice Money management in 2026 is more important than ever before. As the costs of living increase, digital financial services, the shift in labor markets, and simple access to credit, novices can easily have a panic attack when working to establish financial security. Personal finance advice is not just about being wealthy, but rather it is about being in charge of your money and making smart choices and building a safe future.</p>
+
+            <!-- Image 1: Main Finance Image -->
+            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80" alt="Best Personal Finance Advice" class="article-image">
+            <p class="text-center text-sm text-gray-400 -mt-4 mb-6 italic">Best Personal Finance Advice to Start in 2026</p>
+
+            <div class="ad-slot ad-banner">
+                [ AdSense Inline Article Ad Slot ]
+            </div>
+
+            <p>All it takes is a person to acquire simple personal finance advice and knowledge and implement it with a uniform approach to create a sound financial base. This is a guide to the personal finance advice and tips that are practical and beginner-friendly. It concerned the mindset, habits, planning, and long-term growth.</p>
+            
+            <p>Financial intelligence and finance advice awareness are the beginning of financial success. There is no doubt that many individuals are financially homeless not because they are earning small amounts but because they do not monitor or know what happens to their money. The 2026 round of digital spending via applications, subscriptions, and online payment means allows losing control of spending even more easily.</p>
+
+            <h2 class="text-2xl font-bold">Developing a powerful budgeting routine</h2>
+            <p>Personal finance advice is based on budgeting. Budgeting is not a constraint of your life; it only makes your money more organized so that you can use it in a better way. The novices ought to be directed to develop a basic and realistic budget that addresses the necessities such as rent, food, transport, and utilities as well as to make space to save and to enjoy themselves.</p>
+
+            <!-- Image 2: Smart Spending Image -->
+            <img src="https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?auto=format&fit=crop&w=800&q=80" alt="Smart Spending Behavior" class="article-image">
+            <p class="text-center text-sm text-gray-400 -mt-4 mb-6 italic">Smart Spending Behavior Learning</p>
+
+            <h2 class="text-2xl font-bold">Saving Money as a Daily Habit</h2>
+            <p>It is not about waiting till you have more cash to save, saving is a priority. Novices have the notion that to save they have to earn a very good salary, yet little and regular savings can do wonders in the long term. Saving is becoming easier than ever with the help of automatic savings devices and digital wallets in 2026.</p>
+
+            <div class="ad-slot ad-responsive">
+                [ AdSense In-feed Ad Slot ]
+            </div>
+
+            <h2 class="text-2xl font-bold">Finding a Healthy Money Mindset</h2>
+            <p>The way you think determines how you spend money. Most amateurs are raised with negative ideas about money, like fear, guilt or shame. Financial success begins with a healthy attitude in 2026. Money is an instrument and not a stressor, nor a fear.</p>
+
+            <!-- Image 3: Money Mindset Image -->
+            <img src="https://images.unsplash.com/photo-1616514197671-15d99ce7a6f8?auto=format&fit=crop&w=800&q=80" alt="Healthy Money Mindset" class="article-image">
+            <p class="text-center text-sm text-gray-400 -mt-4 mb-6 italic">Finding a Healthy Money Mindset</p>
+
+            <h2 class="text-2xl font-bold">Conclusion</h2>
+            <p>Personal finance advice for a start-up in 2026 is more about simplicity, discipline and smart habits. It does not require elaborate ideas or affluence to accomplish. You must have attitude, organization, discipline, and awareness.</p>
+        </div>
+
+        <!-- STEP 2: FINAL CONTINUE BUTTON -->
+        <div class="mt-12 text-center pb-8 border-b border-gray-200">
+            <div id="bottom-verify-section" style="display:none;">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Verification Complete!</h3>
+                <a href="<%= destination || '#' %>" class="btn-verify" style="display:inline-block;">
+                    Continue to Link <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            <div id="bottom-waiting-text" class="text-gray-400 font-semibold italic">
+                Please wait for the timer above to complete...
+            </div>
+        </div>
+
+        <!-- Bottom Ad Slot -->
+        <div class="ad-slot ad-responsive">
+            [ AdSense Bottom Ad Slot ]
+        </div>
+
+        <!-- Comment Section -->
+        <div class="mt-10">
+            <h3 class="text-2xl font-bold mb-6">Leave a Comment</h3>
+            <p class="text-sm text-gray-500 mb-4">Your email address will not be published. Required fields are marked *</p>
+            <form class="space-y-4 text-sm">
+                <textarea class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" rows="4" placeholder="Type here.."></textarea>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" placeholder="Name*" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                    <input type="email" placeholder="Email*" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <input type="text" placeholder="Website" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <div class="flex items-center">
+                    <input type="checkbox" id="save-info" class="mr-2">
+                    <label for="save-info" class="text-gray-600">Save my name, email, and website in this browser for the next time I comment.</label>
+                </div>
+                <button type="button" class="bg-gray-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-900 transition">Post Comment</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Right Column: Sidebar (Perfect for Sticky Ads) -->
+    <aside class="lg:col-span-1">
+        <div class="sticky top-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+                <h3 class="text-lg font-bold border-b pb-2 mb-4">Search</h3>
+                <input type="text" placeholder="Search..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+
+            <!-- Sidebar Ad 1 -->
+            <div class="ad-slot ad-responsive h-64 mb-6">
+                [ Sidebar Square Ad Slot ]
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6">
+                <h3 class="text-lg font-bold border-b pb-2 mb-4">Recent Posts</h3>
+                <ul class="space-y-3 text-sm text-gray-600">
+                    <li class="hover:text-blue-600 cursor-pointer">Creating Multiple Revenue Sources</li>
+                    <li class="hover:text-blue-600 cursor-pointer">Learning the Fundamentals of Investing</li>
+                    <li class="hover:text-blue-600 cursor-pointer">Protect Your Financial Future</li>
+                </ul>
+            </div>
+
+            <!-- Sidebar Ad 2 -->
+            <div class="ad-slot ad-responsive h-96">
+                [ Vertical Skyscraper Ad ]
+            </div>
+        </div>
+    </aside>
+
 </main>
 
-<div class="w-full bg-gray-200 dark:bg-gray-700 text-center py-4 text-sm text-gray-500">Advertisement Space (728x90 Bottom)</div>
+<footer class="bg-gray-900 text-gray-400 text-center py-6 mt-12 text-sm">
+    <p>Copyright © 2026 ShortInvest | Powered by Astra WordPress Theme</p>
+</footer>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        let timeLeft = 10;
-        const timerDisplay = document.getElementById('timerDisplay');
-        const instructionText = document.getElementById('instructionText');
-        const continueBtn = document.getElementById('continueBtn');
-        const token = "<%= token %>";
+    let timeLeft = 15; 
+    const timerDisplay = document.getElementById('countdown-number');
+    const scrollBtn = document.getElementById('scroll-btn');
+    const timerText = document.getElementById('timer-display');
+    
+    const bottomSection = document.getElementById('bottom-verify-section');
+    const bottomWaitingText = document.getElementById('bottom-waiting-text');
 
-        const countdown = setInterval(() => {
-            timeLeft--;
-            timerDisplay.innerText = timeLeft;
+    const countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerText.style.display = 'none';
+            scrollBtn.style.display = 'inline-block';
             
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                timerDisplay.innerText = "0";
-                instructionText.innerText = "Processing request securely...";
-                
-                // Fire AJAX to backend to validate completion and get next token/URL
-                fetch('/l/step/process', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ t: token })
-                })
-                .then(res => res.json().then(data => ({ ok: res.ok, data })))
-                .then(({ ok, data }) => {
-                    if (ok && data.nextUrl) {
-                        timerDisplay.style.display = 'none';
-                        instructionText.innerText = "Verification Complete! Redirecting...";
-                        continueBtn.href = data.nextUrl;
-                        continueBtn.classList.remove('hidden');
+            bottomWaitingText.style.display = 'none';
+            bottomSection.style.display = 'block';
+        }
+    }, 1000);
 
-                        // GSAP Pulse Animation on Button
-                        gsap.to("#continueBtn", { scale: 1.05, repeat: -1, yoyo: true, duration: 0.8 });
-
-                        // Auto-advance so people don't get stuck waiting â€” the button remains as a manual fallback
-                        setTimeout(() => { window.location.href = data.nextUrl; }, 1800);
-                    } else {
-                        instructionText.innerText = "Session expired â€” please click the link again from the original page.";
-                        continueBtn.textContent = 'Retry';
-                        continueBtn.href = window.location.href;
-                        continueBtn.classList.remove('hidden');
-                    }
-                })
-                .catch(err => {
-                    instructionText.innerText = "Network error â€” tap Retry.";
-                    continueBtn.textContent = 'Retry';
-                    continueBtn.href = window.location.href;
-                    continueBtn.classList.remove('hidden');
-                });
-            }
-        }, 1000);
-    });
+    function scrollToBottom() {
+        bottomSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const finalBtn = bottomSection.querySelector('.btn-verify');
+        setTimeout(() => {
+            finalBtn.style.transform = 'scale(1.05)';
+            setTimeout(() => finalBtn.style.transform = 'scale(1)', 300);
+        }, 500);
+    }
 </script>
-<%- include('../partials/footer') %>
+
+
