@@ -201,38 +201,14 @@
             </div>
         </header>
 
-        <!-- reCAPTCHA Checkbox Area (This blocks the timer until clicked) -->
-        <div id="captcha-box" class="flex items-center justify-between w-[310px] bg-[#f9f9f9] border border-[#d3d3d3] rounded-[3px] p-2 py-3 shadow-sm mx-auto md:mx-0 mb-8 transition-opacity duration-300">
-            <div class="flex items-center gap-3 pl-2">
-                <!-- Custom Checkbox -->
-                <div class="relative w-7 h-7 bg-white border-2 border-[#c1c1c1] rounded-sm cursor-pointer hover:border-[#b2b2b2] flex items-center justify-center transition-all" id="captcha-checkbox" onclick="verifyCaptcha()">
-                    <!-- Checkmark (Hidden initially) -->
-                    <svg id="captcha-checkmark" class="w-5 h-5 text-green-600 hidden" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                    <!-- Spinner (Hidden initially) -->
-                    <svg id="captcha-spinner" class="w-5 h-5 text-blue-600 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                </div>
-                <span class="text-[14px] font-medium text-[#222]">I'm not a robot</span>
-            </div>
-            <div class="flex flex-col items-center justify-center pr-2">
-                <!-- Inline SVG Recaptcha Logo -->
-                <svg class="w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M21.05 10.98c-.46-1.55-1.39-2.92-2.63-3.95-1.54-1.29-3.55-2.03-5.69-2.03-3.23 0-6.17 1.83-7.69 4.7-1.12 2.11-1.35 4.6-.64 6.88 1.14 3.66 4.67 6.42 8.5 6.42 1.25 0 2.47-.26 3.6-.74.65-.28 1.25-.66 1.78-1.12l-2.45-2.4c-1.07.74-2.39 1.14-3.75 1.14-2.34 0-4.48-1.26-5.59-3.28-.6-1.09-.85-2.36-.67-3.62.24-1.74 1.22-3.25 2.67-4.22 1.22-.82 2.7-1.25 4.22-1.25 1.63 0 3.19.53 4.45 1.51 1.05.82 1.79 1.95 2.11 3.25l2.78-1.04z"></path>
-                </svg>
-                <span class="text-[10px] text-[#555] mt-1 font-semibold tracking-wide">reCAPTCHA</span>
-                <span class="text-[8px] text-[#555]">Privacy - Terms</span>
-            </div>
-        </div>
-
-        <p id="captcha-instruction" class="text-sm font-semibold text-red-500 mb-8 animate-pulse">Please complete the reCAPTCHA above to proceed.</p>
-
         <!-- Header Ad (Leaderboard) -->
         <div class="ad-wrapper mt-4">
             <span class="ad-label">Advertisement</span>
             <div class="ad-slot ad-leaderboard">[ 728x90 Leaderboard Ad Slot ]</div>
         </div>
 
-        <!-- STEP 1: VERIFICATION TIMER BOX (HIDDEN UNTIL CAPTCHA IS CLICKED) -->
-        <div class="verify-box flex-col items-center justify-center my-12 relative z-20 hidden" id="step1-box">
+        <!-- STEP 1: VERIFICATION TIMER BOX -->
+        <div class="verify-box flex flex-col items-center justify-center my-12 relative z-20" id="step1-box">
             <div class="bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-inner" style="width: 80px; height: 80px; flex-shrink: 0;">
                 <svg style="width: 40px; height: 40px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
@@ -484,48 +460,8 @@
 <!-- Preserved Backend Timer Integration -->
 <%- include('timer-script') %>
 
-<!-- Script for Checkbox and Verification Logic -->
+<!-- Preserved JavaScript Verification Functionality -->
 <script>
-// Logic to handle Custom reCAPTCHA
-function verifyCaptcha() {
-    const checkmark = document.getElementById('captcha-checkmark');
-    const spinner = document.getElementById('captcha-spinner');
-    const box = document.getElementById('captcha-checkbox');
-    const recaptchaContainer = document.getElementById('captcha-box');
-    const instruction = document.getElementById('captcha-instruction');
-    const step1Box = document.getElementById('step1-box');
-    
-    // Prevent double clicking
-    if(box.classList.contains('verified')) return;
-    
-    // 1. Show spinner
-    spinner.classList.remove('hidden');
-    box.classList.add('verified'); 
-    
-    setTimeout(() => {
-        // 2. Hide spinner, show green tick
-        spinner.classList.add('hidden');
-        checkmark.classList.remove('hidden');
-        box.style.border = "none";
-        
-        setTimeout(() => {
-            // 3. Fade out recaptcha box
-            recaptchaContainer.style.opacity = '0';
-            if(instruction) instruction.style.opacity = '0';
-            
-            setTimeout(() => {
-                // 4. Hide recaptcha completely, SHOW TIMER
-                recaptchaContainer.style.display = 'none';
-                if(instruction) instruction.style.display = 'none';
-                
-                step1Box.classList.remove('hidden');
-                step1Box.classList.add('flex'); // Switch to flex layout
-            }, 300);
-        }, 600);
-    }, 1000);
-}
-
-// Preserved original timer logic
 document.addEventListener("DOMContentLoaded", function() { 
     const timerValElement = document.getElementById('timerDisplay'); 
     const continueBtn = document.getElementById('continueBtn'); 
