@@ -161,7 +161,7 @@
         <header class="mb-8 text-center md:text-left">
             <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 font-bold text-xs uppercase tracking-widest mb-4">Verification Step <%= step %> of <%= totalSteps %></span>
             <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">The Ultimate Guide to Personal Finance: Building Wealth in 2026</h1>
-            
+
             <div class="flex flex-col md:flex-row items-center justify-between border-y border-gray-100 py-4 mt-6">
                 <div class="flex items-center gap-4 mb-4 md:mb-0">
                     <img src="https://ui-avatars.com/api/?name=Star+India&background=0D8ABC&color=fff" alt="Author" class="w-12 h-12 rounded-full shadow-sm">
@@ -192,10 +192,12 @@
                 <i class="fas fa-shield-check text-3xl"></i>
             </div>
             <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-2 text-center">Securing Your Connection...</h3>
-            
-            <!-- Timer ID required by timer-script -->
-            <div class="text-6xl font-black text-blue-600 my-4 h-20 flex items-center justify-center drop-shadow-md" id="timerDisplay">10</div>
-            
+
+            <!-- FIX 1: Timer ID is now wrapped in a parent div so backend script hides ONLY this div, not the button! -->
+            <div id="timer-wrapper" class="w-full flex justify-center">
+                <div class="text-6xl font-black text-blue-600 my-4 h-20 flex items-center justify-center drop-shadow-md" id="timerDisplay">10</div>
+            </div>
+
             <!-- Instruction Text ID required by timer-script -->
             <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-6 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
 
@@ -216,7 +218,7 @@
 
             <h2>1. Developing a Bulletproof Budgeting Routine</h2>
             <p>Personal finance is firmly rooted in budgeting. Contrary to popular belief, budgeting is not a constraint on your life; it merely makes your money organized so you can deploy it like a tool. Beginners should develop a realistic budget utilizing the 50/30/20 rule: 50% for necessities (rent, food, utilities), 30% for wants, and 20% dedicated strictly to savings and investments.</p>
-            
+
             <!-- AD PATTERN 2: In-Article Floating Ad -->
             <div class="ad-wrapper ad-float-right hidden md:block">
                 <span class="ad-label">Advertisement</span>
@@ -283,17 +285,16 @@
                 <i class="fas fa-lock-open text-2xl"></i>
             </div>
             <h3 class="text-2xl font-extrabold text-gray-900 mb-4">Destination Link Ready</h3>
-            
-            <!-- Fixed height to prevent layout shifting -->
+
             <div id="bottom-waiting-text" class="text-gray-500 font-semibold mb-6 h-6 flex items-center justify-center bg-gray-200 py-4 px-6 rounded-lg animate-pulse">
                 Please wait for the timer at the top to complete...
             </div>
 
-            <!-- Continue Button ID required by timer-script -->
+            <!-- FIX 2: Added ID and robust inline styling so custom script forces it to show accurately -->
             <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 transition shadow-lg hover:shadow-2xl hover:-translate-y-1 items-center justify-center tracking-wide">
                 Get Destination Link <i class="fas fa-external-link-alt ml-2"></i>
             </a>
-            
+
             <p class="text-xs text-gray-400 mt-4">By continuing, you agree to our terms of service.</p>
         </div>
 
@@ -310,7 +311,7 @@
     <!-- Right Column: Sidebar -->
     <aside class="xl:col-span-4 hidden xl:block">
         <div class="sticky top-28 space-y-8">
-            
+
             <!-- Search Widget -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 class="text-sm font-extrabold uppercase tracking-widest text-gray-900 mb-4">Search</h3>
@@ -398,27 +399,32 @@
 <!-- Backend Timer Script -->
 <%- include('timer-script') %>
 
-<!-- Custom Bridge Logic -->
+<!-- FIX 3: Updated Custom Bridge Logic for Flawless Triggering -->
 <script>
     const customLogic = setInterval(() => {
-        const timerVal = document.getElementById('timerDisplay').innerText;
+        const timerValElement = document.getElementById('timerDisplay');
         const continueBtn = document.getElementById('continueBtn');
         const scrollBtn = document.getElementById('scroll-btn');
         const waitingText = document.getElementById('bottom-waiting-text');
         
+        if (!timerValElement || !continueBtn) return;
+        
+        const timerVal = timerValElement.innerText;
+        
+        // If timer reached 0 OR backend script removed the hidden class from continue button
         if (timerVal === "0" || timerVal === 0 || !continueBtn.classList.contains('hidden')) {
-            // Show top scroll button
+            
+            // 1. Show the top scroll button properly
             scrollBtn.classList.remove('hidden');
-            scrollBtn.classList.add('flex');
+            scrollBtn.style.display = 'flex'; // Force display flex
             
-            // Hide "Please wait" text at the bottom
-            waitingText.classList.add('hidden');
+            // 2. Hide the bottom waiting text completely
+            waitingText.style.display = 'none';
             
-            // Ensure continueBtn displays properly as flex
-            if(!continueBtn.classList.contains('hidden')) {
-                continueBtn.classList.add('flex');
-            }
-
+            // 3. Force the continue button to show properly at the bottom
+            continueBtn.classList.remove('hidden');
+            continueBtn.style.display = 'flex'; // Force display flex to overwrite Tailwind classes if needed
+            
             clearInterval(customLogic);
         }
     }, 500);
@@ -428,3 +434,4 @@
         document.getElementById('bottom-verify-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 </script>
+
