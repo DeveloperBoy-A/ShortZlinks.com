@@ -153,14 +153,6 @@
         pointer-events: auto !important; 
         cursor: pointer !important; 
     }
-
-    /* Fake Checkbox styling */
-    .recaptcha-box {
-        background: #f9f9f9;
-        border: 1px solid #d3d3d3;
-        border-radius: 3px;
-        box-shadow: 0 0 4px 1px rgba(0,0,0,0.08);
-    }
 </style>
 
 <!-- Clean & Modern Header Navigation -->
@@ -199,7 +191,6 @@
             </h1>
             
             <div class="flex items-center justify-center md:justify-start space-x-4 mt-6 mb-10">
-                <!-- Safe Inline SVG Avatar -->
                 <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 border border-green-200">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 </div>
@@ -208,22 +199,31 @@
                     <p class="text-xs text-gray-500 font-medium">Updated for 2026</p>
                 </div>
             </div>
-
-            <!-- "I am not a robot" Section -->
-            <div class="recaptcha-box flex items-center justify-between w-full max-w-[340px] p-4 mx-auto md:mx-0 mt-8 mb-4">
-                <div class="flex items-center gap-4">
-                    <input type="checkbox" id="robot-check" class="w-7 h-7 cursor-pointer accent-blue-600 border-2 border-gray-300 rounded-sm">
-                    <label for="robot-check" class="font-medium text-gray-700 text-sm md:text-base cursor-pointer select-none">I'm not a robot</label>
-                </div>
-                <div class="flex flex-col items-center justify-center">
-                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12zm10 8c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z"/>
-                    </svg>
-                    <span class="text-[9px] text-gray-500 mt-1 uppercase tracking-wider font-semibold">reCAPTCHA</span>
-                </div>
-            </div>
-            
         </header>
+
+        <!-- reCAPTCHA Checkbox Area (This blocks the timer until clicked) -->
+        <div id="captcha-box" class="flex items-center justify-between w-[310px] bg-[#f9f9f9] border border-[#d3d3d3] rounded-[3px] p-2 py-3 shadow-sm mx-auto md:mx-0 mb-8 transition-opacity duration-300">
+            <div class="flex items-center gap-3 pl-2">
+                <!-- Custom Checkbox -->
+                <div class="relative w-7 h-7 bg-white border-2 border-[#c1c1c1] rounded-sm cursor-pointer hover:border-[#b2b2b2] flex items-center justify-center transition-all" id="captcha-checkbox" onclick="verifyCaptcha()">
+                    <!-- Checkmark (Hidden initially) -->
+                    <svg id="captcha-checkmark" class="w-5 h-5 text-green-600 hidden" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                    <!-- Spinner (Hidden initially) -->
+                    <svg id="captcha-spinner" class="w-5 h-5 text-blue-600 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </div>
+                <span class="text-[14px] font-medium text-[#222]">I'm not a robot</span>
+            </div>
+            <div class="flex flex-col items-center justify-center pr-2">
+                <!-- Inline SVG Recaptcha Logo -->
+                <svg class="w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.05 10.98c-.46-1.55-1.39-2.92-2.63-3.95-1.54-1.29-3.55-2.03-5.69-2.03-3.23 0-6.17 1.83-7.69 4.7-1.12 2.11-1.35 4.6-.64 6.88 1.14 3.66 4.67 6.42 8.5 6.42 1.25 0 2.47-.26 3.6-.74.65-.28 1.25-.66 1.78-1.12l-2.45-2.4c-1.07.74-2.39 1.14-3.75 1.14-2.34 0-4.48-1.26-5.59-3.28-.6-1.09-.85-2.36-.67-3.62.24-1.74 1.22-3.25 2.67-4.22 1.22-.82 2.7-1.25 4.22-1.25 1.63 0 3.19.53 4.45 1.51 1.05.82 1.79 1.95 2.11 3.25l2.78-1.04z"></path>
+                </svg>
+                <span class="text-[10px] text-[#555] mt-1 font-semibold tracking-wide">reCAPTCHA</span>
+                <span class="text-[8px] text-[#555]">Privacy - Terms</span>
+            </div>
+        </div>
+
+        <p id="captcha-instruction" class="text-sm font-semibold text-red-500 mb-8 animate-pulse">Please complete the reCAPTCHA above to proceed.</p>
 
         <!-- Header Ad (Leaderboard) -->
         <div class="ad-wrapper mt-4">
@@ -231,8 +231,8 @@
             <div class="ad-slot ad-leaderboard">[ 728x90 Leaderboard Ad Slot ]</div>
         </div>
 
-        <!-- STEP 1: VERIFICATION TIMER BOX -->
-        <div class="verify-box flex flex-col items-center justify-center my-12 relative z-20" id="step1-box">
+        <!-- STEP 1: VERIFICATION TIMER BOX (HIDDEN UNTIL CAPTCHA IS CLICKED) -->
+        <div class="verify-box flex-col items-center justify-center my-12 relative z-20 hidden" id="step1-box">
             <div class="bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-inner" style="width: 80px; height: 80px; flex-shrink: 0;">
                 <svg style="width: 40px; height: 40px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
@@ -253,9 +253,9 @@
             </a>
         </div>
 
-        <!-- FULL ARTICLE CONTENT (EXTENDED) -->
+        <!-- FULL ARTICLE CONTENT (DOUBLE LENGTH) -->
         <article class="article-body mt-12">
-            <p class="drop-cap">Taking control of your health in 2026 is more critical than ever. With sedentary lifestyles becoming the norm, highly processed foods dominating supermarket shelves, and stress levels reaching all-time highs, many beginners feel completely overwhelmed when trying to establish a healthy daily routine. The truth is, wellness doesn't require extreme makeovers; it requires small, consistent habits.</p>
+            <p class="drop-cap">Taking control of your health in 2026 is more critical than ever. With sedentary lifestyles becoming the norm, highly processed foods dominating supermarket shelves, and stress levels reaching all-time highs, many beginners feel completely overwhelmed when trying to establish a healthy daily routine. The truth is, wellness doesn't require extreme makeovers; it requires small, consistent habits compounded over time.</p>
 
             <!-- IMAGE 1: INLINE SVG ILLUSTRATION -->
             <div class="image-wrapper">
@@ -276,11 +276,11 @@
             <div class="ad-wrapper p-0 overflow-hidden border-2 border-gray-100">
                 <span class="ad-label pt-3 pl-4 text-left">Sponsored Content</span>
                 <div class="ad-slot ad-native border-none bg-gray-50">
-                    <div class="ad-native-img bg-gray-300"></div>
+                    <div class="ad-native-img bg-gray-300 relative flex items-center justify-center text-gray-500"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
                     <div class="ad-native-text">
-                        <h4 class="font-bold text-gray-800 text-lg mb-1">[ Native Ad Headline Here ]</h4>
-                        <p class="text-sm text-gray-500 line-clamp-2">This is a native advertisement block that blends in perfectly with the article content. It gets higher click-through rates.</p>
-                        <span class="text-blue-600 text-xs font-bold mt-2 hover:underline cursor-pointer">Learn More &rarr;</span>
+                        <h4 class="font-bold text-gray-800 text-lg mb-1">Top 5 Superfoods for 2026</h4>
+                        <p class="text-sm text-gray-500 line-clamp-2">Discover the nutrient-dense foods that experts are recommending for optimal energy levels.</p>
+                        <span class="text-blue-600 text-xs font-bold mt-2 hover:underline cursor-pointer">Read Article &rarr;</span>
                     </div>
                 </div>
             </div>
@@ -336,8 +336,81 @@
 
             <h2>6. Posture and Ergonomic Health</h2>
             <p>Tech neck and lower back pain have become modern epidemics. If you spend 8 hours a day staring at a laptop or smartphone, your spine is paying the price. Investing in an ergonomic chair, positioning your monitor at eye level, and practicing "chin tucks" can save you thousands of dollars in physical therapy down the road. Remember, poor posture doesn't just look bad; it restricts your lung capacity and elevates stress hormones.</p>
+            
+            <h2>7. Gut Health and the Microbiome</h2>
+            <p>Science has confirmed that your gut is your second brain. Trillions of bacteria living in your digestive tract dictate everything from your immune system strength to your daily mood. To optimize your microbiome, you must incorporate fermented foods like kimchi, kefir, and kombucha into your diet, while significantly reducing refined sugars that feed harmful bacteria.</p>
 
-            <h2>7. Fundamentals of Preventive Care</h2>
+            <!-- IMAGE 4: INLINE SVG ILLUSTRATION (Gut/Flexibility) -->
+            <div class="image-wrapper">
+                <svg class="article-image" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="800" height="450" fill="#fef3c7"/>
+                    <path d="M400 150 C500 150 550 250 400 300 C250 250 300 150 400 150" fill="#fbbf24" opacity="0.8"/>
+                    <circle cx="400" cy="220" r="40" fill="#f59e0b"/>
+                    <text x="400" y="380" font-family="system-ui" font-size="32" font-weight="800" fill="#b45309" text-anchor="middle" letter-spacing="3">FLEXIBILITY & CORE</text>
+                </svg>
+            </div>
+            <p class="image-caption">A strong core and daily stretching routines prevent injuries and improve overall life quality.</p>
+
+            <!-- Article Ad 4 (Native Ad Style) -->
+            <div class="ad-wrapper p-0 overflow-hidden border-2 border-gray-100">
+                <span class="ad-label pt-3 pl-4 text-left">Sponsored Product</span>
+                <div class="ad-slot ad-native border-none bg-gray-50">
+                    <div class="ad-native-img bg-gray-300 relative flex items-center justify-center text-gray-500"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                    <div class="ad-native-text">
+                        <h4 class="font-bold text-gray-800 text-lg mb-1">Ergonomic Chairs on Sale</h4>
+                        <p class="text-sm text-gray-500 line-clamp-2">Upgrade your home office today and save your spine. Limited time discount applied.</p>
+                        <span class="text-blue-600 text-xs font-bold mt-2 hover:underline cursor-pointer">Shop Now &rarr;</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2>8. The Importance of Flexibility and Mobility</h2>
+            <p>Strength training is crucial, but without mobility, you are just building stiff muscles. Incorporating dynamic stretching, yoga, or Pilates into your weekly routine ensures that your joints move through their full range of motion. Mobility work flushes out lactic acid, accelerates muscle recovery, and ensures that you can comfortably perform daily tasks well into your older years.</p>
+
+            <h2>9. Intermittent Fasting Demystified</h2>
+            <p>Fasting is not a diet; it's an eating schedule. Giving your digestive system a break for 14-16 hours a day allows your body to enter a state of "autophagy," where it cleans out damaged cells and regenerates new ones. Fasting also naturally lowers insulin levels, making it easier for your body to tap into stored fat for energy instead of relying on a constant stream of glucose.</p>
+            
+            <!-- Article Ad 5 (Leaderboard) -->
+            <div class="ad-wrapper mt-4">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-leaderboard">[ 728x90 Banner Ad ]</div>
+            </div>
+
+            <h2>10. Mind-Muscle Connection in Training</h2>
+            <p>Lifting weights without focus is a waste of time. The "mind-muscle connection" refers to consciously feeling the target muscle contract during an exercise. Instead of just moving weight from point A to point B, slow down your repetitions, focus on the eccentric (lowering) phase, and you will recruit significantly more muscle fibers, leading to better growth and less risk of injury.</p>
+
+            <h2>11. Social Connections and Longevity</h2>
+            <p>We often forget that humans are inherently social creatures. Studies consistently show that loneliness is as damaging to your health as smoking 15 cigarettes a day. Building a strong community, maintaining deep friendships, and engaging in social hobbies dramatically lowers cortisol levels, reduces blood pressure, and significantly increases your overall life expectancy.</p>
+            
+            <!-- IMAGE 5: INLINE SVG ILLUSTRATION (Mindfulness) -->
+            <div class="image-wrapper">
+                <svg class="article-image" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="800" height="450" fill="#faf5ff"/>
+                    <circle cx="400" cy="200" r="100" fill="#a855f7" opacity="0.15"/>
+                    <circle cx="400" cy="200" r="70" fill="#a855f7" opacity="0.3"/>
+                    <circle cx="400" cy="200" r="40" fill="#9333ea"/>
+                    <path d="M400 130 C450 130 450 270 400 270 C350 270 350 130 400 130" fill="none" stroke="#ffffff" stroke-width="4"/>
+                    <text x="400" y="350" font-family="system-ui" font-size="32" font-weight="800" fill="#581c87" text-anchor="middle" letter-spacing="3">MINDFULNESS & REST</text>
+                </svg>
+            </div>
+            <p class="image-caption">Prioritizing mindfulness and stress management protects your long-term cognitive health.</p>
+
+            <h2>12. Breathing Techniques for Nervous System Regulation</h2>
+            <p>When you are stressed, your breathing becomes shallow and rapid, keeping your body in a "fight or flight" state. Techniques like Box Breathing (inhale 4s, hold 4s, exhale 4s, hold 4s) or the 4-7-8 method can instantly activate your parasympathetic nervous system. Taking just two minutes a day to consciously breathe can dramatically lower anxiety and improve mental clarity.</p>
+
+            <h2>13. Creating a Toxin-Free Home Environment</h2>
+            <p>The air quality inside your home is often worse than the air outside. Transitioning to non-toxic cleaning supplies, using glass containers instead of cheap plastics, and investing in a HEPA air purifier can significantly reduce the chemical load on your liver. Small changes in your environment lead to massive improvements in your long-term cellular health.</p>
+
+            <!-- Article Ad 6 (Square Ad) -->
+            <div class="ad-wrapper">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-square">[ 300x250 Square Ad ]</div>
+            </div>
+
+            <h2>14. Long-term Consistency over Perfection</h2>
+            <p>The biggest trap in the health and fitness industry is the illusion of perfection. One bad meal will not make you unhealthy, just as one salad will not make you fit. The secret to long-lasting wellness is the ability to bounce back after a setback. Aim for 80% compliance to your routine. If you miss a workout, don't panic—just make sure you show up the next day.</p>
+
+            <h2>15. Fundamentals of Preventive Care</h2>
             <p>Excellent health is not just about looking good in the mirror; it is about longevity. Today, anyone can take advantage of routine check-ups, blood panels, and digital health trackers directly from their smartphone. The key is understanding that preventing illness is much easier than curing it. Stay hydrated, prioritize regular medical screenings, and always listen to your body's early warning signals.</p>
 
             <h2>Conclusion</h2>
@@ -411,8 +484,48 @@
 <!-- Preserved Backend Timer Integration -->
 <%- include('timer-script') %>
 
-<!-- Preserved JavaScript Verification Functionality -->
+<!-- Script for Checkbox and Verification Logic -->
 <script>
+// Logic to handle Custom reCAPTCHA
+function verifyCaptcha() {
+    const checkmark = document.getElementById('captcha-checkmark');
+    const spinner = document.getElementById('captcha-spinner');
+    const box = document.getElementById('captcha-checkbox');
+    const recaptchaContainer = document.getElementById('captcha-box');
+    const instruction = document.getElementById('captcha-instruction');
+    const step1Box = document.getElementById('step1-box');
+    
+    // Prevent double clicking
+    if(box.classList.contains('verified')) return;
+    
+    // 1. Show spinner
+    spinner.classList.remove('hidden');
+    box.classList.add('verified'); 
+    
+    setTimeout(() => {
+        // 2. Hide spinner, show green tick
+        spinner.classList.add('hidden');
+        checkmark.classList.remove('hidden');
+        box.style.border = "none";
+        
+        setTimeout(() => {
+            // 3. Fade out recaptcha box
+            recaptchaContainer.style.opacity = '0';
+            if(instruction) instruction.style.opacity = '0';
+            
+            setTimeout(() => {
+                // 4. Hide recaptcha completely, SHOW TIMER
+                recaptchaContainer.style.display = 'none';
+                if(instruction) instruction.style.display = 'none';
+                
+                step1Box.classList.remove('hidden');
+                step1Box.classList.add('flex'); // Switch to flex layout
+            }, 300);
+        }, 600);
+    }, 1000);
+}
+
+// Preserved original timer logic
 document.addEventListener("DOMContentLoaded", function() { 
     const timerValElement = document.getElementById('timerDisplay'); 
     const continueBtn = document.getElementById('continueBtn'); 
