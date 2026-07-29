@@ -21,25 +21,37 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ t: token })
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.nextUrl) {
+                .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                .then(({ ok, data }) => {
+                    if (ok && data.nextUrl) {
                         if(timerDisplay) timerDisplay.parentElement.style.display = 'none';
-                        if(instructionText) instructionText.innerText = "Verification Complete!";
+                        if(instructionText) instructionText.innerText = "Verification Complete! Redirecting...";
                         continueBtn.href = data.nextUrl;
                         continueBtn.classList.remove('hidden');
-                        
+
                         gsap.to(continueBtn, { scale: 1.03, repeat: -1, yoyo: true, duration: 0.6 });
+
+                        // Auto-advance so people don't get stuck waiting â€” the button remains as a manual fallback
+                        setTimeout(() => { window.location.href = data.nextUrl; }, 1800);
                     } else {
-                        if(instructionText) instructionText.innerText = "Error processing request.";
+                        if(instructionText) instructionText.innerText = "Session expired â€” please click the link again from the original page.";
+                        if(continueBtn) {
+                            continueBtn.textContent = 'Retry';
+                            continueBtn.href = window.location.href;
+                            continueBtn.classList.remove('hidden');
+                        }
                     }
                 })
                 .catch(err => {
-                    if(instructionText) instructionText.innerText = "Network Error. Please reload.";
+                    if(instructionText) instructionText.innerText = "Network error â€” tap Retry.";
+                    if(continueBtn) {
+                        continueBtn.textContent = 'Retry';
+                        continueBtn.href = window.location.href;
+                        continueBtn.classList.remove('hidden');
+                    }
                 });
             }
         }, 1000);
     });
 </script>
-
 
