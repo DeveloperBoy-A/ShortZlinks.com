@@ -6,6 +6,7 @@ const Report = require("../models/Report");
 const User = require("../models/User");
 const Link = require("../models/Link");
 const Withdrawal = require("../models/Withdrawal");
+const linkController = require("../controllers/linkController");
 
 router.get('/', async (req, res) => {
     if (req.session.user) {
@@ -68,6 +69,10 @@ router.post('/report-abuse', async (req, res) => {
 });
 
 router.get('/api', apiController.createLinkViaApi);
+
+// Homepage "Shorten" box — no account required. Returns JSON so the page can
+// show + copy the result inline without a redirect.
+router.post('/shorten', linkController.createGuestLink);
 
 // Footer pages (previously linked but had no backend route -> 404s)
 router.get('/payment-proofs', pageController.getPaymentProofs);
