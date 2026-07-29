@@ -9,7 +9,6 @@
 %>
 
 <div class="flex flex-1 flex-col md:flex-row overflow-hidden bg-gray-50 dark:bg-gray-900">
-    <%- include('../partials/sidebar') %>
     
     <main class="flex-1 p-4 md:p-6 overflow-y-auto">
         <div class="max-w-6xl mx-auto space-y-6">
@@ -21,7 +20,7 @@
                     <div class="mb-4 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center justify-between gap-3 flex-wrap">
                         <span class="text-green-700 dark:text-green-400 font-bold flex items-center gap-2 shrink-0"><i class="fas fa-check-circle"></i> Link created:</span>
                         <a href="<%= query.shortUrl %>" target="_blank" id="createdShortUrl" class="text-primary font-bold hover:underline break-all flex-1"><%= query.shortUrl %></a>
-                        <button type="button" onclick="copyCreatedLink(this)" data-url="<%= query.shortUrl %>"
+                        <button type="button" onclick="copyToClipboard('<%= query.shortUrl %>', this)"
                             class="shrink-0 bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
                             <i class="fas fa-copy"></i> <span>Copy</span>
                         </button>
@@ -84,40 +83,6 @@
             </div>
 
             <script>
-                function copyCreatedLink(btn) {
-                    const url = btn.getAttribute('data-url');
-                    const label = btn.querySelector('span');
-                    const restoreLabel = () => { label.textContent = 'Copy'; };
-
-                    const showCopied = () => {
-                        label.textContent = 'Copied!';
-                        setTimeout(restoreLabel, 1500);
-                    };
-
-                    if (navigator.clipboard && window.isSecureContext) {
-                        navigator.clipboard.writeText(url).then(showCopied).catch(() => fallbackCopy(url, showCopied));
-                    } else {
-                        fallbackCopy(url, showCopied);
-                    }
-                }
-
-                function fallbackCopy(text, onSuccess) {
-                    const temp = document.createElement('textarea');
-                    temp.value = text;
-                    temp.style.position = 'fixed';
-                    temp.style.opacity = '0';
-                    document.body.appendChild(temp);
-                    temp.focus();
-                    temp.select();
-                    try {
-                        document.execCommand('copy');
-                        onSuccess();
-                    } catch (err) {
-                        console.error('Copy failed:', err);
-                    }
-                    document.body.removeChild(temp);
-                }
-
                 (function () {
                     var toggleBtn = document.getElementById('toggleAdvanceBtn');
                     var advancePanel = document.getElementById('advanceOptions');
