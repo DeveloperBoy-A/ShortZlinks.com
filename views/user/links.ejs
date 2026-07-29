@@ -1,6 +1,5 @@
 <%- include('../partials/header') %>
 <div class="flex flex-1 flex-col md:flex-row overflow-hidden">
-    <%- include('../partials/sidebar') %>
     <main class="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         <h1 class="text-3xl font-bold mb-6">Manage Your Links</h1>
 
@@ -35,8 +34,8 @@
                                 <td class="p-4"><%= link.totalClicks %></td>
                                 <td class="p-4 text-green-500 font-bold">$<%= link.validEarnings.toFixed(4) %></td>
                                 <td class="p-4">
-                                    <button onclick="copyToClipboard('<%= settings.defaultDomain %>/l/<%= link.alias %>')" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
-                                        <i class="fas fa-copy"></i> Copy
+                                    <button onclick="copyToClipboard('https://<%= settings.defaultDomain.replace(/^https?:\/\//, '') %>/l/<%= link.alias %>', this)" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-500 transition text-sm">
+                                        <i class="fas fa-copy"></i> <span>Copy</span>
                                     </button>
                                 </td>
                             </tr>
@@ -48,13 +47,4 @@
     </main>
 </div>
 
-<script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            alert('Link copied to clipboard!');
-        }).catch(err => {
-            console.error('Could not copy text: ', err);
-        });
-    }
-</script>
 <%- include('../partials/footer') %>
