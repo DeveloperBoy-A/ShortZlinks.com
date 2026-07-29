@@ -1,0 +1,384 @@
+<!-- Tailwind CSS (Ensures styling works immediately) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts for Premium Typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    html { 
+        scroll-behavior: smooth; 
+    }
+    
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif; 
+        background-color: #f8fafc; 
+        color: #0f172a; 
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Premium Article Typography & Spacing */
+    .article-body {
+        max-width: 100%;
+        overflow-wrap: break-word;
+    }
+
+    .article-body p { 
+        font-family: 'Merriweather', serif; 
+        margin-bottom: 2rem; 
+        line-height: 1.85; 
+        font-size: 1.125rem; 
+        color: #334155; 
+    }
+
+    .article-body h2 { 
+        font-family: 'Plus Jakarta Sans', sans-serif; 
+        color: #0f172a; 
+        font-weight: 800; 
+        font-size: 2rem; 
+        margin-top: 3.5rem; 
+        margin-bottom: 1.5rem; 
+        letter-spacing: -0.025em;
+        line-height: 1.3;
+    }
+
+    /* Elegant Drop Cap */
+    .drop-cap::first-letter { 
+        font-size: 4.2rem; 
+        font-weight: 900; 
+        float: left; 
+        line-height: 0.8; 
+        padding-right: 0.75rem; 
+        padding-top: 0.25rem;
+        color: #16a34a; /* Changed to Green for Health theme */
+        font-family: 'Plus Jakarta Sans', sans-serif; 
+    }
+
+    /* High-Quality Stable Images & Animations */
+    .image-wrapper {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 1.25rem;
+        margin: 3rem 0 1rem 0;
+        background-color: #e2e8f0;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        aspect-ratio: 16 / 9;
+        border: 1px solid #f1f5f9;
+        position: relative;
+    }
+
+    .article-image { 
+        width: 100%; 
+        height: 100%;
+        object-fit: cover; 
+        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .image-wrapper:hover .article-image {
+        transform: scale(1.05);
+    }
+
+    .image-caption { 
+        text-align: center; 
+        font-size: 0.875rem; 
+        color: #64748b; 
+        font-style: italic; 
+        margin-bottom: 2.5rem; 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Modern Advertisement Blocks */
+    .ad-wrapper { 
+        background: #ffffff; 
+        border-radius: 1rem; 
+        padding: 1.5rem; 
+        margin: 3rem 0; 
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); 
+        border: 1px solid #e2e8f0; 
+        text-align: center; 
+        transition: box-shadow 0.3s ease;
+    }
+
+    .ad-wrapper:hover {
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+    }
+
+    .ad-label { 
+        font-size: 0.7rem; 
+        text-transform: uppercase; 
+        letter-spacing: 0.15em; 
+        color: #94a3b8; 
+        margin-bottom: 0.75rem; 
+        display: block; 
+        font-weight: 700;
+    }
+
+    .ad-slot { 
+        background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px);
+        border: 2px dashed #cbd5e1; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        color: #64748b; 
+        font-weight: 600; 
+        border-radius: 0.75rem; 
+        width: 100%; 
+        transition: border-color 0.3s ease;
+    }
+
+    .ad-banner { height: 90px; }
+    .ad-rectangle { height: 250px; }
+
+    /* Verification Box Styling */
+    .verify-box { 
+        background: linear-gradient(145deg, #ffffff 0%, #f0fdf4 100%); 
+        border: 1px solid #bbf7d0; 
+        border-radius: 1.5rem; 
+        padding: 3rem 2rem; 
+        box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.08), 0 8px 10px -6px rgba(34, 197, 94, 0.04); 
+        position: relative; 
+        overflow: hidden; 
+    }
+
+    .verify-box::before { 
+        content: ''; 
+        position: absolute; 
+        top: 0; left: 0; 
+        width: 100%; height: 5px; 
+        background: linear-gradient(90deg, #22c55e, #10b981, #047857); 
+    }
+
+    .clickable-btn { 
+        position: relative; 
+        z-index: 100 !important; 
+        pointer-events: auto !important; 
+        cursor: pointer !important; 
+    }
+</style>
+
+<!-- Clean & Modern Header Navigation -->
+<header class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-600 text-white rounded-xl flex items-center justify-center font-extrabold text-xl shadow-lg shadow-green-200">H</div>
+                <span class="font-extrabold text-2xl tracking-tight text-gray-900">HealthPlus</span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-500 hover:text-green-600 font-semibold transition-colors">Nutrition</a>
+                <a href="#" class="text-gray-500 hover:text-green-600 font-semibold transition-colors">Fitness</a>
+                <a href="#" class="text-gray-500 hover:text-green-600 font-semibold transition-colors">Mental Wellness</a>
+            </nav>
+            <div>
+                <a href="#" class="bg-gray-900 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-gray-800 transition-colors shadow-md text-sm tracking-wide">Subscribe</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Layout Grid -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 xl:grid-cols-12 gap-12">
+
+    <!-- Left Column: Content -->
+    <div class="xl:col-span-8 bg-white p-6 md:p-14 rounded-3xl shadow-sm border border-gray-100 overflow-hidden relative z-10">
+
+        <!-- Article Header -->
+        <header class="mb-10 text-center md:text-left">
+            <span class="inline-block py-1.5 px-4 rounded-full bg-green-50 text-green-700 font-bold text-xs uppercase tracking-widest mb-5 border border-green-100">
+                Verification Step <%= step %> of <%= totalSteps %>
+            </span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 tracking-tight">
+                The Ultimate Guide to Holistic Health: Transforming Your Body in 2026
+            </h1>
+            <div class="flex items-center justify-center md:justify-start space-x-4 mt-6">
+                <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name=Wellness+Team&background=16a34a&color=fff&size=150" alt="Author Profile" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <p class="font-bold text-gray-900 text-sm">Wellness Editorial Team</p>
+                    <p class="text-xs text-gray-500 font-medium">Updated for 2026</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Header Ad -->
+        <div class="ad-wrapper">
+            <span class="ad-label">Advertisement</span>
+            <div class="ad-slot ad-rectangle">[ Header Ad Slot ]</div>
+        </div>
+
+        <!-- STEP 1: VERIFICATION TIMER BOX -->
+        <div class="verify-box flex flex-col items-center justify-center my-12 relative z-20" id="step1-box">
+            <div class="bg-green-100 text-green-600 w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-inner" style="width: 80px; height: 80px; flex-shrink: 0;">
+                <svg style="width: 40px; height: 40px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2 text-center tracking-tight">Securing Your Connection...</h3>
+
+            <!-- Timer Area -->
+            <div id="timer-wrapper" class="w-full flex justify-center">
+                <div class="text-7xl font-black text-green-600 my-4 h-24 flex items-center justify-center tracking-tighter drop-shadow-sm" id="timerDisplay">10</div>
+            </div>
+            <p id="instructionText" class="text-sm md:text-base font-bold text-gray-500 mb-8 animate-pulse h-6 text-center">Checking browser security before proceeding...</p>
+
+            <!-- Scroll Button with SVG Arrow -->
+            <a href="#bottom-verify-section" id="scroll-btn" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center text-lg mt-2 relative z-50 clickable-btn border border-green-400 border-opacity-30">
+                Scroll Down To Continue
+                <svg style="width: 20px; height: 20px; margin-left: 8px;" class="animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            </a>
+        </div>
+
+        <!-- FULL ARTICLE CONTENT RESTORED & ENHANCED (HEALTH THEME) -->
+        <article class="article-body mt-12">
+            <p class="drop-cap">Taking control of your health in 2026 is more critical than ever. With sedentary lifestyles becoming the norm, highly processed foods dominating supermarket shelves, and stress levels reaching all-time highs, many beginners feel completely overwhelmed when trying to establish a healthy daily routine.</p>
+
+            <!-- IMAGE 1: High-Quality Stable Image (Nutrition) with fallback -->
+            <div class="image-wrapper">
+                <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Foods_%28cropped%29.jpg/800px-Foods_%28cropped%29.jpg" alt="Healthy Nutrition and Fresh Foods" class="article-image" onerror="this.onerror=null; this.src='https://placehold.co/1200x675/e2e8f0/64748b?text=Healthy+Nutrition';">
+            </div>
+            <p class="image-caption">Whole foods and strategic nutrition form the unshakable foundation of physical vitality.</p>
+
+            <h2>1. Developing a Bulletproof Nutrition Plan</h2>
+            <p>Physical wellness is firmly rooted in your daily diet. Contrary to popular belief, a diet is not about starvation or restriction; it merely organizes your caloric intake so your body functions optimally. Beginners should focus on the 80/20 rule: 80% whole, unprocessed foods like vegetables, lean proteins, and complex carbohydrates, and 20% flexibility to enjoy life without guilt.</p>
+
+            <!-- IMAGE 2: High-Quality Stable Image (Fitness) with fallback -->
+            <div class="image-wrapper">
+                <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Step_Aerobics.jpg/800px-Step_Aerobics.jpg" alt="Daily Fitness and Exercise" class="article-image" onerror="this.onerror=null; this.src='https://placehold.co/1200x675/e2e8f0/64748b?text=Daily+Movement';">
+            </div>
+            <p class="image-caption">Consistent daily movement is essential to align your body with long-term health goals.</p>
+
+            <!-- Article Ad 1 -->
+            <div class="ad-wrapper">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-rectangle">[ Article Ad Slot 1 ]</div>
+            </div>
+
+            <h2>2. The Psychology of Daily Movement</h2>
+            <p>You shouldn't wait until you "have more free time" to start exercising; movement is a priority that builds energy and longevity, regardless of your busy schedule. Small, consistent activities do wonders. Taking a 15-minute walk after meals, using standing desks, or doing a quick morning stretch routine compounds over time to deliver massive cardiovascular benefits.</p>
+
+            <!-- IMAGE 3: High-Quality Stable Image (Mental Wellness) with fallback -->
+            <div class="image-wrapper">
+                <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Woman_meditating_at_the_beach.jpg/800px-Woman_meditating_at_the_beach.jpg" alt="Mental Health and Meditation" class="article-image" onerror="this.onerror=null; this.src='https://placehold.co/1200x675/e2e8f0/64748b?text=Mental+Wellness';">
+            </div>
+            <p class="image-caption">Prioritizing mindfulness and stress management protects your long-term cognitive health.</p>
+
+            <h2>3. Mastering Sleep and Stress Management</h2>
+            <p>You can eat perfectly and exercise daily, but unmanaged stress and sleep deprivation will destroy your progress. Focus on eliminating late-night screen time and establish a solid sleep hygiene routine. Aim for 7-9 hours of high-quality sleep every night to allow your muscles to repair and your brain to consolidate memories and flush out toxins.</p>
+
+            <!-- Article Ad 2 -->
+            <div class="ad-wrapper">
+                <span class="ad-label">Advertisement</span>
+                <div class="ad-slot ad-rectangle">[ Article Ad Slot 2 ]</div>
+            </div>
+
+            <h2>4. Building a Sustainable Wellness Routine</h2>
+            <p>Depending on short-term "crash diets" or extreme 30-day challenges is the riskiest health decision you can make today. The key is creating a sustainable lifestyle. Building healthy habits—whether it's meal prepping on Sundays, joining a local sports club, or practicing 10 minutes of daily mindfulness—creates a protective moat around your physical and mental well-being.</p>
+
+            <h2>5. Fundamentals of Preventive Care</h2>
+            <p>Excellent health is not just about looking good in the mirror; it is about longevity. Today, anyone can take advantage of routine check-ups, blood panels, and digital health trackers directly from their smartwatch. The key is understanding that preventing illness is much easier than curing it. Stay hydrated, prioritize regular medical screenings, and listen to your body's signals.</p>
+
+            <h2>Conclusion</h2>
+            <p>Personal wellness in 2026 is about consistency, emotional balance, and prioritizing daily habits. You must prioritize sustainable actions over extreme, short-lived fitness trends. By mastering your nutrition, prioritizing sleep, managing stress, and committing to lifelong movement, you are laying an unshakable foundation for true health and vitality.</p>
+        </article>
+
+        <!-- STEP 2: FINAL CONTINUE BUTTON -->
+        <div class="mt-16 bg-gray-50 border border-gray-200 rounded-3xl p-10 text-center flex flex-col items-center justify-center shadow-inner relative z-20" id="bottom-verify-section">
+            <div class="bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-sm" style="width: 80px; height: 80px; flex-shrink: 0;">
+                <svg style="width: 40px; height: 40px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">Destination Link Ready</h3>
+
+            <div id="bottom-waiting-text" class="text-gray-500 font-semibold mb-6 h-12 flex items-center justify-center bg-gray-200 py-3 px-6 rounded-xl animate-pulse text-sm md:text-base border border-gray-300">
+                Please wait for the timer at the top to complete...
+            </div>
+
+            <!-- Destination Button with SVG Arrow -->
+            <a id="continueBtn" href="#" class="hidden w-full max-w-md mx-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-600 hover:to-emerald-700 hover:shadow-xl transition-all hover:-translate-y-1 shadow-lg flex items-center justify-center tracking-wide relative z-50 clickable-btn border border-green-400 border-opacity-40">
+                Continue to Next Step
+                <svg style="width: 24px; height: 24px; margin-left: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7-7m7-7H3"></path></svg>
+            </a>
+
+            <p class="text-xs text-gray-400 mt-6 font-medium">By continuing, you agree to our verified terms of service.</p>
+        </div>
+
+        <!-- Bottom Ad -->
+        <div class="ad-wrapper mb-0 mt-12">
+            <span class="ad-label">Advertisement</span>
+            <div class="ad-slot ad-rectangle">[ Bottom Ad ]</div>
+        </div>
+
+    </div>
+
+    <!-- Right Column Sidebar -->
+    <aside class="xl:col-span-4 hidden xl:block">
+        <div class="sticky top-28 space-y-8">
+            <!-- Sidebar Sticky Ad -->
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                <span class="ad-label text-center">Advertisement</span>
+                <div class="ad-slot w-full m-0 rounded-2xl" style="height: 600px;">[ Sidebar Sticky Ad ]</div>
+            </div>
+
+            <!-- Sidebar Newsletter Box (Aesthetic Filler) -->
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8 text-white shadow-lg border border-gray-700">
+                <h3 class="text-xl font-bold mb-3 font-['Plus_Jakarta_Sans']">Get Daily Health Tips</h3>
+                <p class="text-sm text-gray-300 mb-5">Join 50,000+ readers receiving our morning wellness newsletter.</p>
+                <input type="email" placeholder="Email address" class="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-green-500 mb-3">
+                <button class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl transition-colors">Subscribe Now</button>
+            </div>
+        </div>
+    </aside>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-gray-200 mt-12 py-10">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <p class="text-sm text-gray-500 font-medium">Copyright &copy; 2026 HealthPlus | All Rights Reserved.</p>
+    </div>
+</footer>
+
+<!-- Preserved Backend Timer Integration -->
+<%- include('timer-script') %>
+
+<!-- Preserved JavaScript Verification Functionality -->
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+    const timerValElement = document.getElementById('timerDisplay'); 
+    const continueBtn = document.getElementById('continueBtn'); 
+    const scrollBtn = document.getElementById('scroll-btn'); 
+    const waitingText = document.getElementById('bottom-waiting-text'); 
+
+    const customLogic = setInterval(() => { 
+        if (!timerValElement || !continueBtn) return; 
+        
+        const timerVal = timerValElement.innerText.trim(); 
+        const btnNotHidden = !continueBtn.classList.contains('hidden'); 
+        const hrefUpdated = continueBtn.getAttribute('href') !== '#' && continueBtn.getAttribute('href') !== ''; 
+
+        if (timerVal === "0" || timerVal === 0 || timerVal === "" || btnNotHidden || hrefUpdated) { 
+            // Show top Scroll Button 
+            if(scrollBtn) { 
+                scrollBtn.classList.remove('hidden'); 
+                scrollBtn.style.display = 'flex'; 
+            } 
+            
+            // Hide waiting text 
+            if(waitingText) { 
+                waitingText.style.display = 'none'; 
+            } 
+            
+            // Show bottom continue button 
+            if(continueBtn) { 
+                continueBtn.classList.remove('hidden'); 
+                continueBtn.style.display = 'flex'; 
+            } 
+            
+            clearInterval(customLogic); 
+        } 
+    }, 500); 
+});
+</script>
