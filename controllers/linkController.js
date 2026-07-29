@@ -33,7 +33,7 @@ exports.createLink = async (req, res) => {
         const { originalUrl, domain, alias, expiresAt } = req.body;
 
         // Fetch default domain if user didn't select one
-        const settings = await Setting.findOne();
+        const settings = await Setting.findOne() || await Setting.create({});
         const selectedDomain = domain || settings.defaultDomain;
 
         const linkData = {
@@ -68,29 +68,37 @@ exports.createLink = async (req, res) => {
 
 // 2. Public: Initial Click & Redirect to Step 1
 exports.handleInitialClick = async (req, res) => {
-    const link = req.linkData; // Attached by clickFrequencyLimiter middleware
-    const isDuplicate = req.isDuplicateClick;
-    const ip = req.clientIp;
-    const geo = geoip.lookup(ip);
-    const country = geo ? geo.country : 'Unknown';
+    try {
+        const link = req.linkData; // Attached by clickFrequencyLimiter middleware
+        const isDuplicate = req.isDuplicateClick;
+        const ip = req.clientIp;
+        const geo = geoip.lookup(ip);
+        const country = geo ? geo.country : 'Unknown';
 
-    const settings = await Setting.findOne();
-    const totalSteps = settings.adSteps;
+        const settings = await Setting.findOne() || await Setting.create({});
+        const totalSteps = settings.adSteps;
 
-    // Create a JWT to track this specific click session statelessly
-    const payload = {
-        linkId: link._id,
-        originalUrl: link.originalUrl,
-        isValid: !isDuplicate, 
-        ip,
-        country,
-        userAgent: req.headers['user-agent'],
-        totalSteps,
-        currentStep: 1
-    };
+        // Create a JWT to track this specific click session statelessly
+        const payload = {
+            linkId: link._id,
+            originalUrl: link.originalUrl,
+            isValid: !isDuplicate,
+            ip,
+            country,
+            userAgent: req.headers['user-agent'],
+            totalSteps,
+            currentStep: 1
+        };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
-    res.redirect(`/l/step/1?t=${token}`);
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15m' });
+        res.redirect(`/l/step/1?t=${token}`);
+    } catch (error) {
+        console.error('Initial Click Error:', error);
+        res.status(500).render('404', {
+            title: 'Something went wrong',
+            message: 'We could not process this link right now. Please try again in a moment.'
+        });
+    }
 };
 
 // 3. Public: Render Intermediate Ad Step Page (UPDATED FOR RANDOM THEMES)
@@ -139,7 +147,7 @@ exports.processStep = async (req, res) => {
             // Final Step Reached
             if (isValid) {
                 const link = await Link.findById(linkId);
-                const settings = await Setting.findOne(); // DB se live settings fetch karein
+                const settings = await Setting.findOne() || await Setting.create({}); // DB se live settings fetch karein
 
                 // --- DYNAMIC ENGINE: DB SE VALUES UTHAYEIN ---
                 // Agar DB mein countryRate hai toh wo, nahi toh global Default
