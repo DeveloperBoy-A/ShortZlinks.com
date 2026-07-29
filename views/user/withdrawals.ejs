@@ -1,6 +1,5 @@
 <%- include('../partials/header') %>
 <div class="flex flex-1 flex-col md:flex-row overflow-hidden bg-gray-50 dark:bg-gray-900">
-    <%- include('../partials/sidebar') %>
     
     <main class="flex-1 p-4 md:p-6 overflow-y-auto">
         <div class="max-w-5xl mx-auto space-y-6">
@@ -16,7 +15,7 @@
                     <div>
                         <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Available Balance</p>
                         <h2 class="text-3xl font-black text-gray-800 dark:text-white">$<%= user.walletBalance.toFixed(4) %></h2>
-                        <p class="text-xs font-bold text-green-500 mt-1">INR : ₹<%= (user.walletBalance * 85).toFixed(3) %></p>
+                        <p class="text-xs font-bold text-green-500 mt-1">INR : â‚¹<%= (user.walletBalance * 85).toFixed(3) %></p>
                     </div>
                     <div class="text-green-500 opacity-80">
                         <i class="fas fa-money-bill-wave text-5xl"></i>
@@ -29,7 +28,7 @@
                     <div>
                         <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Pending Withdrawn</p>
                         <h2 class="text-3xl font-black text-gray-800 dark:text-white">$<%= typeof pendingAmount !== 'undefined' ? pendingAmount.toFixed(4) : '0.0000' %></h2>
-                        <p class="text-xs font-bold text-green-500 mt-1">INR : ₹<%= typeof pendingAmount !== 'undefined' ? (pendingAmount * 85).toFixed(3) : '0.000' %></p>
+                        <p class="text-xs font-bold text-green-500 mt-1">INR : â‚¹<%= typeof pendingAmount !== 'undefined' ? (pendingAmount * 85).toFixed(3) : '0.000' %></p>
                     </div>
                     <div class="text-yellow-400 opacity-80">
                         <i class="fas fa-hand-holding-usd text-5xl"></i>
@@ -42,7 +41,7 @@
                     <div>
                         <p class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Total Withdraw</p>
                         <h2 class="text-3xl font-black text-gray-800 dark:text-white">$<%= user.totalWithdrawn.toFixed(4) %></h2>
-                        <p class="text-xs font-bold text-green-500 mt-1">INR : ₹<%= (user.totalWithdrawn * 85).toFixed(3) %></p>
+                        <p class="text-xs font-bold text-green-500 mt-1">INR : â‚¹<%= (user.totalWithdrawn * 85).toFixed(3) %></p>
                     </div>
                     <div class="text-purple-400 opacity-80">
                         <i class="fas fa-wallet text-5xl"></i>
