@@ -28,7 +28,7 @@ exports.createLinkViaApi = async (req, res) => {
             }
         }
 
-        const settings = await Setting.findOne();
+        const settings = await Setting.findOne() || await Setting.create({});
         const domain = settings ? settings.defaultDomain : `${req.protocol}://${req.get('host')}`;
 
         const newLink = await Link.create({
