@@ -3,12 +3,37 @@ const router = express.Router();
 const apiController = require("../controllers/apiController");
 const pageController = require("../controllers/pageController");
 const Report = require("../models/Report");
+const User = require("../models/User");
+const Link = require("../models/Link");
+const Withdrawal = require("../models/Withdrawal");
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     if (req.session.user) {
         return res.redirect(req.session.user.role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
     }
-    res.render('index', { title: 'Welcome to ' + res.locals.siteName });
+
+    // Real, live numbers for the "Numbers Speak Everything" homepage stats section.
+    // Wrapped in try/catch + sane fallbacks so a DB hiccup never breaks the homepage.
+    let stats = { totalClicks: 0, totalUrls: 0, registeredUsers: 0, totalWithdrawals: 0 };
+    try {
+        const [clicksAgg, totalUrls, registeredUsers, withdrawalsAgg] = await Promise.all([
+            Link.aggregate([{ $group: { _id: null, sum: { $sum: '$totalClicks' } } }]),
+            Link.countDocuments(),
+            User.countDocuments(),
+            Withdrawal.aggregate([
+                { $match: { status: 'Completed' } },
+                { $group: { _id: null, sum: { $sum: '$amount' } } }
+            ])
+        ]);
+        stats.totalClicks = (clicksAgg[0] && clicksAgg[0].sum) || 0;
+        stats.totalUrls = totalUrls || 0;
+        stats.registeredUsers = registeredUsers || 0;
+        stats.totalWithdrawals = (withdrawalsAgg[0] && withdrawalsAgg[0].sum) || 0;
+    } catch (err) {
+        console.error('Homepage stats error:', err);
+    }
+
+    res.render('index', { title: 'Welcome to ' + res.locals.siteName, stats });
 });
 
 router.get('/login', (req, res) => {
