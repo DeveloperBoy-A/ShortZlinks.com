@@ -207,7 +207,7 @@ exports.getApiDocs = async (req, res) => {
 exports.getReferrals = async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id);
-        const settings = await Setting.findOne();
+        const settings = await Setting.findOne() || await Setting.create({});
         const referralCount = await User.countDocuments({ referredBy: user._id });
         const referralLink = `${settings ? settings.defaultDomain : ''}/login?ref=${user._id}`;
 
